@@ -1,6 +1,23 @@
 // import React from 'react';
 
+import { useState } from "react";
+
 const ClientSignup = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    dateOfBirth: "",
+    Address: "",
+    City: "",
+    State: "",
+    ZipCode: ""
+  })
+
+  function handleFormSubmit(){
+    
+  }
+
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-4xl w-full">
@@ -41,38 +58,11 @@ const ClientSignup = () => {
             </label>
           </div>
 
-          <div className="mb-4">
-            <label className="block mb-2">Services Required:</label>
-            <div className="flex flex-wrap gap-4">
-              <label className="flex items-center">
-                <input type="checkbox" className="mr-2" />
-                General Consultation
-              </label>
-              <label className="flex items-center">
-                <input type="checkbox" className="mr-2" />
-                Specialist Consultation
-              </label>
-              <label className="flex items-center">
-                <input type="checkbox" className="mr-2" />
-                Health Checkup
-              </label>
-              <label className="flex items-center">
-                <input type="checkbox" className="mr-2" />
-                Emergency Services
-              </label>
-              <label className="flex items-center">
-                <input type="checkbox" className="mr-2" />
-                Surgery
-              </label>
-              <label className="flex items-center">
-                <input type="checkbox" className="mr-2" />
-                Laboratory Services
-              </label>
-            </div>
-          </div>
 
           <div className="mt-6">
-            <button type="submit" className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600">
+            <button type="submit" className="w-full px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" 
+            onClick={handleFormSubmit}
+            >
               Signup
             </button>
           </div>

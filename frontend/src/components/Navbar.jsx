@@ -71,10 +71,12 @@ const Navbar = () => {
           </svg>
 
           {/* Brand Name with Different Colors for Medi and Connect */}
-          <span className="ml-2">
-            <span className="text-blue-600">Medi</span>
-            <span className="text-purple-600">Connect</span>
-          </span>
+          <Link to="/" className="flex items-center">
+            <span className="ml-2">
+              <span className="text-blue-600">Medi</span>
+              <span className="text-purple-600">Connect</span>
+            </span>
+          </Link>
         </div>
 
 
@@ -82,9 +84,9 @@ const Navbar = () => {
         <div className="flex items-center space-x-6">
 
           {/* New Section (e.g., Services) */}
-          <button className="px-4 py-2 border rounded-md hover:bg-gray-100">
+          <a href="/services" className="px-4 py-2 border rounded-md hover:bg-gray-100">
             Services
-          </button>
+          </a>
 
           {/* Ask a Question Dropdown */}
           <div className="relative">
@@ -96,7 +98,7 @@ const Navbar = () => {
             </button>
             {askQuestionDropdownOpen && (
               <div className="absolute right-0 mt-2 py-2 w-48 bg-white border rounded-md shadow-xl">
-                <a href="#" className="block px-4 py-2 hover:bg-gray-100">
+                <a href="/contact" className="block px-4 py-2 hover:bg-gray-100">
                   Contact Us
                 </a>
               </div>
