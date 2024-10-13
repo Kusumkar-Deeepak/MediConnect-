@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SearchSection = () => {
   // Sample data for hospitals with added details
@@ -168,86 +170,106 @@ const SearchSection = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredHospitals, setFilteredHospitals] = useState([]);
 
+  // Set initial filtered hospitals on component mount
+  useEffect(() => {
+    // Initialize with the first few hospitals
+    setFilteredHospitals(hospitals.slice(0, 3)); // Adjust the number of hospitals shown initially
+  }, []);
+
   // Search function to filter hospitals by city
-  const handleSearch = () => {
-    const results = hospitals.filter((hospital) =>
-      hospital.city.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    setFilteredHospitals(results);
-    setSearchTerm('');
-  };
-
-  return (
-    <div
-      className="flex flex-col items-center h-auto bg-cover bg-center text-white py-8"
-      // style={{
-      //   backgroundImage: "url('https://www.saifeehospital.com/img/slides/slide1.jpg')",
-      // }}
-    >
-      <h1 className="text-4xl font-bold mb-4 text-black">Find Hospitals in Your City</h1>
-      <div className="flex w-full max-w-lg mb-6">
-        <input
-          type="text"
-          placeholder="Enter city name (e.g., Mumbai)"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full px-4 py-2 border border-gray-300 rounded-l-md text-gray-900"
-        />
-        <button
-          onClick={handleSearch}
-          className="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
-        >
-          Search
-        </button>
-      </div>
-      {/* Styled H3 Element */}
-    <h3 className="text-lg font-semibold text-center mb-4 text-gray-800">
-      For Booking the Hospital Appointment Please Signup/Login.
-    </h3>
-
-      {/* Search Results */}
-      <div className="w-full max-w-4xl px-4 space-y-4">
-        {filteredHospitals.length > 0 ? (
-          filteredHospitals.map((hospital, index) => (
-            <div
-              key={index}
-              className="flex items-center bg-gray-100 p-6 rounded-lg shadow-lg border border-gray-300 text-gray-900"
-            >
-              {/* Image on the Left */}
-              <img
-                src={hospital.image}
-                alt={hospital.name}
-                className="w-64 h-32 rounded-lg object-cover mr-6"
-              />
-
-              {/* Center Content */}
-              <div className="flex-1">
-                <h3 className="text-2xl font-bold">{hospital.name}</h3>
-                <p className="text-lg">{hospital.address}</p>
-                <p className="text-md mt-2">
-                  <strong>Doctor:</strong> {hospital.doctor.name} <br />
-                  <strong>Specialty:</strong> {hospital.doctor.specialty} <br />
-                  <strong>Experience:</strong> {hospital.doctor.experience}
-                </p>
-              </div>
-
-              {/* Right Content - Operating Hours */}
-              <div className="text-right">
-                <p className="text-xl font-semibold">Opening Hours</p>
-                <p className="text-lg">{hospital.openingHours}</p>
-              </div>
-            </div>
-          ))
-        ) : (
-          searchTerm && (
-            <p className="text-lg font-semibold text-gray-700 bg-white p-4 rounded-md shadow-md">
-              No hospitals found in {searchTerm}
-            </p>
-          )
+  // Search function to filter hospitals by city
+    // Search function to filter hospitals by city
+    const handleSearch = () => {
+      const results = hospitals.filter((hospital) =>
+        hospital.city.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+  
+      // Check if any results are found
+      if (results.length === 0) {
+        // Display an error message using toast
+        toast.error(`No hospitals found in "${searchTerm}"`);
+        // Set filtered hospitals to the default hospitals (first 3)
+        setFilteredHospitals(hospitals.slice(0, 3));
+      } else {
+        // Set filtered hospitals to the search results
+        setFilteredHospitals(results);
+      }
+  
+      // Clear the search term
+      setSearchTerm('');
+    };
+  
+    return (
+      <div className="flex flex-col items-center h-auto bg-cover bg-center text-white py-8">
+        <ToastContainer />
+        <h1 className="text-4xl font-bold mb-4 text-black">Find Hospitals in Your City</h1>
+        <div className="flex w-full max-w-lg mb-6">
+          <input
+            type="text"
+            placeholder="Enter city name (e.g., Mumbai)"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-l-md text-gray-900"
+          />
+          <button
+            onClick={handleSearch}
+            className="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
+          >
+            Search
+          </button>
+        </div>
+        <h3 className="text-lg font-semibold text-center mb-4 text-gray-800">
+          For Booking the Hospital Appointment Please Signup/Login.
+        </h3>
+  
+        {/* Display the search term if it exists */}
+        {searchTerm && (
+          <p className="text-lg font-semibold text-gray-800 mb-4">
+            Search term: <span className="font-bold">{searchTerm}</span>
+          </p>
         )}
+  
+        {/* Search Results */}
+        <div className="w-full max-w-4xl px-4 space-y-4">
+          {filteredHospitals.length > 0 ? (
+            filteredHospitals.map((hospital, index) => (
+              <div
+                key={index}
+                className="flex items-center bg-gray-100 p-6 rounded-lg shadow-lg border border-gray-300 text-gray-900"
+              >
+                {/* Image on the Left */}
+                <img
+                  src={hospital.image}
+                  alt={hospital.name}
+                  className="w-64 h-32 rounded-lg object-cover mr-6"
+                />
+  
+                {/* Center Content */}
+                <div className="flex-1">
+                  <h3 className="text-2xl font-bold">{hospital.name}</h3>
+                  <p className="text-lg">{hospital.address}</p>
+                  <p className="text-md mt-2">
+                    <strong>Doctor:</strong> {hospital.doctor.name} <br />
+                    <strong>Specialty:</strong> {hospital.doctor.specialty} <br />
+                    <strong>Experience:</strong> {hospital.doctor.experience}
+                  </p>
+                </div>
+  
+                {/* Right Content - Operating Hours */}
+                <div className="text-right">
+                  <p className="text-xl font-semibold">Opening Hours</p>
+                  <p className="text-lg">{hospital.openingHours}</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p className="text-lg font-semibold text-gray-700 bg-white p-4 rounded-md shadow-md">
+              No hospitals found.
+            </p>
+          )}
+        </div>
       </div>
-    </div>
-  );
-};
-
-export default SearchSection;
+    );
+  };
+  
+  export default SearchSection;
