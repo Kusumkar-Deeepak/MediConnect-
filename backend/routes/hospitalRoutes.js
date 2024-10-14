@@ -1,6 +1,8 @@
 const express = require('express');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
 const Hospital = require('../models/hospital');
 const router = express.Router();
 require('dotenv').config();
@@ -106,22 +108,56 @@ const sendAdminConfirmationEmail = async (hospitalData, token) => {
 };
 
 
-// Route to handle hospital registration submission
+
+// Hospital registration route
 router.post('/', async (req, res) => {
   try {
-    const { name, email } = req.body;
+    const {
+      name,
+      email,
+      password,
+      id,
+      phone,
+      address,
+      city,
+      state,
+      zipCode,
+      specDrName,
+      numberOfDoctors,
+      numberOfNurses,
+      aboutHospital,
+      facilities,
+    } = req.body;
 
     // Check if hospital already exists
-    const existingHospital = await Hospital.findOne({ name });
+    const existingHospital = await Hospital.findOne({ email }); // You might want to check by email
     if (existingHospital) {
       return res.status(400).json({ message: 'Hospital already exists.' });
     }
 
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     // Generate a confirmation token
     const token = crypto.randomBytes(32).toString('hex');
 
-    // Store the registration data in memory
-    pendingHospitals[token] = req.body;
+    // Store the registration data in memory with the hashed password
+    pendingHospitals[token] = {
+      name,
+      email,
+      password: hashedPassword, // Store the hashed password
+      id,
+      phone,
+      address,
+      city,
+      state,
+      zipCode,
+      specDrName,
+      numberOfDoctors,
+      numberOfNurses,
+      aboutHospital,
+      facilities,
+    };
 
     // Send confirmation email to admin
     await sendAdminConfirmationEmail(req.body, token);
@@ -179,6 +215,45 @@ router.get('/cancel/:token', async (req, res) => {
   delete pendingHospitals[token];
 
   res.status(200).json({ message: 'Hospital registration has been cancelled. Notification sent.' });
+});
+
+
+// Hospital Login Route
+router.get('/login', async (req, res) => {
+  const { id, password } = req.query;
+  console.log(id, password)
+
+  try {
+    const hospital = await Hospital.findOne({ id });
+    if (!hospital) {
+      return res.status(400).json({ message: 'Hospital not found' });
+    }
+
+    const isMatch = await bcrypt.compare(password, hospital.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Invalid password' });
+    }
+
+    const token = jwt.sign({ id: hospital.id, type: 'hospital' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    res.status(200).json({ message: 'Login successful', token, hospital: {
+      id: hospital.id,
+      name: hospital.name,
+      email: hospital.email,
+      phone: hospital.phone,
+      address: hospital.address,
+      city: hospital.city,
+      state: hospital.state,
+      zipCode: hospital.zipCode,
+      specDrName: hospital.specDrName,
+      numberOfDoctors: hospital.numberOfDoctors,
+      numberOfNurses: hospital.numberOfNurses,
+      aboutHospital: hospital.aboutHospital,
+      facilities: hospital.facilities, // Assuming facilities is an object
+    }, });
+  } catch (error) {
+    console.error('Error during hospital login:', error);
+    res.status(500).json({ message: 'An error occurred during hospital login' });
+  }
 });
 
 module.exports = router;

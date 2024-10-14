@@ -2,11 +2,15 @@
 import { useState } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
+
 
 const ClientSignup = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    password: "",
     phone: "",
     dateOfBirth: "",
     address: "",
@@ -14,6 +18,23 @@ const ClientSignup = () => {
     state: "",
     zipCode: ""
   });
+
+  const navigate = useNavigate();
+
+  const validateForm = () => {
+    const { name, email, password, phone, address, city, state, zipCode, dateOfBirth } = formData;
+
+    if (!name || !email || !password || !phone || !address || !city || !state || !zipCode || !dateOfBirth) {
+      toast.error("All fields are required.");
+      return false;
+    }
+
+    if (!/^\d+$/.test(zipCode)) {
+      toast.error("Zip Code must be a number.");
+      return false;
+    }
+    return true;
+  }
 
   const formChange = (e) => {
     const { name, value } = e.target;
@@ -23,11 +44,29 @@ const ClientSignup = () => {
     }));
   };
 
-  const handleFormSubmit = (e) => {
+  const handleFormSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form Data:', formData);
-    // Further form processing (e.g., sending to API) can go here
-    toast.success('Client Added successfully!');
+
+    if(!validateForm()) {
+      return;
+    }
+
+    try {
+      const response = await axios.post('http://localhost:3000/api/clients', formData);
+      if (response.status === 200) {
+        toast.success(response.data.message); // Show success message
+  
+        // Add a timeout before navigating to the home page
+        setTimeout(() => {
+          navigate('/'); // Redirect to home page after 3 seconds
+        }, 3000); // 3000 milliseconds = 3 seconds
+      } else {
+        toast.error(response.data.message); // Show error message
+      }
+    } catch(error){
+      console.error("Error:", error);
+      toast.error(error.response?.data?.message || "An unexpected error occurred.");
+    }
   };
 
   return (
@@ -55,6 +94,17 @@ const ClientSignup = () => {
                 value={formData.email}
                 onChange={formChange}
                 type="email"
+                className="w-full px-3 py-2 border rounded-md mt-1"
+                required
+              />
+            </label>
+            <label>
+              Password:
+              <input
+                name="password"
+                value={formData.password}
+                onChange={formChange}
+                type="password"
                 className="w-full px-3 py-2 border rounded-md mt-1"
                 required
               />

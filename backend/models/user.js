@@ -24,6 +24,10 @@ const clientSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
+  password: {
+    type: String,
+    required: true,
+  },
   address: {
     type: String,
     required: true,
@@ -47,4 +51,4 @@ const clientSchema = new mongoose.Schema({
   },
 }, { timestamps: true }); // Adds createdAt and updatedAt fields
 
-module.exports = mongoose.model("Client", clientSchema);
+module.exports = mongoose.model("Client", clientSchema, 'client');
