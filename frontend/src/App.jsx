@@ -1,26 +1,35 @@
 import './App.css'
+import AppointmentList from './components/AppointmentList';
 import ClientSignup from './components/ClientSignup';
 import ContactPage from './components/ContactPage';
+import DoctorDetails from './components/DoctorDetails';
+import HospitalDashboard from './components/HospitalDashboard';
 import HospitalSignup from './components/HospitalSignup';
 import ServicesSection from './components/ServiceSection';
+import { UserProvider } from './Context/UserContext';
 import Home from './pages/Home'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 
 function App() {
-  
+
 
   return (
     <>
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/ClientSignup" element={<ClientSignup />} />
-          <Route path="/HospitalSignup" element={<HospitalSignup />} />
-          <Route path="/services" element={<ServicesSection />} />
-          <Route path="/contact" element={<ContactPage />} />
-        </Routes>
-      </Router>
+      <UserProvider>
+        <Router>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/ClientSignup" element={<ClientSignup />} />
+            <Route path="/HospitalSignup" element={<HospitalSignup />} />
+            <Route path="/services" element={<ServicesSection />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/hospital/dashboard" element={<HospitalDashboard />} />
+            <Route path="/doctor-details" element={<DoctorDetails />} />
+            <Route path="/check-clients/:hospitalId" element={<AppointmentList />} />
+          </Routes>
+        </Router>
+      </UserProvider>
     </>
   )
 }

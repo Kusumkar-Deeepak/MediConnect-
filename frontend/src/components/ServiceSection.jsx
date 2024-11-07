@@ -1,75 +1,76 @@
-// import React from 'react';
-
+import { useState } from "react";
 import Navbar from "./Navbar";
+import axios from 'axios';
 
 const ServiceSection = () => {
-  // Sample services array for MediConnect
-  const services = [
-    {
-      title: 'Telemedicine Consultations',
-      description: 'Connect with healthcare professionals via video calls for remote consultations, ensuring convenient access to medical advice.',
-      icon: '📞',
-    },
-    {
-      title: 'Appointment Scheduling',
-      description: 'Easily book, reschedule, and cancel appointments with healthcare providers through an intuitive online interface.',
-      icon: '📅',
-    },
-    {
-      title: 'Patient Management System',
-      description: 'Streamline patient information management, including records, history, and treatment plans, for better healthcare delivery.',
-      icon: '👥',
-    },
-    {
-      title: 'Prescription Management',
-      description: 'Manage and refill prescriptions electronically, ensuring patients have easy access to their medications.',
-      icon: '💊',
-    },
-    {
-      title: 'Health Monitoring Tools',
-      description: 'Utilize integrated tools for tracking vital signs, health metrics, and reminders for medication adherence.',
-      icon: '📈',
-    },
-    {
-      title: 'Emergency Services',
-      description: 'Quick access to emergency services and information, ensuring prompt care during critical situations.',
-      icon: '🚑',
-    },
-    {
-      title: 'Healthcare Analytics',
-      description: 'Gain insights through analytics tools to monitor health trends, patient outcomes, and service efficiency.',
-      icon: '📊',
-    },
-    {
-      title: 'Secure Data Management',
-      description: 'Ensure patient data security with encrypted storage and compliant practices for maintaining privacy and confidentiality.',
-      icon: '🔒',
-    },
-  ];
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [questionCount, setQuestionCount] = useState(0);
+  const maxQuestionsPerDay = 10;
 
-  // Function to handle Go Back button
+  const handleSendMessage = async (e) => {
+    e.preventDefault();
+    if (input.trim() === "") return;
+  
+    if (questionCount < maxQuestionsPerDay) {
+      setMessages((prev) => [...prev, { sender: "user", text: input }]);
+  
+      try {
+        // Making a GET request using axios
+        const response = await axios.get(`http://localhost:3000/api/clients/askDoctor`, {
+          params: { input: input }, // Send input as query parameter
+        });
+        
+  
+        // Check if the response contains the expected data
+        if (response.data && response.data.text) {
+          setMessages((prev) => [...prev, { sender: "doctor", text: response.data.text }]);
+        } else {
+          throw new Error("Invalid response format.");
+        }
+  
+      } catch (error) {
+        console.error("Error fetching response:", error);
+        alert("Failed to fetch response. Please try again.");
+      }
+  
+      setInput("");
+      setQuestionCount((prev) => prev + 1);
+    } else {
+      alert("You have reached the maximum number of questions for today.");
+    }
+  };
 
   return (
     <div className="relative min-h-screen">
       <Navbar />
-
-      {/* Services Section */}
-      <div className="px-4 py-10">
-        <h1 className="text-2xl font-bold mb-6">Our Services</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {services.map((service, index) => (
-            <div
-              key={index}
-              className="p-4 border rounded-lg shadow-md flex flex-col items-start"
-            >
-              <div className="text-3xl">{service.icon}</div>
-              <h2 className="text-xl font-semibold mt-2">{service.title}</h2>
-              <p className="mt-1 text-gray-700">{service.description}</p>
+      <div className="p-4 border rounded-lg shadow-md mt-10 max-w-xl mx-auto">
+        <h2 className="text-xl font-semibold mb-4">Ask the Doctor</h2>
+        <div className="h-60 overflow-y-auto border border-gray-300 rounded-lg p-2 mb-2">
+          {messages.map((msg, index) => (
+            <div key={index} className={`my-1 ${msg.sender === "user" ? "text-right" : "text-left"}`}>
+              <span className={`inline-block p-2 rounded-lg ${msg.sender === "user" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"}`}>
+                {msg.text}
+              </span>
             </div>
           ))}
         </div>
+        <form onSubmit={handleSendMessage} className="flex">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder="Ask a question..."
+            className="flex-1 border border-gray-300 p-2 rounded-lg"
+          />
+          <button type="submit" className="ml-2 bg-blue-500 text-white p-2 rounded-lg">
+            Send
+          </button>
+        </form>
+        <p className="mt-2 text-sm text-gray-500">
+          Questions remaining today: {maxQuestionsPerDay - questionCount}
+        </p>
       </div>
-      
     </div>
   );
 };

@@ -1,275 +1,320 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { UserContext } from '../Context/UserContext'; // Adjust the path as necessary
+import Hospital from './Hospitals'
+import axios from 'axios';
+
 
 const SearchSection = () => {
   // Sample data for hospitals with added details
   const hospitals = [
     {
-      name: 'City Hospital',
-      city: 'Mumbai',
-      address: '123 Mumbai Street',
-      doctor: { name: 'Dr. A. Sharma', specialty: 'Cardiologist', experience: '15 years' },
-      openingHours: '9:00 AM - 6:00 PM',
-      image: 'https://www.saifeehospital.com/img/slides/slide1.jpg',
+        name: 'City Hospital',
+        city: 'Mumbai',
+        address: '123 Mumbai Street',
+        specDrName: 'A. Sharma',
+        specialist: 'Cardiologist',
+        experience: 15,
+        openingHours: '9:00 AM - 6:00 PM',
+        doctorImage: 'https://www.saifeehospital.com/img/slides/slide1.jpg',
+        languagesSpoken: 'English, Hindi'
     },
     {
-      name: 'Sunshine Hospital',
-      city: 'Delhi',
-      address: '456 Delhi Avenue',
-      doctor: { name: 'Dr. B. Singh', specialty: 'Orthopedic', experience: '10 years' },
-      openingHours: '10:00 AM - 8:00 PM',
-      image: 'https://sunshinehospital.co/assets/images/Gallery/Hospital-Front-Main.jpg',
+        name: 'Sunshine Hospital',
+        city: 'Delhi',
+        address: '456 Delhi Avenue',
+        specDrName: 'B. Singh',
+        specialist: 'Orthopedic',
+        experience: 10,
+        openingHours: '10:00 AM - 8:00 PM',
+        doctorImage: 'https://sunshinehospital.co/assets/images/Gallery/Hospital-Front-Main.jpg',
+        languagesSpoken: 'English, Hindi'
     },
     {
-      name: 'Apollo Hospital',
-      city: 'Bangalore',
-      address: '789 Bangalore Road',
-      doctor: { name: 'Dr. C. Rao', specialty: 'Neurologist', experience: '20 years' },
-      openingHours: '8:00 AM - 5:00 PM',
-      image: 'https://safartibbi.com/wp-content/uploads/2024/05/apollo.jpg',
+        name: 'Apollo Hospital',
+        city: 'Bangalore',
+        address: '789 Bangalore Road',
+        specDrName: 'C. Rao',
+        specialist: 'Neurologist',
+        experience: 20,
+        openingHours: '8:00 AM - 5:00 PM',
+        doctorImage: 'https://safartibbi.com/wp-content/uploads/2024/05/apollo.jpg',
+        languagesSpoken: 'English, Kannada'
     },
     {
-      name: 'Santa Cruise Valley Hospital',
-      city: 'Mumbai',
-      address: '101 Mumbai Lane',
-      doctor: { name: 'Dr. D. Patil', specialty: 'Dermatologist', experience: '12 years' },
-      openingHours: '9:00 AM - 6:00 PM',
-      image: 'https://www.guptasen.com/wp-content/uploads/2024/03/Artteza-Towers-Santacruz-West.webp',
+        name: 'Santa Cruise Valley Hospital',
+        city: 'Mumbai',
+        address: '101 Mumbai Lane',
+        specDrName: 'D. Patil',
+        specialist: 'Dermatologist',
+        experience: 12,
+        openingHours: '9:00 AM - 6:00 PM',
+        doctorImage: 'https://www.guptasen.com/wp-content/uploads/2024/03/Artteza-Towers-Santacruz-West.webp',
+        languagesSpoken: 'English, Marathi'
     },
     {
-      name: 'Care Hospital',
-      city: 'Pune',
-      address: '121 Pune Street',
-      doctor: { name: 'Dr. E. Desai', specialty: 'Pediatrician', experience: '8 years' },
-      openingHours: '8:30 AM - 6:00 PM',
-      image: 'https://www.puneinsight.com/wp-content/uploads/2020/06/care-main.jpg',
+        name: 'Care Hospital',
+        city: 'Pune',
+        address: '121 Pune Street',
+        specDrName: 'E. Desai',
+        specialist: 'Pediatrician',
+        experience: 8,
+        openingHours: '8:30 AM - 6:00 PM',
+        doctorImage: 'https://www.puneinsight.com/wp-content/uploads/2020/06/care-main.jpg',
+        languagesSpoken: 'English, Marathi'
     },
     {
-      name: 'Metro Hospital',
-      city: 'Hyderabad',
-      address: '1234 Hyderabad Road',
-      doctor: { name: 'Dr. F. Reddy', specialty: 'General Surgeon', experience: '14 years' },
-      openingHours: '7:00 AM - 5:00 PM',
-      image: 'https://images1-fabric.practo.com/5555cd34516ec6512bd43d9caa6e02c990b0a82652dca.jpg',
+        name: 'Metro Hospital',
+        city: 'Hyderabad',
+        address: '1234 Hyderabad Road',
+        specDrName: 'F. Reddy',
+        specialist: 'General Surgeon',
+        experience: 14,
+        openingHours: '7:00 AM - 5:00 PM',
+        doctorImage: 'https://images1-fabric.practo.com/5555cd34516ec6512bd43d9caa6e02c990b0a82652dca.jpg',
+        languagesSpoken: 'English, Telugu'
     },
     {
-      name: 'Fortis Hospital',
-      city: 'Chennai',
-      address: '543 Chennai Blvd',
-      doctor: { name: 'Dr. G. Iyer', specialty: 'Orthopedic Surgeon', experience: '18 years' },
-      openingHours: '10:00 AM - 7:00 PM',
-      image: 'https://www.bizzbuzz.news/h-upload/2023/11/25/1820020-fortis.webp',
+        name: 'Fortis Hospital',
+        city: 'Chennai',
+        address: '543 Chennai Blvd',
+        specDrName: 'G. Iyer',
+        specialist: 'Orthopedic Surgeon',
+        experience: 18,
+        openingHours: '10:00 AM - 7:00 PM',
+        doctorImage: 'https://www.bizzbuzz.news/h-upload/2023/11/25/1820020-fortis.webp',
+        languagesSpoken: 'English, Tamil'
     },
     {
-      name: 'Max Health Care',
-      city: 'Delhi',
-      address: '678 Delhi Avenue',
-      doctor: { name: 'Dr. H. Kapur', specialty: 'ENT Specialist', experience: '11 years' },
-      openingHours: '9:00 AM - 5:00 PM',
-      image: 'https://d35oenyzp35321.cloudfront.net/Max_Super_Speciality_Hospital_Shalimar_Bagh_jpg_5c1758d700.jpg',
+        name: 'Max Health Care',
+        city: 'Delhi',
+        address: '678 Delhi Avenue',
+        specDrName: 'H. Kapur',
+        specialist: 'ENT Specialist',
+        experience: 11,
+        openingHours: '9:00 AM - 5:00 PM',
+        doctorImage: 'https://d35oenyzp35321.cloudfront.net/Max_Super_Speciality_Hospital_Shalimar_Bagh_jpg_5c1758d700.jpg',
+        languagesSpoken: 'English, Hindi'
     },
     {
-      name: 'Lotus Hospital',
-      city: 'Jaipur',
-      address: '333 Jaipur Lane',
-      doctor: { name: 'Dr. I. Singh', specialty: 'Gynecologist', experience: '16 years' },
-      openingHours: '8:00 AM - 4:00 PM',
-      image: 'https://cdn.hexahealth.com/Image/cb8ab721-b3fe-4270-908d-0e61d2d9a7de.jpg',
+        name: 'Lotus Hospital',
+        city: 'Jaipur',
+        address: '333 Jaipur Lane',
+        specDrName: 'I. Singh',
+        specialist: 'Gynecologist',
+        experience: 16,
+        openingHours: '8:00 AM - 4:00 PM',
+        doctorImage: 'https://cdn.hexahealth.com/Image/cb8ab721-b3fe-4270-908d-0e61d2d9a7de.jpg',
+        languagesSpoken: 'English, Hindi'
     },
     {
-      name: 'Medanta Hospital',
-      city: 'Gurgaon',
-      address: '451 Gurgaon Circle',
-      doctor: { name: 'Dr. J. Gupta', specialty: 'Oncologist', experience: '19 years' },
-      openingHours: '9:00 AM - 6:30 PM',
-      image: 'https://upload.wikimedia.org/wikipedia/en/6/68/Medanta_the_medicity_hospital.jpg',
+        name: 'Medanta Hospital',
+        city: 'Gurgaon',
+        address: '451 Gurgaon Circle',
+        specDrName: 'J. Gupta',
+        specialist: 'Oncologist',
+        experience: 19,
+        openingHours: '9:00 AM - 6:30 PM',
+        doctorImage: 'https://upload.wikimedia.org/wikipedia/en/6/68/Medanta_the_medicity_hospital.jpg',
+        languagesSpoken: 'English, Hindi'
     },
     {
-      name: 'Rainbow Hospital',
-      city: 'Mumbai',
-      address: '159 Rainbow Ave',
-      doctor: { name: 'Dr. K. Mehta', specialty: 'Pediatrician', experience: '7 years' },
-      openingHours: '8:30 AM - 5:00 PM',
-      image: 'https://images1-fabric.practo.com/rainbow-children-s-multispecialty-clinic-mumbai-1483344465-586a0a5160419.JPG',
+        name: 'Rainbow Hospital',
+        city: 'Mumbai',
+        address: '159 Rainbow Ave',
+        specDrName: 'K. Mehta',
+        specialist: 'Pediatrician',
+        experience: 7,
+        openingHours: '8:30 AM - 5:00 PM',
+        doctorImage: 'https://images1-fabric.practo.com/rainbow-children-s-multispecialty-clinic-mumbai-1483344465-586a0a5160419.JPG',
+        languagesSpoken: 'English, Marathi'
     },
     {
-      name: 'Ruby Hall Clinic',
-      city: 'Pune',
-      address: '256 Pune Street',
-      doctor: { name: 'Dr. L. Naik', specialty: 'Radiologist', experience: '13 years' },
-      openingHours: '9:00 AM - 7:00 PM',
-      image: 'https://images1-fabric.practo.com/rainbow-children-s-multispecialty-clinic-mumbai-1483344465-586a0a5160419.JPG',
+        name: 'Ruby Hall Clinic',
+        city: 'Pune',
+        address: '256 Pune Street',
+        specDrName: 'L. Naik',
+        specialist: 'Radiologist',
+        experience: 13,
+        openingHours: '9:00 AM - 7:00 PM',
+        doctorImage: 'https://images1-fabric.practo.com/rainbow-children-s-multispecialty-clinic-mumbai-1483344465-586a0a5160419.JPG',
+        languagesSpoken: 'English, Marathi'
     },
     {
-      name: 'Narayana Health',
-      city: 'Bangalore',
-      address: '101 Narayana Road',
-      doctor: { name: 'Dr. M. Kumar', specialty: 'Cardiologist', experience: '20 years' },
-      openingHours: '8:00 AM - 4:00 PM',
-      image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Narayana_Institute_of_Cardiac_Sciences%2C_Bangalore%2C_Karnataka%2C_India_%282014%29.jpg/640px-Narayana_Institute_of_Cardiac_Sciences%2C_Bangalore%2C_Karnataka%2C_India_%282014%29.jpg',
+        name: 'Narayana Health',
+        city: 'Bangalore',
+        address: '101 Narayana Road',
+        specDrName: 'M. Kumar',
+        specialist: 'Cardiologist',
+        experience: 20,
+        openingHours: '8:00 AM - 4:00 PM',
+        doctorImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Narayana_Institute_of_Cardiac_Sciences%2C_Bangalore%2C_Karnataka%2C_India_%282014%29.jpg/640px-Narayana_Institute_of_Cardiac_Sciences%2C_Bangalore%2C_Karnataka%2C_India_%282014%29.jpg',
+        languagesSpoken: 'English, Kannada'
     },
     {
-      name: 'AIMS Hospital',
-      city: 'Kolkata',
-      address: '321 Kolkata Road',
-      doctor: { name: 'Dr. N. Banerjee', specialty: 'Endocrinologist', experience: '22 years' },
-      openingHours: '10:00 AM - 5:00 PM',
-      image: 'https://example.com/aims-hospital.jpg',
+        name: 'AIMS Hospital',
+        city: 'Kolkata',
+        address: '321 Kolkata Road',
+        specDrName: 'N. Banerjee',
+        specialist: 'Endocrinologist',
+        experience: 22,
+        openingHours: '10:00 AM - 5:00 PM',
+        doctorImage: 'https://example.com/aims-hospital.jpg',
+        languagesSpoken: 'English, Bengali'
     },
     {
-      name: 'Sri Ramachandra Hospital',
-      city: 'Chennai',
-      address: '789 Ramachandra Lane',
-      doctor: { name: 'Dr. O. Subramanian', specialty: 'Neurosurgeon', experience: '25 years' },
-      openingHours: '9:30 AM - 6:00 PM',
-      image: 'https://example.com/sri-ramachandra.jpg',
+        name: 'Sri Ramachandra Hospital',
+        city: 'Chennai',
+        address: '789 Ramachandra Lane',
+        specDrName: 'O. Subramanian',
+        specialist: 'Neurosurgeon',
+        experience: 25,
+        openingHours: '9:30 AM - 6:00 PM',
+        doctorImage: 'https://example.com/sri-ramachandra.jpg',
+        languagesSpoken: 'English, Tamil'
     },
     {
-      name: 'Global Hospital',
-      city: 'Mumbai',
-      address: '250 Global Avenue',
-      doctor: { name: 'Dr. P. Rane', specialty: 'Pulmonologist', experience: '9 years' },
-      openingHours: '8:00 AM - 5:00 PM',
-      image: 'https://example.com/global-hospital.jpg',
+        name: 'Global Hospital',
+        city: 'Mumbai',
+        address: '250 Global Avenue',
+        specDrName: 'P. Rane',
+        specialist: 'Pulmonologist',
+        experience: 9,
+        openingHours: '8:00 AM - 5:00 PM',
+        doctorImage: 'https://example.com/global-hospital.jpg',
+        languagesSpoken: 'English, Marathi'
     },
     {
-      name: 'Kokilaben Hospital',
-      city: 'Mumbai',
-      address: '300 Mumbai Main Road',
-      doctor: { name: 'Dr. Q. Patel', specialty: 'Gastroenterologist', experience: '12 years' },
-      openingHours: '7:30 AM - 8:00 PM',
-      image: 'https://example.com/kokilaben-hospital.jpg',
+        name: 'Kokilaben Hospital',
+        city: 'Mumbai',
+        address: '300 Mumbai Main Road',
+        specDrName: 'Q. Patel',
+        specialist: 'Gastroenterologist',
+        experience: 12,
+        openingHours: '7:30 AM - 8:00 PM',
+        doctorImage: 'https://example.com/kokilaben-hospital.jpg',
+        languagesSpoken: 'English, Gujarati'
     },
     {
-      name: 'Shalby Hospital',
-      city: 'Ahmedabad',
-      address: '120 Shalby Street',
-      doctor: { name: 'Dr. R. Shah', specialty: 'Oncologist', experience: '15 years' },
-      openingHours: '10:00 AM - 7:00 PM',
-      image: 'https://example.com/shalby-hospital.jpg',
+        name: 'Shalby Hospital',
+        city: 'Ahmedabad',
+        address: '120 Shalby Street',
+        specDrName: 'R. Shah',
+        specialist: 'Oncologist',
+        experience: 15,
+        openingHours: '10:00 AM - 7:00 PM',
+        doctorImage: 'https://example.com/shalby-hospital.jpg',
+        languagesSpoken: 'English, Gujarati'
     },
     {
-      name: 'SevenHills Hospital',
-      city: 'Visakhapatnam',
-      address: '405 Vishakha Lane',
-      doctor: { name: 'Dr. S. Reddy', specialty: 'Dermatologist', experience: '6 years' },
-      openingHours: '8:30 AM - 4:30 PM',
-      image: 'https://example.com/sevenhills-hospital.jpg',
-    },
-    {
-      name: 'BLK Super Speciality Hospital',
-      city: 'Delhi',
-      address: '677 BLK Street',
-      doctor: { name: 'Dr. T. Kapoor', specialty: 'Hematologist', experience: '18 years' },
-      openingHours: '9:00 AM - 5:00 PM',
-      image: 'https://example.com/blk-hospital.jpg',
-    },
-  ];
+        name: 'Holy Family Hospital',
+        city: 'Mumbai',
+        address: '451 Mumbai Crescent',
+        specDrName: 'S. Jacob',
+        specialist: 'Nephrologist',
+        experience: 18,
+        openingHours: '9:00 AM - 5:30 PM',
+        doctorImage: 'https://example.com/holy-family-hospital.jpg',
+        languagesSpoken: 'English, Hindi'
+    }
+];
 
-  const [searchTerm, setSearchTerm] = useState('');
+
+const [searchTerm, setSearchTerm] = useState('');
   const [filteredHospitals, setFilteredHospitals] = useState([]);
-
-  // Set initial filtered hospitals on component mount
+  const { clientInfo } = useContext(UserContext);
+  const isLoggedIn = !!clientInfo;
+  console.log('client in search service', clientInfo)
   useEffect(() => {
-    // Initialize with the first few hospitals
-    setFilteredHospitals(hospitals.slice(0, 3)); // Adjust the number of hospitals shown initially
-  }, []);
+    const fetchHospitals = async () => {
+      const token = localStorage.getItem('token');
 
-  // Search function to filter hospitals by city
-  // Search function to filter hospitals by city
-    // Search function to filter hospitals by city
-    const handleSearch = () => {
-      const results = hospitals.filter((hospital) =>
-        hospital.city.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-  
-      // Check if any results are found
-      if (results.length === 0) {
-        // Display an error message using toast
-        toast.error(`No hospitals found in "${searchTerm}"`);
-        // Set filtered hospitals to the default hospitals (first 3)
-        setFilteredHospitals(hospitals.slice(0, 3));
+      if (isLoggedIn) {
+        // Fetch actual hospital data for logged-in users
+        try {
+          const response = await axios.get('http://localhost:3000/api/hospitals/find-hospital', {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          console.log(response.data);
+
+          if (Array.isArray(response.data)) {
+            setFilteredHospitals(response.data);
+            localStorage.setItem('hospitals', JSON.stringify(response.data));
+          } else {
+            setFilteredHospitals([]);
+          }
+        } catch (error) {
+          toast.error('Failed to fetch hospitals. Please try again later.', error);
+          setFilteredHospitals([]);
+        }
       } else {
-        // Set filtered hospitals to the search results
-        setFilteredHospitals(results);
+        // For non-logged-in users, display temporary data
+        setFilteredHospitals(hospitals.slice(0, 3));
       }
-  
-      // Clear the search term
-      setSearchTerm('');
     };
-  
-    return (
-      <div className="flex flex-col items-center h-auto bg-cover bg-center text-white py-8">
-        <ToastContainer />
-        <h1 className="text-4xl font-bold mb-4 text-black">Find Hospitals in Your City</h1>
-        <div className="flex w-full max-w-lg mb-6">
-          <input
-            type="text"
-            placeholder="Enter city name (e.g., Mumbai)"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full px-4 py-2 border border-gray-300 rounded-l-md text-gray-900"
-          />
-          <button
-            onClick={handleSearch}
-            className="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
-          >
-            Search
-          </button>
-        </div>
-        <h3 className="text-lg font-semibold text-center mb-4 text-gray-800">
-          For Booking the Hospital Appointment Please Signup/Login.
-        </h3>
-  
-        {/* Display the search term if it exists */}
-        {searchTerm && (
-          <p className="text-lg font-semibold text-gray-800 mb-4">
-            Search term: <span className="font-bold">{searchTerm}</span>
+
+    fetchHospitals();
+  }, [isLoggedIn]);  // Re-fetch data based on login status
+
+  const handleSearch = () => {
+    const dataToFilter = isLoggedIn ? filteredHospitals : hospitals.slice(0, 3);
+    const results = dataToFilter.filter((hospital) =>
+      hospital.city.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    if (results.length === 0) {
+      toast.error(`No hospitals found in "${searchTerm}"`);
+      setFilteredHospitals(dataToFilter);
+    } else {
+      setFilteredHospitals(results);
+    }
+    setSearchTerm('');
+  };
+
+  return (
+    <div className="flex flex-col items-center h-auto bg-cover bg-center text-white py-8">
+      <ToastContainer />
+      <h1 className="text-4xl font-bold mb-4 text-black">Find Hospitals in Your City</h1>
+
+      {/* Search Input Section */}
+      <div className="flex w-full max-w-lg mb-6">
+        <input
+          type="text"
+          placeholder="Enter city name (e.g., Mumbai)"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full px-4 py-2 border border-gray-300 rounded-l-md text-gray-900"
+        />
+        <button
+          onClick={handleSearch}
+          className="px-4 py-2 bg-blue-500 text-white rounded-r-md hover:bg-blue-600"
+        >
+          Search
+        </button>
+      </div>
+
+      {/* Info Message */}
+      <h3 className="text-lg font-semibold text-center mb-4 text-gray-800">
+        {isLoggedIn
+          ? ''
+          : 'You are viewing limited data. For Booking the Hospital Appointment, Please Signup/Login.'}
+      </h3>
+
+      {/* Search Results */}
+      <div className="w-full max-w-4xl px-4 space-y-4">
+        {filteredHospitals.length > 0 ? (
+          filteredHospitals.map((hospital, index) => (
+            <Hospital key={index} hospital={hospital} isLoggedIn={isLoggedIn} clientInfo={clientInfo} />
+          ))
+        ) : (
+          <p className="text-lg font-semibold text-gray-700 bg-white p-4 rounded-md shadow-md">
+            No hospitals found.
           </p>
         )}
-  
-        {/* Search Results */}
-        <div className="w-full max-w-4xl px-4 space-y-4">
-          {filteredHospitals.length > 0 ? (
-            filteredHospitals.map((hospital, index) => (
-              <div
-                key={index}
-                className="flex items-center bg-gray-100 p-6 rounded-lg shadow-lg border border-gray-300 text-gray-900"
-              >
-                {/* Image on the Left */}
-                <img
-                  src={hospital.image}
-                  alt={hospital.name}
-                  className="w-64 h-32 rounded-lg object-cover mr-6"
-                />
-  
-                {/* Center Content */}
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold">{hospital.name}</h3>
-                  <p className="text-lg">{hospital.address}</p>
-                  <p className="text-md mt-2">
-                    <strong>Doctor:</strong> {hospital.doctor.name} <br />
-                    <strong>Specialty:</strong> {hospital.doctor.specialty} <br />
-                    <strong>Experience:</strong> {hospital.doctor.experience}
-                  </p>
-                </div>
-  
-                {/* Right Content - Operating Hours */}
-                <div className="text-right">
-                  <p className="text-xl font-semibold">Opening Hours</p>
-                  <p className="text-lg">{hospital.openingHours}</p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p className="text-lg font-semibold text-gray-700 bg-white p-4 rounded-md shadow-md">
-              No hospitals found.
-            </p>
-          )}
-        </div>
       </div>
-    );
-  };
-  
-  export default SearchSection;
+    </div>
+  );
+};
+
+export default SearchSection;

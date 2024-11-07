@@ -3,6 +3,7 @@ const Router = express.Router();
 const User = require('../models/user');  // Renaming 'client' to 'User' to avoid conflict
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const router = require('./hospitalRoutes');
 // const user = require('../models/user');
 require('dotenv').config();
 
@@ -71,5 +72,9 @@ Router.get('/login', async (req, res) => {
     res.status(500).json({ message: 'An error occurred during client login' });
   }
 });
+
+
+
+
 
 module.exports = Router;
