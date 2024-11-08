@@ -106,124 +106,132 @@ const DoctorDetails = () => {
     }
 };
 
-  return (
-    <div className="bg-gray-100 min-h-screen flex flex-col">
-      <ToastContainer />
-      <Navbar />
+return (
+  <div className="bg-gray-100 min-h-screen flex flex-col">
+    <ToastContainer />
+    <Navbar />
 
-      <div className="flex flex-row w-full mt-4" style={{ marginTop: '30px' }}>
-        <div className="flex-1 overflow-y-auto p-2 max-h-[calc(100vh-64px-24px-20px)] w-[60%]">
-          <h1 className="text-3xl font-bold mb-6">Doctor Details</h1>
+    <div className="flex flex-col lg:flex-row w-full mt-4" style={{ marginTop: '30px' }}>
+      {/* Doctor Details Section */}
+      <div className="flex-1 overflow-y-auto p-2 max-h-[calc(100vh-64px-24px-20px)] lg:w-[60%]">
+        <h1 className="text-3xl font-bold mb-6">Doctor Details</h1>
 
-          <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 className="text-xl font-semibold mb-2">Doctor Information</h2>
-            <div className="flex mb-4">
-              <img
-                src={hospital.doctorImage || defaultImage}
-                alt={hospital.specDrName || "Doctor"}
-                className="w-32 h-32 rounded-full object-cover mr-4"
-              />
-              <div>
-                <p><strong>Name:</strong> {hospital.specDrName ? `Dr. ${hospital.specDrName}` : "N/A"}</p>
-                <p><strong>Specialization:</strong> {hospital.specialist || "N/A"}</p>
-                <p><strong>Experience:</strong> {hospital.experience || "N/A"}</p>
-                <p><strong>Degree:</strong> {hospital.degree || "N/A"}</p>
-                <p><strong>Languages Spoken:</strong> {hospital.languagesSpoken || "N/A"}</p>
-              </div>
+        {/* Doctor Info */}
+        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl font-semibold mb-2">Doctor Information</h2>
+          <div className="flex mb-4">
+            <img
+              src={hospital.doctorImage || defaultImage}
+              alt={hospital.specDrName || "Doctor"}
+              className="w-32 h-32 rounded-full object-cover mr-4"
+            />
+            <div>
+              <p><strong>Name:</strong> {hospital.specDrName ? `Dr. ${hospital.specDrName}` : "N/A"}</p>
+              <p><strong>Specialization:</strong> {hospital.specialist || "N/A"}</p>
+              <p><strong>Experience:</strong> {hospital.experience || "N/A"}</p>
+              <p><strong>Degree:</strong> {hospital.degree || "N/A"}</p>
+              <p><strong>Languages Spoken:</strong> {hospital.languagesSpoken || "N/A"}</p>
             </div>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 className="text-xl font-semibold mb-2">Hospital Information</h2>
-            <p><strong>Website:</strong> <a href={hospital.website || "#"} className="text-blue-600 hover:underline">{hospital.website || "No website available."}</a></p>
-            <p><strong>Opening Hours:</strong> {hospital.openingHours ? `${hospital.openingHours.start} - ${hospital.openingHours.end}` : "No opening hours available."}</p>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 className="text-xl font-semibold mb-2">About the Doctor</h2>
-            <p>{hospital.aboutHospital || "No information available."}</p>
-          </div>
-
-          <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 className="text-xl font-semibold mb-2">Facilities</h2>
-            <p>{facilities || "No facilities available."}</p>
           </div>
         </div>
 
-        <div className="w-[10%]"></div>
+        {/* Hospital Info */}
+        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl font-semibold mb-2">Hospital Information</h2>
+          <p><strong>Website:</strong> <a href={hospital.website || "#"} className="text-blue-600 hover:underline">{hospital.website || "No website available."}</a></p>
+          <p><strong>Opening Hours:</strong> {hospital.openingHours ? `${hospital.openingHours.start} - ${hospital.openingHours.end}` : "No opening hours available."}</p>
+        </div>
 
-        <div className="bg-white p-2 my-6 rounded-lg shadow-md w-[30%] h-[calc(100vh-94px-64px)] overflow-y-auto">
-          <h2 className="text-2xl font-bold mb-4">Book Appointment</h2>
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label className="block text-sm font-medium mb-1">Full Name</label>
-              <input 
-                type="text" 
-                name="name" 
-                value={formData.name} 
-                onChange={handleChange} 
-                className="w-full border border-gray-300 p-2 rounded" 
-                required 
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Email</label>
-              <input 
-                type="email" 
-                name="email" 
-                value={formData.email} 
-                onChange={handleChange} 
-                className="w-full border border-gray-300 p-2 rounded" 
-                required 
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Phone Number</label>
-              <input 
-                type="tel" 
-                name="phone" 
-                value={formData.phone} 
-                onChange={handleChange} 
-                className="w-full border border-gray-300 p-2 rounded" 
-                required 
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Preferred Date</label>
-              <input 
-                type="date" 
-                name="preferredDate" 
-                min={formattedToday} 
-                onChange={handleChange} 
-                className="w-full border border-gray-300 p-2 rounded" 
-                required 
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Preferred Time</label>
-              <select 
-                name="preferredTime" 
-                onChange={handleChange} 
-                className="w-full border border-gray-300 p-2 rounded" 
-                required 
-              >
-                <option value="">Select a time</option>
-                {timeSlots.map((time, index) => (
-                  <option key={index} value={time}>{time}</option>
-                ))}
-              </select>
-            </div>
-            <button 
-              type="submit" 
-              className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
-            >
-              Book Appointment
-            </button>
-          </form>
+        {/* About the Doctor */}
+        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl font-semibold mb-2">About the Doctor</h2>
+          <p>{hospital.aboutHospital || "No information available."}</p>
+        </div>
+
+        {/* Facilities */}
+        <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl font-semibold mb-2">Facilities</h2>
+          <p>{facilities || "No facilities available."}</p>
         </div>
       </div>
+
+      {/* Empty space for the gap */}
+      <div className="w-[10%]"></div>
+
+      {/* Appointment Booking Form */}
+      <div className="bg-white p-2 my-6 rounded-lg shadow-md lg:w-[30%] w-full h-auto lg:h-[calc(100vh-94px-64px)] overflow-y-auto">
+        <h2 className="text-2xl font-bold mb-4">Book Appointment</h2>
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div>
+            <label className="block text-sm font-medium mb-1">Full Name</label>
+            <input 
+              type="text" 
+              name="name" 
+              value={formData.name} 
+              onChange={handleChange} 
+              className="w-full border border-gray-300 p-2 rounded" 
+              required 
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Email</label>
+            <input 
+              type="email" 
+              name="email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              className="w-full border border-gray-300 p-2 rounded" 
+              required 
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Phone Number</label>
+            <input 
+              type="tel" 
+              name="phone" 
+              value={formData.phone} 
+              onChange={handleChange} 
+              className="w-full border border-gray-300 p-2 rounded" 
+              required 
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Preferred Date</label>
+            <input 
+              type="date" 
+              name="preferredDate" 
+              min={formattedToday} 
+              onChange={handleChange} 
+              className="w-full border border-gray-300 p-2 rounded" 
+              required 
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-1">Preferred Time</label>
+            <select 
+              name="preferredTime" 
+              onChange={handleChange} 
+              className="w-full border border-gray-300 p-2 rounded" 
+              required 
+            >
+              <option value="">Select a time</option>
+              {timeSlots.map((time, index) => (
+                <option key={index} value={time}>{time}</option>
+              ))}
+            </select>
+          </div>
+          <button 
+            type="submit" 
+            className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
+          >
+            Book Appointment
+          </button>
+        </form>
+      </div>
     </div>
-  );
+  </div>
+);
+
 };
 
 export default DoctorDetails;

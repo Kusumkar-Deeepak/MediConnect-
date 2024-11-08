@@ -65,62 +65,65 @@ const AppointmentList = () => {
           <p><strong>Contact:</strong> {hospitalInfo?.phone}</p>
           <p><strong>Email:</strong> {hospitalInfo?.email}</p>
         </div>
-        <table className="table-auto w-full border border-gray-300 shadow-md rounded-lg">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="p-2 border">Name</th>
-              <th className="p-2 border">Email</th>
-              <th className="p-2 border">Phone</th>
-              <th className="p-2 border">Preferred Date</th>
-              <th className="p-2 border">Preferred Time</th>
-              <th className="p-2 border">Visited</th>
-            </tr>
-          </thead>
-          <tbody>
-            {appointments.length > 0 ? (
-              appointments.map((appt) => (
-                <tr key={appt._id} className="text-center border-b hover:bg-gray-100">
-                  <td className="p-2 border">{appt.name}</td>
-                  <td className="p-2 border">{appt.email}</td>
-                  <td className="p-2 border">{appt.phone}</td>
-                  <td className="p-2 border">{new Date(appt.preferredDate).toLocaleDateString('en-GB')}</td>
-                  <td className="p-2 border">{appt.preferredTime}</td>
-                  <td className="p-2 border flex justify-center items-center">
-                    {appt.visited === null ? (  // Check if visited is null
-                      <>
-                        <span
-                          onClick={() => handleEmojiClick(appt, true)}
-                          className="cursor-pointer text-green-500 mx-1"
-                        >
-                          ✅
-                        </span>
-                        <span
-                          onClick={() => handleEmojiClick(appt, false)}
-                          className="cursor-pointer text-red-500 mx-1"
-                        >
-                          ❌
-                        </span>
-                      </>
-                    ) : appt.visited ? (
-                      <span className="text-green-500">Visited</span>
-                    ) : (
-                      <span className="text-red-500">Not Visited</span>
-                    )}
+        <div className="overflow-x-auto">
+          <table className="table-auto w-full border border-gray-300 shadow-md rounded-lg">
+            <thead>
+              <tr className="bg-gray-200">
+                <th className="p-2 border text-xs sm:text-base">Name</th>
+                <th className="p-2 border text-xs sm:text-base">Email</th>
+                <th className="p-2 border text-xs sm:text-base">Phone</th>
+                <th className="p-2 border text-xs sm:text-base">Preferred Date</th>
+                <th className="p-2 border text-xs sm:text-base">Preferred Time</th>
+                <th className="p-2 border text-xs sm:text-base">Visited</th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointments.length > 0 ? (
+                appointments.map((appt) => (
+                  <tr key={appt._id} className="text-center border-b hover:bg-gray-100">
+                    <td className="p-2 border text-sm sm:text-base">{appt.name}</td>
+                    <td className="p-2 border text-sm sm:text-base">{appt.email}</td>
+                    <td className="p-2 border text-sm sm:text-base">{appt.phone}</td>
+                    <td className="p-2 border text-sm sm:text-base">{new Date(appt.preferredDate).toLocaleDateString('en-GB')}</td>
+                    <td className="p-2 border text-sm sm:text-base">{appt.preferredTime}</td>
+                    <td className="p-2 border flex justify-center items-center text-sm sm:text-base">
+                      {appt.visited === null ? (
+                        <>
+                          <span
+                            onClick={() => handleEmojiClick(appt, true)}
+                            className="cursor-pointer text-green-500 mx-1"
+                          >
+                            ✅
+                          </span>
+                          <span
+                            onClick={() => handleEmojiClick(appt, false)}
+                            className="cursor-pointer text-red-500 mx-1"
+                          >
+                            ❌
+                          </span>
+                        </>
+                      ) : appt.visited ? (
+                        <span className="text-green-500">Visited</span>
+                      ) : (
+                        <span className="text-red-500">Not Visited</span>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center p-4">
+                    No appointments available.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="text-center p-4">
-                  No appointments available.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </>
   );
+  
 };
 
 export default AppointmentList;

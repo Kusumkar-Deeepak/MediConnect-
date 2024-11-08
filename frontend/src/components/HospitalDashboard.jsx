@@ -1,31 +1,29 @@
-import { useContext, useState, useEffect } from 'react';
-import { UserContext } from '../Context/UserContext';
-import hospitalImage from '../assets/images/hospital.avif';
-import Navbar from './Navbar';
-import { ArrowRightIcon, ArrowLeftIcon } from '@heroicons/react/outline';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useContext, useState, useEffect } from "react";
+import { UserContext } from "../Context/UserContext";
+import hospitalImage from "../assets/images/hospital.avif";
+import Navbar from "./Navbar";
+import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/outline";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
 
 const HospitalDashboard = () => {
-  const { hospitalInfo, setHospitalInfo, clearHospitalInfo } = useContext(UserContext);
+  const { hospitalInfo, setHospitalInfo, clearHospitalInfo } =
+    useContext(UserContext);
   const [isUpdateModalOpen, setUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [currentStep, setCurrentStep] = useState(1);
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [formData, setFormData] = useState({});
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  console.log("hospital : ", hospitalInfo.id);
-
-  // Update formData when hospitalInfo is available
   useEffect(() => {
     if (hospitalInfo) {
       setFormData(hospitalInfo);
     }
   }, [hospitalInfo]);
 
-  // Check if hospitalInfo is still loading
   if (!hospitalInfo) {
     return <div>Loading...</div>;
   }
@@ -33,57 +31,72 @@ const HospitalDashboard = () => {
   const handleOpenUpdateModal = () => setUpdateModalOpen(true);
   const handleCloseUpdateModal = () => setUpdateModalOpen(false);
   const handleCloseEditModal = () => setEditModalOpen(false);
-  const handleNextStep = () => {
-    setCurrentStep(2);
-  };
-
-  const handlePrevStep = () => {
-    setCurrentStep(1);
-  };
-
+  const handleNextStep = () => setCurrentStep(2);
+  const handlePrevStep = () => setCurrentStep(1);
   const handleOpenDeleteModal = () => setDeleteModalOpen(true);
   const handleCloseDeleteModal = () => setDeleteModalOpen(false);
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        facilities: {
+          ...prevFormData.facilities,
+          [name]: checked,
+        },
+      }));
+    } else if (name.includes("openingHours")) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        openingHours: {
+          ...prevFormData.openingHours,
+          [name.split(".")[1]]: value,
+        },
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
   };
-
-
 
   const confirmCredentials = async () => {
     if (!hospitalInfo.id) {
-      console.error('Error: hospital ID is missing', hospitalInfo.id);
+      console.error("Error: hospital ID is missing", hospitalInfo.id);
       return;
     }
 
     try {
-      const response = await axios.post('http://localhost:3000/api/hospitals/verify', {
-        id: hospitalInfo.id, // Pass the ID explicitly
-        password,
-      });
+      const response = await axios.post(
+        "http://localhost:3000/api/hospitals/verify",
+        {
+          id: hospitalInfo.id,
+          password,
+        }
+      );
 
       if (response.status === 200) {
         setEditModalOpen(true);
         setUpdateModalOpen(false);
+        toast.success("Credentials verified successfully.");
       } else {
-        alert(response.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.error('Error verifying credentials:', error);
-      alert(error.response?.data?.message || 'Error verifying credentials');
+      console.error("Error verifying credentials:", error);
+      toast.error(
+        error.response?.data?.message || "Error verifying credentials"
+      );
     }
   };
 
-  
   const handleUpdateProfile = async () => {
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       const response = await axios.put(
-        'http://localhost:3000/api/hospitals/update',
+        "http://localhost:3000/api/hospitals/update",
         {
           ...formData,
           password,
@@ -96,60 +109,62 @@ const HospitalDashboard = () => {
       );
 
       if (response.status === 200) {
-        alert(response.data.message);
+        toast.success("Profile updated successfully.");
         handleCloseEditModal();
-
-        // Update context with the new data after a successful profile update
-        setHospitalInfo(formData);
+        setHospitalInfo(formData); // Update context with the new data
       } else {
-        alert(response.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert(error.response?.data?.message || 'Error updating profile');
+      toast.error(error.response?.data?.message || "Error updating profile");
     }
   };
-  
-  
-
-  console.log('formdata : ', formData);
 
   const handleDeleteProfile = async () => {
     try {
-      const response = await axios.delete('http://localhost:3000/api/hospitals/delete', {
-        data: {
-          id: hospitalInfo.id,
-          password,
-        },
-      });
+      const response = await axios.delete(
+        "http://localhost:3000/api/hospitals/delete",
+        {
+          data: {
+            id: hospitalInfo.id,
+            password,
+          },
+        }
+      );
 
       if (response.status === 200) {
-        alert(response.data.message);
-        clearHospitalInfo();  // Clear hospital info from context and localStorage
-        localStorage.removeItem('token');
-        navigate('/');  // Redirect to the home page
+        toast.success("Profile deleted successfully.");
+        clearHospitalInfo(); // Clear hospital info from context and localStorage
+        localStorage.removeItem("token");
+        navigate("/");
         handleCloseDeleteModal();
       } else {
-        alert(response.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error deleting profile:", error);
-      alert(error.response?.data?.message || 'Error deleting profile');
+      toast.error(error.response?.data?.message || "Error deleting profile");
     }
   };
 
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
   const facilities = hospitalInfo?.facilities || {};
-  const availableFacilities = Object.entries(facilities).filter(([, available]) => available);
-  const languages = Array.isArray(hospitalInfo?.languagesSpoken)
-    ? hospitalInfo.languagesSpoken.join(', ')
-    : 'Languages not available';
+  const availableFacilities = Object.entries(facilities).filter(
+    ([, available]) => available
+  );
+  // const languages = Array.isArray(hospitalInfo?.languagesSpoken)
+  //   ? hospitalInfo.languagesSpoken.join(', ')
+  //   : 'Languages not available';
+
+  console.log("formdata : ", formData);
 
   return (
     <>
       <Navbar />
       <div className="max-w-8xl w-full mt-4 bg-white shadow-lg rounded-lg p-6 md:p-8">
+        <ToastContainer />
         {/* Profile Section */}
         <div className="flex flex-col md:flex-row items-start mb-6">
           <img
@@ -158,14 +173,19 @@ const HospitalDashboard = () => {
             className="rounded-full w-32 h-32 border-4 border-blue-400 shadow-lg mb-4 md:mb-0 md:mr-6 transition-transform duration-300 hover:scale-105"
           />
           <div className="flex flex-col justify-start md:flex-grow">
-            <h2 className="text-3xl font-bold text-blue-800">{hospitalInfo?.name || "Hospital Name"}</h2>
-            <p className="text-lg text-gray-700 mt-1">{hospitalInfo?.aboutHospital || "About the hospital"}</p>
+            <h2 className="text-3xl font-bold text-blue-800">
+              {hospitalInfo?.name || "Hospital Name"}
+            </h2>
+            <p className="text-lg text-gray-700 mt-1">
+              {hospitalInfo?.aboutHospital || "About the hospital"}
+            </p>
             <div className="text-gray-600 mt-2">
               <p>Email: {hospitalInfo?.email || "N/A"}</p>
               <p>Contact: {hospitalInfo?.phone || "N/A"}</p>
               <p>
-                Address: {hospitalInfo?.address || "N/A"}, {hospitalInfo?.city || "City"},
-                {hospitalInfo?.state || "State"}, {hospitalInfo?.zipCode || "Zip Code"}
+                Address: {hospitalInfo?.address || "N/A"},{" "}
+                {hospitalInfo?.city || "City"},{hospitalInfo?.state || "State"},{" "}
+                {hospitalInfo?.zipCode || "Zip Code"}
               </p>
               <p>
                 Website:{" "}
@@ -178,9 +198,13 @@ const HospitalDashboard = () => {
                   {hospitalInfo?.website || "N/A"}
                 </a>
               </p>
-              <p>Languages Spoken: {languages}</p>
-              <p>Insurance Accepted: {hospitalInfo?.insuranceAccepted || "N/A"}</p>
-              <p>Emergency Contact: {hospitalInfo?.emergencyContact || "N/A"}</p>
+              <p>Languages Spoken: {hospitalInfo?.languagesSpoken || "N/A"}</p>
+              <p>
+                Insurance Accepted: {hospitalInfo?.insuranceAccepted || "N/A"}
+              </p>
+              <p>
+                Emergency Contact: {hospitalInfo?.emergencyContact || "N/A"}
+              </p>
             </div>
           </div>
 
@@ -188,23 +212,26 @@ const HospitalDashboard = () => {
           <div className="flex justify-center md:justify-end mt-4 md:mt-0 md:ml-4 space-x-4">
             <button
               onClick={handleOpenUpdateModal}
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition-colors duration-300">
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition-colors duration-300"
+            >
               Edit Profile
             </button>
             <button
               onClick={handleOpenDeleteModal}
-              className="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition-colors duration-300">
+              className="bg-red-500 text-white px-4 py-2 rounded-lg shadow hover:bg-red-600 transition-colors duration-300"
+            >
               Delete Hospital
             </button>
           </div>
-
         </div>
 
         {/* Additional Info Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           {/* Facilities Info */}
           <div className="bg-gradient-to-r from-green-100 to-green-200 p-4 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
-            <h3 className="text-lg font-semibold mb-2 text-green-800">Available Facilities</h3>
+            <h3 className="text-lg font-semibold mb-2 text-green-800">
+              Available Facilities
+            </h3>
             <ul className="list-disc list-inside">
               {availableFacilities.length > 0 ? (
                 availableFacilities.map(([facility], index) => (
@@ -213,38 +240,71 @@ const HospitalDashboard = () => {
                   </li>
                 ))
               ) : (
-                <li className="text-red-600">No facilities available at the moment.</li>
+                <li className="text-red-600">
+                  No facilities available at the moment.
+                </li>
               )}
             </ul>
           </div>
 
           {/* Staff Details */}
           <div className="bg-gradient-to-r from-yellow-100 to-yellow-200 p-4 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
-            <h3 className="text-lg font-semibold mb-2 text-yellow-800">Staff Details</h3>
-            <p>Number of Doctors: <span className="font-bold">{hospitalInfo?.numberOfDoctors || "N/A"}</span></p>
-            <p>Number of Nurses: <span className="font-bold">{hospitalInfo?.numberOfNurses || "N/A"}</span></p>
-            <p>Specialty Doctor Name: <span className="font-bold">{hospitalInfo?.specDrName || "N/A"}</span></p>
-            <p>Specialist: <span className="font-bold">{hospitalInfo?.specialist || "N/A"}</span></p>
-            <p>Degree: <span className="font-bold">{hospitalInfo?.degree || "N/A"}</span></p>
+            <h3 className="text-lg font-semibold mb-2 text-yellow-800">
+              Staff Details
+            </h3>
+            <p>
+              Number of Doctors:{" "}
+              <span className="font-bold">
+                {hospitalInfo?.numberOfDoctors || "N/A"}
+              </span>
+            </p>
+            <p>
+              Number of Nurses:{" "}
+              <span className="font-bold">
+                {hospitalInfo?.numberOfNurses || "N/A"}
+              </span>
+            </p>
+            <p>
+              Specialty Doctor Name:{" "}
+              <span className="font-bold">
+                {hospitalInfo?.specDrName || "N/A"}
+              </span>
+            </p>
+            <p>
+              Specialist:{" "}
+              <span className="font-bold">
+                {hospitalInfo?.specialist || "N/A"}
+              </span>
+            </p>
+            <p>
+              Degree:{" "}
+              <span className="font-bold">{hospitalInfo?.degree || "N/A"}</span>
+            </p>
           </div>
         </div>
 
         {/* Hospital Overview Section */}
         <div className="bg-gradient-to-r from-purple-100 to-purple-200 p-4 rounded-lg shadow hover:shadow-xl transition-shadow duration-300 mb-6">
-          <h3 className="text-lg font-semibold mb-2 text-purple-800">Hospital Overview</h3>
+          <h3 className="text-lg font-semibold mb-2 text-purple-800">
+            Hospital Overview
+          </h3>
           <p>{hospitalInfo?.aboutHospital || "No overview available."}</p>
         </div>
 
         {/* Operational Hours and Experience Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-4 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
-            <h3 className="text-lg font-semibold mb-2 text-blue-800">Opening Hours</h3>
+            <h3 className="text-lg font-semibold mb-2 text-blue-800">
+              Opening Hours
+            </h3>
             <p>Start: {hospitalInfo?.openingHours?.start || "N/A"}</p>
             <p>End: {hospitalInfo?.openingHours?.end || "N/A"}</p>
           </div>
 
           <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-4 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
-            <h3 className="text-lg font-semibold mb-2 text-blue-800">Languages Spoken</h3>
+            <h3 className="text-lg font-semibold mb-2 text-blue-800">
+              Languages Spoken
+            </h3>
             <p>Languages Spoken: {hospitalInfo?.languagesSpoken || "N/A"}</p>
           </div>
         </div>
@@ -421,7 +481,9 @@ const HospitalDashboard = () => {
 
                 {/* Specialty Doctor Name */}
                 <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-gray-700">Specialty Doctor Name</label>
+                  <label className="mb-1 text-gray-700">
+                    Specialty Doctor Name
+                  </label>
                   <input
                     type="text"
                     name="specDrName"
@@ -434,7 +496,9 @@ const HospitalDashboard = () => {
 
                 {/* Number of Doctors */}
                 <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-gray-700">Number of Doctors</label>
+                  <label className="mb-1 text-gray-700">
+                    Number of Doctors
+                  </label>
                   <input
                     type="number"
                     name="numberOfDoctors"
@@ -457,126 +521,163 @@ const HospitalDashboard = () => {
                     className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
-                {/* Experience */}
+                {/* Opening Hours */}
                 <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-gray-700">Experience</label>
-                  <input
-                    type="text"
-                    name="experience"
-                    placeholder="Experience"
-                    value={formData.experience}
-                    onChange={handleInputChange}
-                    className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  <label style={{ display: "flex", alignItems: "center" }}>
+                    Opening Hours:
+                    <input
+                      type="time"
+                      name="openingHours.start"
+                      value={formData.openingHours.start}
+                      onChange={handleInputChange}
+                      required
+                      style={{
+                        border: "0.5px solid gray",
+                        borderRadius: "4px",
+                        padding: "4px",
+                        marginLeft: "10px",
+                        marginRight: "5px",
+                      }}
+                    />
+                  </label>
                 </div>
 
-                {/* Specialist */}
+                {/* Closing Hours */}
                 <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-gray-700">Specialist</label>
-                  <input
-                    type="text"
-                    name="specialist"
-                    placeholder="Specialist"
-                    value={formData.specialist}
-                    onChange={handleInputChange}
-                    className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  <label style={{ display: "flex", alignItems: "center" }}>
+                    Closing Hours:
+                    <input
+                      type="time"
+                      name="openingHours.end"
+                      value={formData.openingHours.end}
+                      onChange={handleInputChange}
+                      required
+                      style={{
+                        border: "0.5px solid gray",
+                        borderRadius: "4px",
+                        padding: "4px",
+                        marginLeft: "10px",
+                        marginRight: "5px",
+                      }}
+                    />
+                  </label>
                 </div>
               </div>
             )}
 
             {currentStep === 2 && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                {/* About Hospital */}
-                <div className="flex flex-col col-span-3 mb-4">
-                  <label className="mb-1 text-gray-700">About Hospital</label>
-                  <textarea
-                    name="aboutHospital"
-                    placeholder="About Hospital"
-                    value={formData.aboutHospital}
-                    onChange={handleInputChange}
-                    className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 h-24"
-                  />
-                </div>
+              <>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                  {/* About Hospital */}
+                  <div className="flex flex-col col-span-3 mb-4">
+                    <label className="mb-1 text-gray-700">About Hospital</label>
+                    <textarea
+                      name="aboutHospital"
+                      placeholder="About Hospital"
+                      value={formData.aboutHospital}
+                      onChange={handleInputChange}
+                      className="border p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 h-24"
+                    />
+                  </div>
 
-                {/* Facilities */}
-                <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-gray-700">Facilities</label>
-                  <input
-                    type="text"
-                    name="facilities"
-                    placeholder="Facilities"
-                    value={formData.facilities}
-                    onChange={handleInputChange}
-                    className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                  {/* Specialist */}
+                  <div className="flex flex-col mb-4">
+                    <label className="mb-1 text-gray-700">Specialist</label>
+                    <input
+                      type="text"
+                      name="specialist"
+                      placeholder="Specialist"
+                      value={formData.specialist}
+                      onChange={handleInputChange}
+                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
 
-                {/* Website */}
-                <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-gray-700">Website</label>
-                  <input
-                    type="text"
-                    name="website"
-                    placeholder="Website"
-                    value={formData.website}
-                    onChange={handleInputChange}
-                    className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                  {/* Website */}
+                  <div className="flex flex-col mb-4">
+                    <label className="mb-1 text-gray-700">Website</label>
+                    <input
+                      type="text"
+                      name="website"
+                      placeholder="Website"
+                      value={formData.website}
+                      onChange={handleInputChange}
+                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
 
-                {/* Languages Spoken */}
-                <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-gray-700">Languages Spoken</label>
-                  <input
-                    type="text"
-                    name="languagesSpoken"
-                    placeholder="Languages Spoken"
-                    value={formData.languagesSpoken}
-                    onChange={handleInputChange}
-                    className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                  {/* Languages Spoken */}
+                  <div className="flex flex-col mb-4">
+                    <label className="mb-1 text-gray-700">
+                      Languages Spoken
+                    </label>
+                    <input
+                      type="text"
+                      name="languagesSpoken"
+                      placeholder="Languages Spoken"
+                      value={formData.languagesSpoken}
+                      onChange={handleInputChange}
+                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
 
-                {/* Insurance Accepted */}
-                <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-gray-700">Insurance Accepted</label>
-                  <input
-                    type="text"
-                    name="insuranceAccepted"
-                    placeholder="Insurance Accepted"
-                    value={formData.insuranceAccepted}
-                    onChange={handleInputChange}
-                    className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                  {/* Insurance Accepted */}
+                  <div className="flex flex-col mb-4">
+                    <label className="mb-1 text-gray-700">
+                      Insurance Accepted
+                    </label>
+                    <input
+                      type="text"
+                      name="insuranceAccepted"
+                      placeholder="Insurance Accepted"
+                      value={formData.insuranceAccepted}
+                      onChange={handleInputChange}
+                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
 
-                {/* Emergency Contact */}
-                <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-gray-700">Emergency Contact</label>
-                  <input
-                    type="text"
-                    name="emergencyContact"
-                    placeholder="Emergency Contact"
-                    value={formData.emergencyContact}
-                    onChange={handleInputChange}
-                    className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                  {/* Emergency Contact */}
+                  <div className="flex flex-col mb-4">
+                    <label className="mb-1 text-gray-700">
+                      Emergency Contact
+                    </label>
+                    <input
+                      type="text"
+                      name="emergencyContact"
+                      placeholder="Emergency Contact"
+                      value={formData.emergencyContact}
+                      onChange={handleInputChange}
+                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
 
-                {/* Degree */}
-                <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-gray-700">Degree</label>
-                  <input
-                    type="text"
-                    name="degree"
-                    placeholder="Degree"
-                    value={formData.degree}
-                    onChange={handleInputChange}
-                    className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
+                  {/* Degree */}
+                  <div className="flex flex-col mb-4">
+                    <label className="mb-1 text-gray-700">Degree</label>
+                    <input
+                      type="text"
+                      name="degree"
+                      placeholder="Degree"
+                      value={formData.degree}
+                      onChange={handleInputChange}
+                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
+
+                  {/* Experience */}
+                  <div className="flex flex-col mb-4">
+                    <label className="mb-1 text-gray-700">Experience</label>
+                    <input
+                      type="text"
+                      name="experience"
+                      placeholder="Experience"
+                      value={formData.experience}
+                      onChange={handleInputChange}
+                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
                 </div>
-             </div>
+              </>
             )}
 
             {/* Navigation Buttons */}
@@ -594,19 +695,21 @@ const HospitalDashboard = () => {
             </div>
 
             {/* Submit Button */}
-            <button onClick={handleUpdateProfile} className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4">
+            <button
+              onClick={handleUpdateProfile}
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg mt-4 mx-2"
+            >
               Save Changes
             </button>
-            <button onClick={handleCloseEditModal} className="text-gray-500 mt-2">
+            <button
+              onClick={handleCloseEditModal}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg mt-4"
+            >
               Cancel
             </button>
           </div>
         </div>
       )}
-
-
-
-
     </>
   );
 };

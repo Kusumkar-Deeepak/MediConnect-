@@ -37,6 +37,10 @@ const HospitalSignup = () => {
       Surgery: false,
       Rehabilitation: false,
       Outpatient: false,
+      BloodBank: false , 
+      Maternity: false , 
+      Pediatrics: false , 
+      Cardiology: false ,
     },
   });
 

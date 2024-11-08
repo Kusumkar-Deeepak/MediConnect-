@@ -1,155 +1,135 @@
-import { useState } from 'react';
-import Navbar from './Navbar';
+import { useState, useContext, useEffect } from "react";
+import { UserContext } from "../Context/UserContext";
+import axios from "axios";
+import { toast, ToastContainer } from "react-toastify"; // Import toast
+import "react-toastify/dist/ReactToastify.css"; // Import toast styles
+import Navbar from "./Navbar";
 
 const ContactPage = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: '',
-  });
-  
-  const [submitted, setSubmitted] = useState(false);
-  const [errors, setErrors] = useState({});
+  const { hospitalInfo } = useContext(UserContext); // Access hospital info from context
 
-  // Handle input changes
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
+  useEffect(() => {
+    // Prefill name and email from hospitalInfo if available
+    if (hospitalInfo) {
+      setFormData((prevData) => ({
+        ...prevData,
+        name: hospitalInfo.name || "",
+        email: hospitalInfo.email || "",
+      }));
+    }
+  }, [hospitalInfo]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
-  // Validate form inputs
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name) newErrors.name = 'Name is required';
-    if (!formData.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
-    if (!formData.phone) newErrors.phone = 'Phone number is required';
-    else if (!/^\d{10}$/.test(formData.phone)) newErrors.phone = 'Phone number must be 10 digits';
-    if (!formData.subject) newErrors.subject = 'Subject is required';
-    if (!formData.message) newErrors.message = 'Message is required';
-    
-    return newErrors;
-  };
-
-  // Handle form submission
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const newErrors = validateForm();
-    
-    if (Object.keys(newErrors).length === 0) {
-      // Simulate form submission
-      console.log('Form submitted:', formData);
-      setSubmitted(true);
-      setFormData({ name: '', email: '', phone: '', subject: '', message: '' }); // Reset form
-    } else {
-      setErrors(newErrors);
+
+    try {
+      // Send the form data to the backend
+      const response = await axios.post("http://localhost:3000/api/hospitals/contact", formData);
+
+      // Handle successful submission
+      if (response.status === 200) {
+        toast.success("Your inquiry has been successfully submitted. Our support team will get back to you shortly.");
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        }); // Clear form after submission
+      }
+    } catch (error) {
+      // Handle error
+      console.error("There was an error submitting the form:", error);
+      toast.error("Failed to submit your request. Please try again later."); // Show error toast
     }
   };
 
   return (
     <>
     <Navbar />
-    <div className="flex flex-col items-center min-h-screen bg-gray-100 p-4">
-      <h1 className="text-3xl font-bold mb-6">Contact Us</h1>
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white shadow-md rounded px-8 py-6 mb-4 w-full max-w-lg"
-      >
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="name">
-            Name
-          </label>
+    <div className="max-w-lg mx-auto p-8 mt-10 bg-white shadow-md rounded">
+      <ToastContainer />
+      <h2 className="text-2xl font-semibold mb-6 text-gray-700">Contact Us</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Name Field */}
+        <div className="flex flex-col">
+          <label className="text-gray-700 mb-1">Name</label>
           <input
             type="text"
-            id="name"
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900"
+            required
+            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Your Name"
+            readOnly // Makes the field read-only if it's prefilled
           />
-          {errors.name && <p className="text-red-500 text-xs italic">{errors.name}</p>}
         </div>
-        
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
-            Email
-          </label>
+
+        {/* Email Field */}
+        <div className="flex flex-col">
+          <label className="text-gray-700 mb-1">Email</label>
           <input
             type="email"
-            id="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900"
+            required
+            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Your Email"
+            readOnly // Makes the field read-only if it's prefilled
           />
-          {errors.email && <p className="text-red-500 text-xs italic">{errors.email}</p>}
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="phone">
-            Phone Number
-          </label>
+        {/* Subject Field */}
+        <div className="flex flex-col">
+          <label className="text-gray-700 mb-1">Subject</label>
           <input
             type="text"
-            id="phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900"
-            placeholder="Your Phone Number"
-          />
-          {errors.phone && <p className="text-red-500 text-xs italic">{errors.phone}</p>}
-        </div>
-        
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="subject">
-            Subject
-          </label>
-          <input
-            type="text"
-            id="subject"
             name="subject"
             value={formData.subject}
             onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900"
+            required
+            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
             placeholder="Subject"
           />
-          {errors.subject && <p className="text-red-500 text-xs italic">{errors.subject}</p>}
         </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="message">
-            Message
-          </label>
+        {/* Message Field */}
+        <div className="flex flex-col">
+          <label className="text-gray-700 mb-1">Message</label>
           <textarea
-            id="message"
             name="message"
             value={formData.message}
             onChange={handleChange}
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-900"
-            placeholder="Your Message"
-            rows="4"
+            required
+            className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 h-32"
+            placeholder="Describe the issue or conflict"
           />
-          {errors.message && <p className="text-red-500 text-xs italic">{errors.message}</p>}
         </div>
-        
+
         <button
           type="submit"
-          className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-600"
+          className="w-full py-2 px-4 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none"
+          onClick={handleSubmit}
         >
           Submit
         </button>
       </form>
-
-      {submitted && (
-        <div className="mt-4 text-green-500">
-          <p>Your message has been submitted successfully!</p>
-        </div>
-      )}
     </div>
     </>
   );

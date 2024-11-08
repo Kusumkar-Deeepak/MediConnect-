@@ -12,220 +12,292 @@ const SearchSection = () => {
     {
         name: 'City Hospital',
         city: 'Mumbai',
+        state: 'Maharashtra',
+        zipCode: '400001',
         address: '123 Mumbai Street',
         specDrName: 'A. Sharma',
         specialist: 'Cardiologist',
         experience: 15,
         openingHours: '9:00 AM - 6:00 PM',
         doctorImage: 'https://www.saifeehospital.com/img/slides/slide1.jpg',
-        languagesSpoken: 'English, Hindi'
+        languagesSpoken: 'English, Hindi',
+        degree: 'MBBS, MD'
     },
     {
         name: 'Sunshine Hospital',
         city: 'Delhi',
+        state: 'Delhi',
+        zipCode: '110001',
         address: '456 Delhi Avenue',
         specDrName: 'B. Singh',
         specialist: 'Orthopedic',
         experience: 10,
         openingHours: '10:00 AM - 8:00 PM',
         doctorImage: 'https://sunshinehospital.co/assets/images/Gallery/Hospital-Front-Main.jpg',
-        languagesSpoken: 'English, Hindi'
+        languagesSpoken: 'English, Hindi',
+        degree: 'MBBS, MS'
     },
     {
         name: 'Apollo Hospital',
         city: 'Bangalore',
+        state: 'Karnataka',
+        zipCode: '560001',
         address: '789 Bangalore Road',
         specDrName: 'C. Rao',
         specialist: 'Neurologist',
         experience: 20,
         openingHours: '8:00 AM - 5:00 PM',
         doctorImage: 'https://safartibbi.com/wp-content/uploads/2024/05/apollo.jpg',
-        languagesSpoken: 'English, Kannada'
+        languagesSpoken: 'English, Kannada',
+        degree: 'MBBS, DM Neurology'
     },
     {
         name: 'Santa Cruise Valley Hospital',
         city: 'Mumbai',
+        state: 'Maharashtra',
+        zipCode: '400002',
         address: '101 Mumbai Lane',
         specDrName: 'D. Patil',
         specialist: 'Dermatologist',
         experience: 12,
         openingHours: '9:00 AM - 6:00 PM',
         doctorImage: 'https://www.guptasen.com/wp-content/uploads/2024/03/Artteza-Towers-Santacruz-West.webp',
-        languagesSpoken: 'English, Marathi'
+        languagesSpoken: 'English, Marathi',
+        degree: 'MBBS, MD Dermatology'
     },
     {
         name: 'Care Hospital',
         city: 'Pune',
+        state: 'Maharashtra',
+        zipCode: '411001',
         address: '121 Pune Street',
         specDrName: 'E. Desai',
         specialist: 'Pediatrician',
         experience: 8,
         openingHours: '8:30 AM - 6:00 PM',
         doctorImage: 'https://www.puneinsight.com/wp-content/uploads/2020/06/care-main.jpg',
-        languagesSpoken: 'English, Marathi'
+        languagesSpoken: 'English, Marathi',
+        degree: 'MBBS, DCH'
     },
     {
         name: 'Metro Hospital',
         city: 'Hyderabad',
+        state: 'Telangana',
+        zipCode: '500001',
         address: '1234 Hyderabad Road',
         specDrName: 'F. Reddy',
         specialist: 'General Surgeon',
         experience: 14,
         openingHours: '7:00 AM - 5:00 PM',
         doctorImage: 'https://images1-fabric.practo.com/5555cd34516ec6512bd43d9caa6e02c990b0a82652dca.jpg',
-        languagesSpoken: 'English, Telugu'
+        languagesSpoken: 'English, Telugu',
+        degree: 'MBBS, MS General Surgery'
     },
     {
         name: 'Fortis Hospital',
         city: 'Chennai',
+        state: 'Tamil Nadu',
+        zipCode: '600001',
         address: '543 Chennai Blvd',
         specDrName: 'G. Iyer',
         specialist: 'Orthopedic Surgeon',
         experience: 18,
         openingHours: '10:00 AM - 7:00 PM',
         doctorImage: 'https://www.bizzbuzz.news/h-upload/2023/11/25/1820020-fortis.webp',
-        languagesSpoken: 'English, Tamil'
+        languagesSpoken: 'English, Tamil',
+        degree: 'MBBS, MS Orthopedics'
     },
     {
         name: 'Max Health Care',
         city: 'Delhi',
+        state: 'Delhi',
+        zipCode: '110002',
         address: '678 Delhi Avenue',
         specDrName: 'H. Kapur',
         specialist: 'ENT Specialist',
         experience: 11,
         openingHours: '9:00 AM - 5:00 PM',
         doctorImage: 'https://d35oenyzp35321.cloudfront.net/Max_Super_Speciality_Hospital_Shalimar_Bagh_jpg_5c1758d700.jpg',
-        languagesSpoken: 'English, Hindi'
+        languagesSpoken: 'English, Hindi',
+        degree: 'MBBS, MS ENT'
     },
     {
         name: 'Lotus Hospital',
         city: 'Jaipur',
+        state: 'Rajasthan',
+        zipCode: '302001',
         address: '333 Jaipur Lane',
         specDrName: 'I. Singh',
         specialist: 'Gynecologist',
         experience: 16,
         openingHours: '8:00 AM - 4:00 PM',
         doctorImage: 'https://cdn.hexahealth.com/Image/cb8ab721-b3fe-4270-908d-0e61d2d9a7de.jpg',
-        languagesSpoken: 'English, Hindi'
+        languagesSpoken: 'English, Hindi',
+        degree: 'MBBS, MD Obstetrics & Gynecology'
     },
     {
         name: 'Medanta Hospital',
         city: 'Gurgaon',
+        state: 'Haryana',
+        zipCode: '122001',
         address: '451 Gurgaon Circle',
         specDrName: 'J. Gupta',
         specialist: 'Oncologist',
         experience: 19,
         openingHours: '9:00 AM - 6:30 PM',
         doctorImage: 'https://upload.wikimedia.org/wikipedia/en/6/68/Medanta_the_medicity_hospital.jpg',
-        languagesSpoken: 'English, Hindi'
+        languagesSpoken: 'English, Hindi',
+        degree: 'MBBS, MD Oncology'
     },
     {
         name: 'Rainbow Hospital',
         city: 'Mumbai',
+        state: 'Maharashtra',
+        zipCode: '400003',
         address: '159 Rainbow Ave',
         specDrName: 'K. Mehta',
         specialist: 'Pediatrician',
         experience: 7,
         openingHours: '8:30 AM - 5:00 PM',
         doctorImage: 'https://images1-fabric.practo.com/rainbow-children-s-multispecialty-clinic-mumbai-1483344465-586a0a5160419.JPG',
-        languagesSpoken: 'English, Marathi'
+        languagesSpoken: 'English, Marathi',
+        degree: 'MBBS, DCH'
     },
     {
         name: 'Ruby Hall Clinic',
         city: 'Pune',
+        state: 'Maharashtra',
+        zipCode: '411002',
         address: '256 Pune Street',
         specDrName: 'L. Naik',
         specialist: 'Radiologist',
         experience: 13,
         openingHours: '9:00 AM - 7:00 PM',
         doctorImage: 'https://images1-fabric.practo.com/rainbow-children-s-multispecialty-clinic-mumbai-1483344465-586a0a5160419.JPG',
-        languagesSpoken: 'English, Marathi'
+        languagesSpoken: 'English, Marathi',
+        degree: 'MBBS, MD Radiology'
     },
     {
         name: 'Narayana Health',
         city: 'Bangalore',
+        state: 'Karnataka',
+        zipCode: '560002',
         address: '101 Narayana Road',
         specDrName: 'M. Kumar',
         specialist: 'Cardiologist',
         experience: 20,
         openingHours: '8:00 AM - 4:00 PM',
         doctorImage: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Narayana_Institute_of_Cardiac_Sciences%2C_Bangalore%2C_Karnataka%2C_India_%282014%29.jpg/640px-Narayana_Institute_of_Cardiac_Sciences%2C_Bangalore%2C_Karnataka%2C_India_%282014%29.jpg',
-        languagesSpoken: 'English, Kannada'
+        languagesSpoken: 'English, Kannada',
+        degree: 'MBBS, DM Cardiology'
     },
     {
         name: 'AIMS Hospital',
         city: 'Kolkata',
+        state: 'West Bengal',
+        zipCode: '700001',
         address: '321 Kolkata Road',
         specDrName: 'N. Banerjee',
         specialist: 'Endocrinologist',
         experience: 22,
         openingHours: '10:00 AM - 5:00 PM',
-        doctorImage: 'https://example.com/aims-hospital.jpg',
-        languagesSpoken: 'English, Bengali'
+        doctorImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsz-nXUx7s6u6ApkleAKLuJKsZBzJoKoKR-w&s',
+        languagesSpoken: 'English, Bengali',
+        degree: 'MBBS, MD Endocrinology'
     },
     {
         name: 'Sri Ramachandra Hospital',
         city: 'Chennai',
+        state: 'Tamil Nadu',
+        zipCode: '600002',
         address: '789 Ramachandra Lane',
         specDrName: 'O. Subramanian',
-        specialist: 'Neurosurgeon',
+        specialist: 'Urologist',
         experience: 25,
-        openingHours: '9:30 AM - 6:00 PM',
-        doctorImage: 'https://example.com/sri-ramachandra.jpg',
-        languagesSpoken: 'English, Tamil'
+        openingHours: '9:00 AM - 5:00 PM',
+        doctorImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSLMFRi94FMQFAA657L5Mt-jTH48Nj_Y7emuw&s',
+        languagesSpoken: 'English, Tamil',
+        degree: 'MBBS, MS Urology'
     },
     {
-        name: 'Global Hospital',
-        city: 'Mumbai',
-        address: '250 Global Avenue',
-        specDrName: 'P. Rane',
-        specialist: 'Pulmonologist',
-        experience: 9,
-        openingHours: '8:00 AM - 5:00 PM',
-        doctorImage: 'https://example.com/global-hospital.jpg',
-        languagesSpoken: 'English, Marathi'
-    },
-    {
-        name: 'Kokilaben Hospital',
-        city: 'Mumbai',
-        address: '300 Mumbai Main Road',
-        specDrName: 'Q. Patel',
-        specialist: 'Gastroenterologist',
-        experience: 12,
-        openingHours: '7:30 AM - 8:00 PM',
-        doctorImage: 'https://example.com/kokilaben-hospital.jpg',
-        languagesSpoken: 'English, Gujarati'
-    },
-    {
-        name: 'Shalby Hospital',
-        city: 'Ahmedabad',
-        address: '120 Shalby Street',
-        specDrName: 'R. Shah',
-        specialist: 'Oncologist',
-        experience: 15,
-        openingHours: '10:00 AM - 7:00 PM',
-        doctorImage: 'https://example.com/shalby-hospital.jpg',
-        languagesSpoken: 'English, Gujarati'
-    },
-    {
-        name: 'Holy Family Hospital',
-        city: 'Mumbai',
-        address: '451 Mumbai Crescent',
-        specDrName: 'S. Jacob',
-        specialist: 'Nephrologist',
-        experience: 18,
-        openingHours: '9:00 AM - 5:30 PM',
-        doctorImage: 'https://example.com/holy-family-hospital.jpg',
-        languagesSpoken: 'English, Hindi'
-    }
+      name: 'St. John\'s Medical Center',
+      city: 'Bangalore',
+      state: 'Karnataka',
+      zipCode: '560003',
+      address: '123 St. John\'s Road',
+      specDrName: 'P. Iyer',
+      specialist: 'Ophthalmologist',
+      experience: 15,
+      openingHours: '8:00 AM - 6:00 PM',
+      doctorImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRpV87VafapRkvWeymOQjF9PW-FDQ6bwOnHA&s',
+      languagesSpoken: 'English, Kannada',
+      degree: 'MBBS, MS Ophthalmology'
+  },
+  {
+      name: 'Saket City Hospital',
+      city: 'Delhi',
+      state: 'Delhi',
+      zipCode: '110003',
+      address: '100 Saket Avenue',
+      specDrName: 'Q. Mehra',
+      specialist: 'Psychiatrist',
+      experience: 12,
+      openingHours: '10:00 AM - 7:00 PM',
+      doctorImage: 'https://images1-fabric.practo.com/saket-city-hospital-delhi-1475413314-57f10542d8dc1.jpg',
+      languagesSpoken: 'English, Hindi',
+      degree: 'MBBS, MD Psychiatry'
+  },
+  {
+      name: 'Cure Hospital',
+      city: 'Hyderabad',
+      state: 'Telangana',
+      zipCode: '500002',
+      address: '87 Cure Lane',
+      specDrName: 'R. Kumar',
+      specialist: 'Nephrologist',
+      experience: 18,
+      openingHours: '9:00 AM - 6:00 PM',
+      doctorImage: 'https://content3.jdmagicbox.com/comp/rangareddy/x3/040pxx40.xx40.191215215505.c2x3/catalogue/cure-hospitals-pocharam-rangareddy-multispeciality-hospitals-2j6vjak0oh.jpg',
+      languagesSpoken: 'English, Telugu',
+      degree: 'MBBS, DM Nephrology'
+  },
+  {
+      name: 'Shanti Nursing Home',
+      city: 'Chennai',
+      state: 'Tamil Nadu',
+      zipCode: '600003',
+      address: '234 Shanti Street',
+      specDrName: 'S. Reddy',
+      specialist: 'General Physician',
+      experience: 25,
+      openingHours: '8:00 AM - 6:00 PM',
+      doctorImage: 'https://images1-fabric.practo.com/practices/679642/shanthi-hospital-chennai-666e4e8a5a276.png',
+      languagesSpoken: 'English, Tamil',
+      degree: 'MBBS, MD General Medicine'
+  },
+  {
+      name: 'Vasundhara Hospital',
+      city: 'Pune',
+      state: 'Maharashtra',
+      zipCode: '411003',
+      address: '456 Vasundhara Lane',
+      specDrName: 'T. Shah',
+      specialist: 'Gastroenterologist',
+      experience: 10,
+      openingHours: '9:00 AM - 5:00 PM',
+      doctorImage: 'https://cdn.worldclinics.net/clinic/large/jpg/vasundhara-hospital-1.jpg',
+      languagesSpoken: 'English, Marathi',
+      degree: 'MBBS, MD Gastroenterology'
+  }
 ];
+
 
 
 const [searchTerm, setSearchTerm] = useState('');
   const [filteredHospitals, setFilteredHospitals] = useState([]);
   const { clientInfo } = useContext(UserContext);
   const isLoggedIn = !!clientInfo;
-  console.log('client in search service', clientInfo)
+
   useEffect(() => {
     const fetchHospitals = async () => {
       const token = localStorage.getItem('token');
@@ -236,7 +308,6 @@ const [searchTerm, setSearchTerm] = useState('');
           const response = await axios.get('http://localhost:3000/api/hospitals/find-hospital', {
             headers: { Authorization: `Bearer ${token}` },
           });
-          console.log(response.data);
 
           if (Array.isArray(response.data)) {
             setFilteredHospitals(response.data);
@@ -258,19 +329,25 @@ const [searchTerm, setSearchTerm] = useState('');
   }, [isLoggedIn]);  // Re-fetch data based on login status
 
   const handleSearch = () => {
-    const dataToFilter = isLoggedIn ? filteredHospitals : hospitals.slice(0, 3);
+    // If logged in, use filtered hospitals, else show all hospitals for non-logged-in users
+    const dataToFilter = isLoggedIn ? filteredHospitals : hospitals;  // Use all hospitals for search
+  
+    const cityToSearch = searchTerm.trim().toLowerCase();
+  
+    // Filter based on a substring match for the city name entered
     const results = dataToFilter.filter((hospital) =>
-      hospital.city.toLowerCase().includes(searchTerm.toLowerCase())
+      hospital.city.toLowerCase().includes(cityToSearch)
     );
-
+  
     if (results.length === 0) {
       toast.error(`No hospitals found in "${searchTerm}"`);
-      setFilteredHospitals(dataToFilter);
+      setFilteredHospitals(hospitals.slice(0, 3));  // Show a default set of hospitals if no match found
     } else {
-      setFilteredHospitals(results);
+      setFilteredHospitals(results.length > 0 ? results : dataToFilter);  // Set the filtered hospitals or keep the original list
+      setSearchTerm('');  // Reset the search term after search
     }
-    setSearchTerm('');
-  };
+};
+
 
   return (
     <div className="flex flex-col items-center h-auto bg-cover bg-center text-white py-8">

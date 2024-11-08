@@ -179,9 +179,12 @@ const Navbar = () => {
         {/* Middle: Navbar Links */}
         <div className="flex items-center space-x-6">
           {isClientLoggedIn && <a href="/services" className="px-4 py-2 border rounded-md hover:bg-gray-100">Ask The Doctor</a>}
+          
+          {/* Conditional Rendering for Hospital Only */}
+        {isHospitalLoggedIn && (
           <div className="relative">
             <button className="px-4 py-2 border rounded-md hover:bg-gray-100" onClick={() => setAskQuestionDropdownOpen(!askQuestionDropdownOpen)}>
-              Ask a Question
+              Ask To MediConnect Team
             </button>
             {askQuestionDropdownOpen && (
               <div className="absolute right-0 mt-2 py-2 w-48 bg-white border rounded-md shadow-xl">
@@ -189,6 +192,7 @@ const Navbar = () => {
               </div>
             )}
           </div>
+        )}
 
           {/* Conditional Rendering for Login/Sign-up or Profile */}
           {(isHospitalLoggedIn || isClientLoggedIn) ? (
