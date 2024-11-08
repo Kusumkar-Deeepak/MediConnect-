@@ -46,11 +46,66 @@ MediConnect is a platform designed to connect clients and healthcare providers i
 - **Authentication:** JWT-based token system for secure login
 - **APIs:** ChatGPT API integration (future enhancement)
 
-## Installation 🚀
+## 🌟Installation
+
+### Prerequisites
+
+- Node.js
+- MongoDB
+
+### Steps
 
 1. Clone the repository:
+   ```bash
+   git clone https://github.com/Kusumkar-DeeepakMediConnect-.git
+   cd MediConnect-
+   ```
+2. Install dependencies:
 
-```bash
-git clone https://github.com/your-username/mediConnect.git
-cd mediConnect
+    ```bash
+    npm install
+    ```
 
+3. Create a `.env` file in the root directory and add the following environment variables:
+
+   ```env
+   MONGO_URI=YOUR_MONGO_URI
+   ```
+   ```env
+   EMAIL_USER=ADMIN_EMAIL1
+   ```
+   ```env
+   EMAIL_USER1=ADMIN_EMAIL2
+   ```
+   ```env
+   APP_PASS=GOOGLE_APP_PASS_FOR_NODEMAILER
+   ```
+   ```env
+   JWT_SECRET=YOUR_JWT_SECRET
+   ```
+   ```env
+   API_KEY = YOUR_GEMINI_API_KEY
+   ```
+
+4. Run the application:
+   
+   -**For Frontend**
+   ```bash
+   npm run dev
+   ```
+
+   -**For Backend**
+   ```bash
+   node app.js
+   ```
+
+## 🌟Usage
+- **Register a hospital:** Hospitals can request registration through the platform. The admin will receive a confirmation email with all details for verification.
+- **Book an appointment:** Clients can browse available hospitals and book appointments. Confirmation emails will be sent automatically.
+- **Access the admin dashboard:** Admins can view client appointments, edit hospital details, and manage settings from the dashboard.
+- **Ask the doctor:** Clients can ask up to 10 questions per day using the "Ask the Doctor" feature.
+
+
+
+ ## 🌟Under Construction 🚧
+MediConnect is currently under development, and we are working hard to bring you the most innovative and efficient healthcare solutions. While some features are functional, others are being continuously refined to provide a seamless experience. Stay tuned for updates, and thank you for your patience as we enhance the platform for you!
