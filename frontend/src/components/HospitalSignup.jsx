@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from 'axios';
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import '../index.css';
+import "../index.css";
+import 'font-awesome/css/font-awesome.min.css'; // Import Font Awesome CSS
 
 const HospitalSignup = () => {
   const [formData, setFormData] = useState({
@@ -37,10 +38,10 @@ const HospitalSignup = () => {
       Surgery: false,
       Rehabilitation: false,
       Outpatient: false,
-      BloodBank: false , 
-      Maternity: false , 
-      Pediatrics: false , 
-      Cardiology: false ,
+      BloodBank: false,
+      Maternity: false,
+      Pediatrics: false,
+      Cardiology: false,
     },
   });
 
@@ -72,31 +73,109 @@ const HospitalSignup = () => {
     }
   };
 
-  const validateForm = () => {
-    const { name, email, id, password, phone, address, city, state, zipCode, specDrName, numberOfDoctors, numberOfNurses, aboutHospital, website, experience, specialist, languagesSpoken, insuranceAccepted, emergencyContact, degree, openingHours } = formData;
+  // State to toggle password visibility
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  // Toggle password visibility
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prevState) => !prevState);
+  };
 
-    if (!name || !email || !id || !password || !phone || !address || !city || !state || !zipCode || !specDrName || !numberOfDoctors || !numberOfNurses || !aboutHospital || !website || !experience || !specialist || !languagesSpoken || !insuranceAccepted || !emergencyContact || !degree) {
+  const validateForm = () => {
+    const {
+      name,
+      email,
+      id,
+      password,
+      phone,
+      address,
+      city,
+      state,
+      zipCode,
+      specDrName,
+      numberOfDoctors,
+      numberOfNurses,
+      aboutHospital,
+      website,
+      experience,
+      specialist,
+      languagesSpoken,
+      insuranceAccepted,
+      emergencyContact,
+      degree,
+      openingHours,
+    } = formData;
+
+    if (
+      !name ||
+      !email ||
+      !id ||
+      !password ||
+      !phone ||
+      !address ||
+      !city ||
+      !state ||
+      !zipCode ||
+      !specDrName ||
+      !numberOfDoctors ||
+      !numberOfNurses ||
+      !aboutHospital ||
+      !website ||
+      !experience ||
+      !specialist ||
+      !languagesSpoken ||
+      !insuranceAccepted ||
+      !emergencyContact ||
+      !degree
+    ) {
       toast.error("All fields are required.");
       return false;
     }
 
+    // Hospital name must contain "hospital" (case insensitive)
+    if (!/hospital/i.test(name)) {
+      toast.error("Hospital name must contain the word 'hospital'.");
+      return false;
+    }
+
+    // City must be a single word
+    if (/\s/.test(city)) {
+      toast.error("City name should be a single word.");
+      return false;
+    }
+
+    // Number of doctors should be greater than the number of nurses
+    if (parseInt(numberOfDoctors) <= parseInt(numberOfNurses)) {
+      toast.error(
+        "Number of doctors must be greater than the number of nurses."
+      );
+      return false;
+    }
+
+    // Validate Zip Code (must be a number)
     if (!/^\d+$/.test(zipCode)) {
       toast.error("Zip Code must be a number.");
       return false;
     }
 
+    // Validate Number of Doctors and Nurses (must be numbers)
     if (!/^\d+$/.test(numberOfDoctors) || !/^\d+$/.test(numberOfNurses)) {
       toast.error("Number of Doctors and Nurses must be numbers.");
       return false;
     }
 
+    // Validate Emergency Contact (must be a valid 10-digit number)
     if (!/^\d{10}$/.test(emergencyContact)) {
       toast.error("Emergency contact number must be a valid 10-digit number.");
       return false;
     }
 
-    if (openingHours.start && openingHours.end && openingHours.start >= openingHours.end) {
-      toast.error("Opening hours should be earlier than closing hours."); // Display the error using toast
+    // Opening hours validation
+    if (
+      openingHours.start &&
+      openingHours.end &&
+      openingHours.start >= openingHours.end
+    ) {
+      toast.error("Opening hours should be earlier than closing hours.");
       return false;
     }
 
@@ -120,31 +199,44 @@ const HospitalSignup = () => {
     console.log("Request Body:", requestBody);
 
     try {
-      const response = await axios.post('http://localhost:3000/api/hospitals', requestBody);
+      const response = await axios.post(
+        "http://localhost:3000/api/hospitals",
+        requestBody
+      );
 
       if (response.status === 200) {
         toast.success(response.data.message);
 
         setTimeout(() => {
-          navigate('/');
+          navigate("/");
         }, 3000);
       } else {
         toast.error(response.data.message);
       }
     } catch (error) {
       console.error("Error:", error);
-      toast.error(error.response?.data?.message || "An unexpected error occurred.");
+      toast.error(
+        error.response?.data?.message || "An unexpected error occurred."
+      );
     }
   };
 
   return (
     <>
-      <div className="warning-message">Please enter all data neatly.</div>
+      <div className="warning-message">
+        Please enter all data neatly. Make sure to read and follow the form
+        filling rules below for accurate entry.
+      </div>
+
       <div className="flex items-center flex-row justify-center h-screen bg-gray-100">
         <ToastContainer />
-        <div className="bg-white p-4 rounded-lg shadow-lg max-w-5xl w-full" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-
-          <h2 className="text-2xl font-bold mb-6 text-center">Hospital Signup</h2>
+        <div
+          className="bg-white p-4 rounded-lg shadow-lg max-w-5xl w-full"
+          style={{ maxHeight: "70vh", overflowY: "auto" }}
+        >
+          <h2 className="text-2xl font-bold mb-6 text-center">
+            Hospital Registration
+          </h2>
           <form onSubmit={formSubmit}>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
               <label>
@@ -183,19 +275,28 @@ const HospitalSignup = () => {
                   required
                 />
               </label>
-              <label>
-                Password:
-                <input
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  type="password"
-                  className="w-full px-3 py-2 border rounded-md mt-1"
-                  autoComplete="current-password"
-                  placeholder="EG. Example@123"
-                  required
-                />
-              </label>
+              {/* Password Field with Show/Hide Feature */}
+        <label className="block">
+          Password:
+          <div className="relative">
+            <input
+              type={isPasswordVisible ? 'text' : 'password'}
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border rounded-md mt-1"
+              autoComplete="current-password"
+              placeholder="EG. Example@123"
+              required
+            />
+            <i
+              className={`absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-xl ${
+                isPasswordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'
+              }`}
+              onClick={togglePasswordVisibility}
+            ></i>
+          </div>
+        </label>
               <label>
                 Contact Number:
                 <input
@@ -264,7 +365,7 @@ const HospitalSignup = () => {
                   onChange={handleChange}
                   type="text"
                   className="w-full px-3 py-2 border rounded-md mt-1"
-                  placeholder="EG. Dr.Kusumkar Deepak"
+                  placeholder="EG. Kusumkar Deepak"
                   required
                 />
               </label>
@@ -387,11 +488,10 @@ const HospitalSignup = () => {
                     borderRadius: "4px",
                     padding: "4px",
                     marginLeft: "10px", // Adds space between label and input
-                    marginRight: "5px"
+                    marginRight: "5px",
                   }}
                 />
               </label>
-
 
               <label style={{ display: "flex", alignItems: "center" }}>
                 Closing Hours:
@@ -406,11 +506,10 @@ const HospitalSignup = () => {
                     borderRadius: "4px",
                     padding: "4px",
                     marginLeft: "10px", // Adds space between label and input
-                    marginRight: "5px"
+                    marginRight: "5px",
                   }}
                 />
               </label>
-
             </div>
 
             <div className="mb-4">
@@ -461,6 +560,91 @@ const HospitalSignup = () => {
             </p>
           </form>
         </div>
+      </div>
+
+      <div className="form-rules bg-gray-50 border border-gray-200 rounded-lg p-12 max-w-2xl mx-auto shadow-lg mt-8">
+        <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+          Form Filling Rules:
+        </h3>
+        <ul className="list-disc list-inside space-y-2 text-gray-700">
+          <li>
+            <strong>Hospital Name:</strong> Must include the word hospital
+            (e.g., City Hospital).
+          </li>
+          <li>
+            <strong>Email:</strong> Enter a valid email address.
+          </li>
+          <li>
+            <strong>Hospital ID:</strong> A unique identifier for the hospital.
+          </li>
+          <li>
+            <strong>Password:</strong> Choose a secure password.
+          </li>
+          <li>
+            <strong>Phone Number:</strong> Enter a valid phone number.
+          </li>
+          <li>
+            <strong>Address:</strong> Enter the full address of the hospital.
+          </li>
+          <li>
+            <strong>City:</strong> Enter only one word (e.g., Mumbai or Delhi).
+          </li>
+          <li>
+            <strong>State:</strong> Enter the state name.
+          </li>
+          <li>
+            <strong>Zip Code:</strong> Must be a numeric value.
+          </li>
+          <li>
+            <strong>Special Doctors Name:</strong> Enter the name of a
+            specialized doctor.
+          </li>
+          <li>
+            <strong>Number of Doctors:</strong> Must be a number and greater
+            than the number of nurses.
+          </li>
+          <li>
+            <strong>Number of Nurses:</strong> Must be a numeric value.
+          </li>
+          <li>
+            <strong>About Hospital:</strong> Provide a brief description of the
+            hospital.
+          </li>
+          <li>
+            <strong>Website:</strong> Enter the hospitals website URL (if any).
+          </li>
+          <li>
+            <strong>Opening Hours:</strong> Start time should be earlier than
+            the end time.
+          </li>
+          <li>
+            <strong>Experience:</strong> Describe the hospitals experience
+            (e.g., years in operation).
+          </li>
+          <li>
+            <strong>Specialist:</strong> Mention the hospitals area(s) of
+            specialization.
+          </li>
+          <li>
+            <strong>Languages Spoken:</strong> List languages spoken at the
+            hospital.
+          </li>
+          <li>
+            <strong>Insurance Accepted:</strong> Mention accepted insurance
+            providers (if any).
+          </li>
+          <li>
+            <strong>Emergency Contact:</strong> Must be a valid 10-digit number.
+          </li>
+          <li>
+            <strong>Degree:</strong> Enter the qualifications/degrees of
+            specialized doctors.
+          </li>
+          <li>
+            <strong>Facilities:</strong> Check the boxes for available
+            facilities at the hospital (e.g., ICU, Pharmacy).
+          </li>
+        </ul>
       </div>
     </>
   );

@@ -6,6 +6,7 @@ import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/outline";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
+import "font-awesome/css/font-awesome.min.css"; // Import Font Awesome CSS
 
 const HospitalDashboard = () => {
   const { hospitalInfo, setHospitalInfo, clearHospitalInfo } =
@@ -17,6 +18,13 @@ const HospitalDashboard = () => {
   const [formData, setFormData] = useState({});
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  // State to toggle password visibility
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  // Function to toggle password visibility
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prevState) => !prevState);
+  };
 
   useEffect(() => {
     if (hospitalInfo) {
@@ -170,8 +178,9 @@ const HospitalDashboard = () => {
           <img
             src={hospitalImage}
             alt="Hospital Profile"
-            className="rounded-full w-32 h-32 border-4 border-blue-400 shadow-lg mb-4 md:mb-0 md:mr-6 transition-transform duration-300 hover:scale-105"
+            className="rounded-full w-32 h-32 border-4 border-blue-400 shadow-lg mb-4 md:mb-0 md:mr-6 transition-transform duration-300 hover:scale-105 mx-auto md:mx-0"
           />
+
           <div className="flex flex-col justify-start md:flex-grow">
             <h2 className="text-3xl font-bold text-blue-800">
               {hospitalInfo?.name || "Hospital Name"}
@@ -323,14 +332,25 @@ const HospitalDashboard = () => {
               onChange={handleInputChange}
               className="border p-2 w-full mb-2"
             />
-            {/* Repeat similar input fields for other info */}
-            <input
-              type="password"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handlePasswordChange}
-              className="border p-2 w-full mb-2"
-            />
+
+            <div className="relative mb-2">
+              <input
+                type={isPasswordVisible ? "text" : "password"} // Toggle between text and password
+                name="hospitalPassword"
+                onChange={handlePasswordChange}
+                value={formData.password}
+                className="w-full px-3 py-2 border rounded-md "
+                placeholder="Password"
+                required
+              />
+              {/* Font Awesome Icon for Show/Hide Password */}
+              <i
+                className={`absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-xl ${
+                  isPasswordVisible ? "fa fa-eye-slash" : "fa fa-eye"
+                }`}
+                onClick={togglePasswordVisibility}
+              ></i>
+            </div>
             <div className="flex justify-end space-x-2">
               <button
                 onClick={handleCloseUpdateModal}
@@ -355,13 +375,25 @@ const HospitalDashboard = () => {
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-2xl font-bold mb-4">Delete Profile</h2>
             <p>Enter password to confirm deletion:</p>
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={handlePasswordChange}
-              className="border p-2 w-full my-2"
-            />
+
+            <div className="relative my-4">
+              <input
+                type={isPasswordVisible ? "text" : "password"} // Toggle between text and password
+                onChange={handlePasswordChange}
+                value={password}
+                className="w-full px-3 py-2 border rounded-md "
+                placeholder="Password"
+                required
+              />
+              {/* Font Awesome Icon for Show/Hide Password */}
+              <i
+                className={`absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-xl ${
+                  isPasswordVisible ? "fa fa-eye-slash" : "fa fa-eye"
+                }`}
+                onClick={togglePasswordVisibility}
+              ></i>
+            </div>
+
             <div className="flex justify-end space-x-2">
               <button
                 onClick={handleCloseDeleteModal}

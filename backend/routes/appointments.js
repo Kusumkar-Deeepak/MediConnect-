@@ -17,39 +17,67 @@ router.post('/appointments', async (req, res) => {
   const { hospitalId, hospitalEmail, clientData } = req.body;
 
   if (!hospitalId || !clientData || !hospitalEmail) {
+    console.log('Error: Missing required data - Hospital ID, client data, or hospital email');
     return res.status(400).json({ message: 'Hospital ID, client data, and hospital email are required.' });
   }
 
   try {
     const preferredDate = new Date(clientData.preferredDate);
+    const preferredDateStart = new Date(preferredDate.setHours(0, 0, 0, 0));
+    const preferredDateEnd = new Date(preferredDate.setHours(23, 59, 59, 999));
 
-    // Check for an existing appointment for the same email on the same day
+    // Log preferred date range
+    console.log(`Preferred Date Range: ${preferredDateStart} to ${preferredDateEnd}`);
+    
+    // Check if an appointment with the same email is already booked on the same day
     const existingAppointment = await AppointmentHospital.findOne({
       hospitalId,
       'appointments.email': clientData.email,
-      'appointments.preferredDate': {
-        $gte: new Date(preferredDate.setHours(0, 0, 0, 0)),
-        $lt: new Date(preferredDate.setHours(23, 59, 59, 999))
-      }
+      'appointments.preferredDate': { $gte: preferredDateStart, $lt: preferredDateEnd }
     });
 
     if (existingAppointment) {
+      console.log(`Appointment already exists for email: ${clientData.email} on this date.`);
       return res.status(400).json({ message: 'You already have an appointment booked for today with this email.' });
+    }
+
+    // Check if there are already 2 bookings for the specified date and time slot
+    const slotCount = await AppointmentHospital.aggregate([
+      { $match: { hospitalId } },
+      { $unwind: '$appointments' },
+      {
+        $match: {
+          'appointments.preferredDate': { $gte: preferredDateStart, $lt: preferredDateEnd },
+          'appointments.preferredTime': clientData.preferredTime
+        }
+      },
+      { $count: 'slotCount' }
+    ]);
+
+    // Log the count of bookings for this slot
+    console.log(`Slot Count for ${clientData.preferredTime} on ${clientData.preferredDate}: ${slotCount.length > 0 ? slotCount[0].slotCount : 0}`);
+
+    if (slotCount.length > 0 && slotCount[0].slotCount >= 2) {
+      console.log(`The selected time slot ${clientData.preferredTime} is fully booked.`);
+      return res.status(400).json({ message: 'The selected time slot is fully booked. Please choose another time.' });
     }
 
     // Find or create the hospital entry
     let appointmentEntry = await AppointmentHospital.findOne({ hospitalId });
 
     if (!appointmentEntry) {
+      console.log(`Creating a new appointment entry for hospital ID: ${hospitalId}`);
       appointmentEntry = new AppointmentHospital({
         hospitalId,
         appointments: [clientData],
       });
     } else {
+      console.log(`Adding new appointment to existing hospital entry for hospital ID: ${hospitalId}`);
       appointmentEntry.appointments.push(clientData);
     }
 
     await appointmentEntry.save();
+    console.log(`Appointment saved successfully for ${clientData.name} on ${clientData.preferredDate} at ${clientData.preferredTime}`);
 
     // Send email confirmation
     const mailOptions = {
@@ -74,6 +102,8 @@ MediConnect Team`,
     };
 
     await transporter.sendMail(mailOptions);
+    console.log(`Confirmation email sent to ${clientData.email}`);
+
     res.status(201).json({ message: 'Appointment booked successfully and email sent.' });
   } catch (error) {
     console.error('Error booking appointment:', error);

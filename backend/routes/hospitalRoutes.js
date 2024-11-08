@@ -232,6 +232,7 @@ router.post("/", async (req, res) => {
     const normalizedHospitalName = name.trim().toLowerCase();
     const normalizedSpecDrName = specDrName.trim().toLowerCase();
     const normalizedId = id.trim().toLowerCase();
+    const normalizedMail = email.trim().toLowerCase();
 
     // Check if hospital already exists by normalized name, specialist doctor, or id
     const existingHospital = await Hospital.findOne({
@@ -239,6 +240,7 @@ router.post("/", async (req, res) => {
         { name: { $regex: `^${normalizedHospitalName}$`, $options: "i" } },
         { specDrName: { $regex: `^${normalizedSpecDrName}$`, $options: "i" } },
         { id: { $regex: `^${normalizedId}$`, $options: "i" } },
+        { email: { $regex: `^${normalizedMail}$`, $options: "i" } },
       ],
     });
 

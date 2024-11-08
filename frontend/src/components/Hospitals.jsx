@@ -46,83 +46,84 @@ const HospitalData = ({ hospital, isLoggedIn, clientInfo }) => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row w-full max-w-4xl p-4 bg-white rounded-lg shadow-md border border-gray-200">
-      {/* Doctor Info Section (25% width on large screens, full width on small screens) */}
-      <div className="w-full lg:w-1/4 flex flex-col items-center p-4 border-b lg:border-r lg:border-gray-300">
-        <img
-          src={
-            hospital.doctorImage ||
-            "https://media.istockphoto.com/id/1344779917/vector/medical-center-hospital-building-vector-design.jpg?s=612x612&w=0&k=20&c=_sZByueZhEZbK2WjQz1jqXy1_Rr5jYkgiVBj-2ls44s="
-          }
-          alt={hospital.specDrName || "Doctor"}
-          className="w-32 h-32 rounded-full object-cover mb-2"
-        />
-        <h3 className="text-lg font-semibold text-black">
-          {hospital.specDrName ? `Dr. ${hospital.specDrName}` : "Doctor's Name"}
-        </h3>
-      </div>
-
-      {/* Hospital Info Section (75% width on large screens, full width on small screens) */}
-      <div className="w-full lg:w-3/4 p-4 text-black">
-        <h3 className="text-2xl font-bold">
-          {hospital.name || "Hospital Name"}
-        </h3>
-        <p className="text-md mt-1">
-          {hospital.specialist || "Specialization not available"} |{" "}
-          {hospital.experience
-            ? `${hospital.experience} years experience`
-            : "Experience not available"}
-        </p>
-
-        <hr className="my-4 border-gray-300" />
-
-        {/* Address displayed in a single line */}
-        <p className="text-md">
-          <strong>Address:</strong>{" "}
-          {hospital.address || "Address not available"},
-          {hospital.city ? ` ${hospital.city}` : " City not available"},
-          {hospital.state ? ` ${hospital.state}` : " State not available"},
-          {hospital.zipCode
-            ? ` ${hospital.zipCode}`
-            : " Zip-code not available"}
-        </p>
-
-        {/* Degree and Languages in one line, centered */}
-        <div className="flex justify-center items-center space-x-8 text-md">
-          <p>
-            <strong>Degree:</strong> {hospital.degree || "Degree not available"}
-          </p>
-          <p>
-            <strong>Languages:</strong>{" "}
-            {hospital.languagesSpoken || "Languages not available"}
-          </p>
-        </div>
-
-        {isLoggedIn ? (
-          <p className="mt-4 text-md text-green-600">{getRandomFeature()} 🥳</p>
-        ) : null}
-
-        <hr className="my-4 border-gray-300" />
-
-        {/* Conditional Rendering for Appointment Button or Message */}
-        {isLoggedIn ? (
-          <button
-            type="button"
-            onClick={handleBookAppointment} // Update the onClick handler
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
-          >
-            Book Appointment
-          </button>
-        ) : (
-          <p className="mt-4 text-red-600 font-semibold">
-            Please log in to book an appointment.
-          </p>
-        )}
-      </div>
+  <div className="flex flex-col lg:flex-row w-full max-w-full sm:max-w-4xl p-4 sm:px-12 lg:px-8 bg-white rounded-lg shadow-md border border-gray-200">
+    {/* Doctor Info Section (25% width on large screens, full width on small screens) */}
+    <div className="w-full lg:w-1/4 flex flex-col items-center p-4 border-b lg:border-r lg:border-gray-300">
+      <img
+        src={
+          hospital.doctorImage ||
+          "https://media.istockphoto.com/id/1344779917/vector/medical-center-hospital-building-vector-design.jpg?s=612x612&w=0&k=20&c=_sZByueZhEZbK2WjQz1jqXy1_Rr5jYkgiVBj-2ls44s="
+        }
+        alt={hospital.specDrName || "Doctor"}
+        className="w-32 h-32 rounded-full object-cover mb-2"
+      />
+      <h3 className="text-lg font-semibold text-black">
+        {hospital.specDrName ? `Dr. ${hospital.specDrName}` : "Doctor's Name"}
+      </h3>
     </div>
-  );
-};
 
+    {/* Hospital Info Section (75% width on large screens, full width on small screens) */}
+    <div className="w-full lg:w-3/4 p-4 text-black">
+      <h3 className="text-2xl font-bold">
+        {hospital.name || "Hospital Name"}
+      </h3>
+      <p className="text-md mt-1">
+        {hospital.specialist || "Specialization not available"} |{" "}
+        {hospital.experience
+          ? `${hospital.experience} years experience`
+          : "Experience not available"}
+      </p>
+
+      <hr className="my-4 border-gray-300" />
+
+      {/* Address displayed in a single line */}
+      <p className="text-md">
+        <strong>Address:</strong>{" "}
+        {hospital.address || "Address not available"},
+        {hospital.city ? ` ${hospital.city}` : " City not available"},
+        {hospital.state ? ` ${hospital.state}` : " State not available"},
+        {hospital.zipCode
+          ? ` ${hospital.zipCode}`
+          : " Zip-code not available"}
+      </p>
+
+      {/* Degree and Languages in one line, centered */}
+      <div className="flex justify-center items-center space-x-8 text-md">
+        <p>
+          <strong>Degree:</strong> {hospital.degree || "Degree not available"}
+        </p>
+        <p>
+          <strong>Languages:</strong>{" "}
+          {hospital.languagesSpoken || "Languages not available"}
+        </p>
+      </div>
+
+      {isLoggedIn ? (
+        <p className="mt-4 text-md text-green-600">{getRandomFeature()} 🥳</p>
+      ) : null}
+
+      <hr className="my-4 border-gray-300" />
+
+      {/* Conditional Rendering for Appointment Button or Message */}
+      {isLoggedIn ? (
+        <button
+          type="button"
+          onClick={handleBookAppointment} // Update the onClick handler
+          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200"
+        >
+          Book Appointment
+        </button>
+      ) : (
+        <p className="mt-4 text-red-600 font-semibold">
+          Please log in to book an appointment.
+        </p>
+      )}
+    </div>
+  </div>
+);
+
+  
+};  
 HospitalData.propTypes = {
   hospital: PropTypes.shape({
     name: PropTypes.string,

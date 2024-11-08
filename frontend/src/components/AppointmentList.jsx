@@ -1,25 +1,34 @@
-import { useContext, useState, useEffect } from 'react';
-import { UserContext } from '../Context/UserContext';
-import { useParams } from 'react-router-dom';
-import Navbar from './Navbar';
-import axios from 'axios';
+import { useContext, useState, useEffect } from "react";
+import { UserContext } from "../Context/UserContext";
+import { useParams } from "react-router-dom";
+import Navbar from "./Navbar";
+import axios from "axios";
 
 const AppointmentList = () => {
   const { hospitalInfo } = useContext(UserContext);
   const { hospitalId } = useParams();
   const [appointments, setAppointments] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const appointmentsPerPage = 10;
 
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/appointments/${hospitalId}`);
-        console.log("API Response Data:", response.data);  // Log the full response data
-        // Ensure appointments have visited initialized correctly
-        const updatedAppointments = response.data.map(appt => ({
-          ...appt,
-          visited: appt.visited === undefined ? null : appt.visited // Ensure visited is null if not defined
-        }));
-        setAppointments(updatedAppointments || []);
+        const response = await axios.get(
+          `http://localhost:3000/api/appointments/${hospitalId}`
+        );
+        
+        // Filter and sort appointments
+        const today = new Date().setHours(0, 0, 0, 0); // Get today's date at midnight
+        const filteredAppointments = response.data
+          .filter((appt) => new Date(appt.preferredDate).getTime() >= today)
+          .sort((a, b) => new Date(a.preferredDate) - new Date(b.preferredDate))
+          .map((appt) => ({
+            ...appt,
+            visited: appt.visited === undefined ? null : appt.visited,
+          }));
+
+        setAppointments(filteredAppointments || []);
       } catch (error) {
         console.error("Error fetching appointments:", error);
       }
@@ -38,8 +47,8 @@ const AppointmentList = () => {
         visited: status,
       });
 
-      setAppointments(prevAppointments =>
-        prevAppointments.map(appt =>
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appt) =>
           appt._id === appointmentId ? { ...appt, visited: status } : appt
         )
       );
@@ -52,23 +61,38 @@ const AppointmentList = () => {
     updateVisitStatus(appt._id, status);
   };
 
+  // Pagination handlers
+  const indexOfLastAppointment = currentPage * appointmentsPerPage;
+  const indexOfFirstAppointment = indexOfLastAppointment - appointmentsPerPage;
+  const currentAppointments = appointments.slice(
+    indexOfFirstAppointment,
+    indexOfLastAppointment
+  );
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <>
       <Navbar />
       <div className="container mx-auto p-4">
         <h2 className="text-2xl font-semibold text-center mb-4">
-          Appointments for <span className="text-blue-600">{hospitalInfo?.name}</span>
+          Appointments for{" "}
+          <span className="text-blue-600">{hospitalInfo?.name}</span>
         </h2>
         <div className="mb-4 p-4 bg-gray-100 rounded shadow-md">
-          <h3 className="text-lg font-semibold">Hospital Details</h3>
-          <p><strong>Address:</strong> {hospitalInfo?.address}</p>
-          <p><strong>Contact:</strong> {hospitalInfo?.phone}</p>
-          <p><strong>Email:</strong> {hospitalInfo?.email}</p>
+          <h3 className="text-lg font-semibold">Hospital Admin Guidelines</h3>
+          <ul className="list-none pl-6 space-y-2">
+            <li>Verify patient details carefully before confirming their appointment status.</li>
+            <li>Mark appointments as <b>Visited</b> or <b>Not Visited</b> only after consultation completion.</li>
+            <li>Ensure all data is accurate and regularly updated to maintain patient confidentiality.</li>
+          </ul>
         </div>
+
         <div className="overflow-x-auto">
           <table className="table-auto w-full border border-gray-300 shadow-md rounded-lg">
             <thead>
               <tr className="bg-gray-200">
+                <th className="p-2 border text-xs sm:text-base">Sr. No.</th>
                 <th className="p-2 border text-xs sm:text-base">Name</th>
                 <th className="p-2 border text-xs sm:text-base">Email</th>
                 <th className="p-2 border text-xs sm:text-base">Phone</th>
@@ -78,15 +102,18 @@ const AppointmentList = () => {
               </tr>
             </thead>
             <tbody>
-              {appointments.length > 0 ? (
-                appointments.map((appt) => (
+              {currentAppointments.length > 0 ? (
+                currentAppointments.map((appt, index) => (
                   <tr key={appt._id} className="text-center border-b hover:bg-gray-100">
+                    <td className="p-2 border text-sm sm:text-base">{indexOfFirstAppointment + index + 1}</td>
                     <td className="p-2 border text-sm sm:text-base">{appt.name}</td>
                     <td className="p-2 border text-sm sm:text-base">{appt.email}</td>
                     <td className="p-2 border text-sm sm:text-base">{appt.phone}</td>
-                    <td className="p-2 border text-sm sm:text-base">{new Date(appt.preferredDate).toLocaleDateString('en-GB')}</td>
+                    <td className="p-2 border text-sm sm:text-base">
+                      {new Date(appt.preferredDate).toLocaleDateString("en-GB")}
+                    </td>
                     <td className="p-2 border text-sm sm:text-base">{appt.preferredTime}</td>
-                    <td className="p-2 border flex justify-center items-center text-sm sm:text-base">
+                    <td className="p-2 border text-sm sm:text-base">
                       {appt.visited === null ? (
                         <>
                           <span
@@ -112,7 +139,7 @@ const AppointmentList = () => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="text-center p-4">
+                  <td colSpan="7" className="text-center p-4">
                     No appointments available.
                   </td>
                 </tr>
@@ -120,10 +147,24 @@ const AppointmentList = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center mt-4">
+          {Array.from({ length: Math.ceil(appointments.length / appointmentsPerPage) }, (_, i) => i + 1).map((page) => (
+            <button
+              key={page}
+              onClick={() => paginate(page)}
+              className={`px-3 py-1 mx-1 ${
+                page === currentPage ? "bg-blue-500 text-white" : "bg-gray-300"
+              } rounded-full`}
+            >
+              {page}
+            </button>
+          ))}
+        </div>
       </div>
     </>
   );
-  
 };
 
 export default AppointmentList;

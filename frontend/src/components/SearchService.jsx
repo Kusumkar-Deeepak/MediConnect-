@@ -2,13 +2,12 @@ import { useState, useEffect, useContext } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { UserContext } from '../Context/UserContext'; // Adjust the path as necessary
-import Hospital from './Hospitals'
+import Hospital from './Hospitals';
 import axios from 'axios';
-
 
 const SearchSection = () => {
   // Sample data for hospitals with added details
-  const hospitals = [
+  const defaultHospitals = [
     {
         name: 'City Hospital',
         city: 'Mumbai',
@@ -290,11 +289,9 @@ const SearchSection = () => {
       degree: 'MBBS, MD Gastroenterology'
   }
 ];
-
-
-
 const [searchTerm, setSearchTerm] = useState('');
   const [filteredHospitals, setFilteredHospitals] = useState([]);
+  const [allHospitals, setAllHospitals] = useState([]); // New state to hold the full list of hospitals
   const { clientInfo } = useContext(UserContext);
   const isLoggedIn = !!clientInfo;
 
@@ -303,51 +300,57 @@ const [searchTerm, setSearchTerm] = useState('');
       const token = localStorage.getItem('token');
 
       if (isLoggedIn) {
-        // Fetch actual hospital data for logged-in users
         try {
           const response = await axios.get('http://localhost:3000/api/hospitals/find-hospital', {
             headers: { Authorization: `Bearer ${token}` },
           });
 
           if (Array.isArray(response.data)) {
-            setFilteredHospitals(response.data);
-            localStorage.setItem('hospitals', JSON.stringify(response.data));
+            setAllHospitals(response.data); // Save the full list of hospitals
+            setFilteredHospitals(response.data); // Display the full list initially
           } else {
+            setAllHospitals([]); 
             setFilteredHospitals([]);
           }
         } catch (error) {
-          toast.error('Failed to fetch hospitals. Please try again later.', error);
+          toast.error('Failed to fetch hospitals. Please try again later.');
+          setAllHospitals([]);
           setFilteredHospitals([]);
+          console.log(error);
         }
       } else {
-        // For non-logged-in users, display temporary data
-        setFilteredHospitals(hospitals.slice(0, 3));
+        // For non-logged-in users, display default sample hospitals
+        setAllHospitals(defaultHospitals);
+        setFilteredHospitals(defaultHospitals.slice(0, 3));
       }
     };
 
     fetchHospitals();
-  }, [isLoggedIn]);  // Re-fetch data based on login status
+  }, [isLoggedIn]);
 
   const handleSearch = () => {
-    // If logged in, use filtered hospitals, else show all hospitals for non-logged-in users
-    const dataToFilter = isLoggedIn ? filteredHospitals : hospitals;  // Use all hospitals for search
-  
     const cityToSearch = searchTerm.trim().toLowerCase();
-  
-    // Filter based on a substring match for the city name entered
-    const results = dataToFilter.filter((hospital) =>
+
+    if (!cityToSearch) {
+      // Reset the display to the full list of hospitals or default hospitals
+      setFilteredHospitals(isLoggedIn ? allHospitals : defaultHospitals.slice(0, 3));
+      return;
+    }
+
+    // Filter from the original list of hospitals
+    const results = allHospitals.filter((hospital) =>
       hospital.city.toLowerCase().includes(cityToSearch)
     );
-  
+
     if (results.length === 0) {
       toast.error(`No hospitals found in "${searchTerm}"`);
-      setFilteredHospitals(hospitals.slice(0, 3));  // Show a default set of hospitals if no match found
+      setFilteredHospitals([]);
     } else {
-      setFilteredHospitals(results.length > 0 ? results : dataToFilter);  // Set the filtered hospitals or keep the original list
-      setSearchTerm('');  // Reset the search term after search
+      setFilteredHospitals(results);
     }
-};
 
+    setSearchTerm('');  // Clear the search input
+  };
 
   return (
     <div className="flex flex-col items-center h-auto bg-cover bg-center text-white py-8">
