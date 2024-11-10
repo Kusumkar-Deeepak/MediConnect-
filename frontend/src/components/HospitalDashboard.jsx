@@ -17,6 +17,7 @@ const HospitalDashboard = () => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [formData, setFormData] = useState({});
   const [password, setPassword] = useState("");
+  const [isUpdatePending, setIsUpdatePending] = useState(false);
   const navigate = useNavigate();
 
   // State to toggle password visibility
@@ -46,27 +47,26 @@ const HospitalDashboard = () => {
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
+
     if (type === "checkbox") {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
+      setFormData((prev) => ({
+        ...prev,
         facilities: {
-          ...prevFormData.facilities,
+          ...prev.facilities,
           [name]: checked,
         },
       }));
-    } else if (name.includes("openingHours")) {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
+    } else if (name.startsWith("openingHours")) {
+      const [, day] = name.split(".");
+      setFormData((prev) => ({
+        ...prev,
         openingHours: {
-          ...prevFormData.openingHours,
-          [name.split(".")[1]]: value,
+          ...prev.openingHours,
+          [day]: value,
         },
       }));
     } else {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
-      }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
@@ -116,8 +116,15 @@ const HospitalDashboard = () => {
         }
       );
 
-      if (response.status === 200) {
-        toast.success("Profile updated successfully.");
+      if (response.status === 202) {
+        // Handle pending approval status
+        setIsUpdatePending(true);
+        toast.info(response.data.message);
+        handleCloseEditModal();
+        // Do not update context since the update is pending approval
+      } else if (response.status === 200) {
+        // Update was successful
+        toast.success(response.data.message);
         handleCloseEditModal();
         setHospitalInfo(formData); // Update context with the new data
       } else {
@@ -145,7 +152,7 @@ const HospitalDashboard = () => {
         toast.success("Profile deleted successfully.");
         clearHospitalInfo(); // Clear hospital info from context and localStorage
         localStorage.removeItem("token");
-        navigate("/");
+        navigate("/admin-details");
         handleCloseDeleteModal();
       } else {
         toast.error(response.data.message);
@@ -168,6 +175,21 @@ const HospitalDashboard = () => {
 
   console.log("formdata : ", formData);
 
+  // Show a message once the update is pending
+  const showPendingUpdateMessage = () => {
+    if (isUpdatePending) {
+      return (
+        <div className="pending-update-message">
+          <p className="text-yellow-800 bg-yellow-200 border-l-4 border-yellow-500 p-2 mt-4">
+            Your update request is pending approval. When you got the mail from the MediConnect Then Please sign out and sign in
+            to view the changes once approved.
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return (
     <>
       <Navbar />
@@ -182,6 +204,8 @@ const HospitalDashboard = () => {
           />
 
           <div className="flex flex-col justify-start md:flex-grow">
+            {/* Pending update message */}
+            {showPendingUpdateMessage()}
             <h2 className="text-3xl font-bold text-blue-800">
               {hospitalInfo?.name || "Hospital Name"}
             </h2>
@@ -262,18 +286,6 @@ const HospitalDashboard = () => {
               Staff Details
             </h3>
             <p>
-              Number of Doctors:{" "}
-              <span className="font-bold">
-                {hospitalInfo?.numberOfDoctors || "N/A"}
-              </span>
-            </p>
-            <p>
-              Number of Nurses:{" "}
-              <span className="font-bold">
-                {hospitalInfo?.numberOfNurses || "N/A"}
-              </span>
-            </p>
-            <p>
               Specialty Doctor Name:{" "}
               <span className="font-bold">
                 {hospitalInfo?.specDrName || "N/A"}
@@ -288,6 +300,18 @@ const HospitalDashboard = () => {
             <p>
               Degree:{" "}
               <span className="font-bold">{hospitalInfo?.degree || "N/A"}</span>
+            </p>
+            <p>
+              Number of Doctors:{" "}
+              <span className="font-bold">
+                {hospitalInfo?.numberOfDoctors || "N/A"}
+              </span>
+            </p>
+            <p>
+              Number of Nurses:{" "}
+              <span className="font-bold">
+                {hospitalInfo?.numberOfNurses || "N/A"}
+              </span>
             </p>
           </div>
         </div>
@@ -420,18 +444,7 @@ const HospitalDashboard = () => {
 
             {currentStep === 1 && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                {/* Hospital Name */}
-                <div className="flex flex-col mb-4">
-                  <label className="mb-1 text-gray-700">Hospital Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    placeholder="Hospital Name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
+                
 
                 {/* Email */}
                 <div className="flex flex-col mb-4">
@@ -553,6 +566,18 @@ const HospitalDashboard = () => {
                     className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
+                {/* Specialist */}
+                <div className="flex flex-col mb-4">
+                    <label className="mb-1 text-gray-700">Specialist</label>
+                    <input
+                      type="text"
+                      name="specialist"
+                      placeholder="Specialist"
+                      value={formData.specialist}
+                      onChange={handleInputChange}
+                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                  </div>
                 {/* Opening Hours */}
                 <div className="flex flex-col mb-4">
                   <label style={{ display: "flex", alignItems: "center" }}>
@@ -612,18 +637,7 @@ const HospitalDashboard = () => {
                     />
                   </div>
 
-                  {/* Specialist */}
-                  <div className="flex flex-col mb-4">
-                    <label className="mb-1 text-gray-700">Specialist</label>
-                    <input
-                      type="text"
-                      name="specialist"
-                      placeholder="Specialist"
-                      value={formData.specialist}
-                      onChange={handleInputChange}
-                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
+                  
 
                   {/* Website */}
                   <div className="flex flex-col mb-4">
@@ -708,6 +722,26 @@ const HospitalDashboard = () => {
                       className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
+                  <div className="flex flex-wrap gap-6 p-4">
+  {Object.entries(formData.facilities).map(([facility, isAvailable]) => (
+    <div key={facility} className="flex items-center mb-3 w-auto">
+      <input
+        type="checkbox"
+        name={facility}
+        checked={isAvailable}
+        onChange={handleInputChange}
+        className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+      />
+      <label
+        htmlFor={facility}
+        className="ml-2 text-gray-700 text-sm font-medium capitalize"
+      >
+        {facility}
+      </label>
+    </div>
+  ))}
+</div>
+
                 </div>
               </>
             )}

@@ -144,9 +144,9 @@ const HospitalSignup = () => {
     }
 
     // Number of doctors should be greater than the number of nurses
-    if (parseInt(numberOfDoctors) <= parseInt(numberOfNurses)) {
+    if (parseInt(numberOfDoctors) >= parseInt(numberOfNurses)) {
       toast.error(
-        "Number of doctors must be greater than the number of nurses."
+        "Number of doctors must be smaller than the number of nurses."
       );
       return false;
     }

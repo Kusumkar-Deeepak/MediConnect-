@@ -17,6 +17,9 @@ export const UserProvider = ({ children }) => {
     return savedClientInfo ? JSON.parse(savedClientInfo) : null;
   });
 
+  const [hospitalId, setHospitalId] = useState(localStorage.getItem("hospitalId") || "");
+
+  
   // Function to save hospital and client info to localStorage
   const saveToLocalStorage = (key, value) => {
     if (value) {
@@ -30,6 +33,12 @@ export const UserProvider = ({ children }) => {
   useEffect(() => {
     saveToLocalStorage('hospitalInfo', hospitalInfo);
     saveToLocalStorage('clientInfo', clientInfo);
+    // Optionally, load hospitalId from localStorage on page load
+    const storedHospitalId = localStorage.getItem("hospitalId");
+    if (storedHospitalId) {
+      setHospitalId(storedHospitalId);
+    }
+
   }, [hospitalInfo, clientInfo]);
 
   // Clear hospital info and client info (useful when user logs out or deletes profile)
@@ -41,6 +50,8 @@ export const UserProvider = ({ children }) => {
     setClientInfo(null);  // Clear the client info
   };
 
+
+
   return (
     <UserContext.Provider
       value={{
@@ -49,7 +60,9 @@ export const UserProvider = ({ children }) => {
         clientInfo,
         setClientInfo,
         clearHospitalInfo,
-        clearClientInfo
+        clearClientInfo,
+        hospitalId, 
+        setHospitalId
       }}
     >
       {children}

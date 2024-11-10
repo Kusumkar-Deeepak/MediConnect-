@@ -23,11 +23,13 @@ const Navbar = () => {
   const [clientData, setClientData] = useState({
     clientEmail: "",
     clientPassword: "",
+    clientName: "",
   });
   const [hospitalData, setHospitalData] = useState({
     hospitalID: "",
     hospitalPassword: "",
   });
+
   const clientOnChange = (e) =>
     setClientData({ ...clientData, [e.target.name]: e.target.value });
   const hospitalOnChange = (e) =>
@@ -44,25 +46,21 @@ const Navbar = () => {
   const closeHospitalModal = () => setHospitalModalOpen(false);
   const closeClientModal = () => setClientModalOpen(false);
 
-  const { setHospitalInfo, setClientInfo } = useContext(UserContext); // Access context
-  const [hospitalId, setHospitalId] = useState("");
+  const { hospitalId, setHospitalInfo, setClientInfo } = useContext(UserContext);
+  // const [hospitalId, setHospitalId] = useState("");
 
-  // State to toggle password visibility
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
-  // Function to toggle password visibility
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prevState) => !prevState);
   };
 
-  // Initialize state based on local storage on mount
   useEffect(() => {
     const token = localStorage.getItem("token");
     const storedHospitalName = localStorage.getItem("hospitalName");
     const storedClientName = localStorage.getItem("clientName");
 
     if (token) {
-      // If the token exists, set the login states accordingly
       const isHospital = storedHospitalName !== null;
       const isClient = storedClientName !== null;
 
@@ -73,7 +71,6 @@ const Navbar = () => {
     }
   }, []);
 
-  // Update date and time every second
   useEffect(() => {
     const updateDateTime = () => {
       const now = new Date();
@@ -87,8 +84,6 @@ const Navbar = () => {
 
   const hospitalSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting hospital data:", hospitalData);
-
     try {
       const response = await axios.get(
         "http://localhost:3000/api/hospitals/login",
@@ -99,40 +94,31 @@ const Navbar = () => {
           },
         }
       );
-      console.log("Response from hospital login:", response.data);
-
       if (response.status === 200 && response.data.token) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("hospitalName", response.data.hospital.name);
+        localStorage.setItem("hospitalId", response.data.hospital.id);
         setHospitalName(response.data.hospital.name);
-        setHospitalId(response.data.hospital.id);
-        // alert(response.data.hospital.id);
+        // setHospitalId(response.data.hospital.id);
         setIsHospitalLoggedIn(true);
         setHospitalInfo(response.data.hospital);
 
-        // Display success toast and navigate after 3 seconds
         toast.success("Hospital login successful");
         setTimeout(() => {
           navigate("/admin-details");
-        }, 1000); // Delay navigation by 3 seconds
-
+        }, 1000);
         closeHospitalModal();
       } else {
         toast.error("Hospital login failed");
       }
     } catch (error) {
       toast.error("Hospital login failed - Invalid Credentials.");
-      console.error(
-        "Error during Hospital login:",
-        error.response?.data || error.message
-      );
+      console.error("Error during Hospital login:", error.response?.data || error.message);
     }
   };
 
   const clientSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting client data:", clientData);
-
     try {
       const response = await axios.get(
         "http://localhost:3000/api/clients/login",
@@ -143,12 +129,9 @@ const Navbar = () => {
           },
         }
       );
-      console.log("Response from client login:", response.data);
-      console.log("Response from client login:", response.data.client);
-
       if (response.status === 200 && response.data.token) {
         localStorage.setItem("token", response.data.token);
-        localStorage.setItem("clientName", response.data.client.name); // Store the client name
+        localStorage.setItem("clientName", response.data.client.name);
         setClientName(response.data.client.name);
         setClientInfo(response.data.client);
         setIsClientLoggedIn(true);
@@ -159,42 +142,34 @@ const Navbar = () => {
       }
     } catch (error) {
       toast.error("Error during client login");
-      console.error(
-        "Error during client login:",
-        error.response?.data || error.message
-      );
+      console.error("Error during client login:", error.response?.data || error.message);
     }
   };
 
-  // Handle sign out for hospital
   const handleHospitalSignOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("hospitalName");
     setIsHospitalLoggedIn(false);
     setHospitalName("");
 
-    // Display success toast and navigate after 3 seconds
     toast.success("Hospital signed out successfully");
     setTimeout(() => {
       navigate("/");
-    }, 2000); // Delay navigation by 3 seconds
+    }, 2000);
   };
 
   const handleClientSignOut = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("clientName");
     setIsClientLoggedIn(false);
-    setClientInfo(null); // Clear clientInfo in the UserContext
+    setClientInfo(null);
     setClientName("");
 
-    // Display success toast and navigate after 3 seconds
     toast.success("Client signed out successfully");
     setTimeout(() => {
       navigate("/");
-    }, 2000); // Delay navigation by 3 seconds
+    }, 2000);
   };
-
-  // console.log('hsp id',hospitalId)y;
 
   return (
     <nav className="bg-white shadow-md">

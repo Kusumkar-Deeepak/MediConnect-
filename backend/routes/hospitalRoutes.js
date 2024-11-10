@@ -467,80 +467,6 @@ router.post("/verify", async (req, res) => {
   }
 });
 
-router.put("/update", verifyToken, async (req, res) => {
-  const {
-    id, // This is your custom hospital ID
-    name,
-    email,
-    phone,
-    address,
-    city,
-    state,
-    zipCode,
-    specDrName,
-    numberOfDoctors,
-    numberOfNurses,
-    aboutHospital,
-    facilities,
-    website,
-    openingHours,
-    experience,
-    specialist,
-    languagesSpoken,
-    insuranceAccepted,
-    emergencyContact,
-    degree,
-    password, // Include password in request body
-  } = req.body;
-
-  console.log("Requested body:", req.body);
-
-  try {
-    // Find hospital by custom 'id' field
-    const hospital = await Hospital.findOne({ id });
-    if (!hospital)
-      return res.status(404).json({ message: "Hospital not found" });
-
-    // If a new password is provided, hash it
-    let hashedPassword = hospital.password; // Keep existing password by default
-    if (password && password.trim()) {
-      const salt = await bcrypt.genSalt(10);
-      hashedPassword = await bcrypt.hash(password, salt);
-    }
-
-    // Update hospital's profile fields only if new values are provided
-    hospital.name = name || hospital.name;
-    hospital.email = email || hospital.email;
-    hospital.password = hashedPassword; // Ensure hashed password is set
-    hospital.phone = phone || hospital.phone;
-    hospital.address = address || hospital.address;
-    hospital.city = city || hospital.city;
-    hospital.state = state || hospital.state;
-    hospital.zipCode = zipCode || hospital.zipCode;
-    hospital.specDrName = specDrName || hospital.specDrName;
-    hospital.numberOfDoctors = numberOfDoctors || hospital.numberOfDoctors;
-    hospital.numberOfNurses = numberOfNurses || hospital.numberOfNurses;
-    hospital.aboutHospital = aboutHospital || hospital.aboutHospital;
-    hospital.facilities = facilities || hospital.facilities;
-    hospital.website = website || hospital.website;
-    hospital.openingHours = openingHours || hospital.openingHours;
-    hospital.experience = experience || hospital.experience;
-    hospital.specialist = specialist || hospital.specialist;
-    hospital.languagesSpoken = languagesSpoken || hospital.languagesSpoken;
-    hospital.insuranceAccepted =
-      insuranceAccepted || hospital.insuranceAccepted;
-    hospital.emergencyContact = emergencyContact || hospital.emergencyContact;
-    hospital.degree = degree || hospital.degree;
-
-    await hospital.save();
-
-    res.status(200).json({ message: "Profile updated successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
-
 router.delete("/delete", async (req, res) => {
   try {
     const { id, password } = req.body;
@@ -623,5 +549,182 @@ router.post("/contact", async (req, res) => {
     });
   }
 });
+
+// Temporary storage for pending updates
+const pendingUpdates = {};
+
+// Update hospital profile route with confirmation request
+router.put("/update", verifyToken, async (req, res) => {
+  const { id, ...updatedFields } = req.body;
+
+  try {
+    const hospital = await Hospital.findOne({ id });
+    if (!hospital) {
+      return res.status(404).json({ message: "Hospital not found" });
+    }
+
+    // Generate a unique token for this update request
+    const updateToken = crypto.randomBytes(32).toString("hex");
+    pendingUpdates[updateToken] = { id, updatedFields };
+
+    // Send confirmation email to MediConnect Admin
+    await sendUpdateConfirmationEmail(req.body, updateToken);
+
+    // Use 202 status for a pending update request
+    res.status(202).json({
+      message: "Update request is pending approval from MediConnect Admin.",
+    });
+  } catch (error) {
+    console.error("Error during hospital update request:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+// Send update confirmation email function
+async function sendUpdateConfirmationEmail(updateData, token) {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.APP_PASS,
+    },
+  });
+
+  const confirmLink = `http://localhost:3000/api/hospitals/confirmUpdate/${token}`;
+  const cancelLink = `http://localhost:3000/api/hospitals/cancelUpdate/${token}`;
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: process.env.EMAIL_USER, // MediConnect Admin Email
+    subject: "Hospital Profile Update Request",
+    html: `
+      <h2>Hospital Profile Update Request</h2>
+      <p>A hospital has requested an update to their profile. Here are the details:</p>
+      <pre>${JSON.stringify(updateData, null, 2)}</pre>
+      <p>Click the buttons below to confirm or cancel this update:</p>
+      <a href="${confirmLink}" style="padding: 10px 15px; background: green; color: white; text-decoration: none;">Confirm Update</a>
+      <a href="${cancelLink}" style="padding: 10px 15px; background: red; color: white; text-decoration: none;">Cancel Update</a>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+}
+
+// Route to confirm update
+router.get("/confirmUpdate/:token", async (req, res) => {
+  try {
+    const { token } = req.params;
+    const updateData = pendingUpdates[token];
+
+    if (!updateData) {
+      console.log("Invalid or expired token");
+      return res.status(400).json({ message: "Invalid or expired confirmation token." });
+    }
+
+    const hospital = await Hospital.findOne({ id: updateData.id });
+    if (!hospital) {
+      console.log("Hospital not found for ID:", updateData.id);
+      return res.status(404).json({ message: "Hospital not found" });
+    }
+
+    // Exclude sensitive fields like password
+    if (updateData.updatedFields.password) {
+      delete updateData.updatedFields.password;
+    }
+
+    // Apply the update fields to the hospital document
+    Object.assign(hospital, updateData.updatedFields);
+
+    // Save the updated hospital profile
+    await hospital.save();
+    console.log("Update saved to MongoDB for hospital:", hospital.id);
+
+    // Clean up pending updates
+    delete pendingUpdates[token];
+
+    await sendUpdateAcceptedEmail(hospital.email, updateData.updatedFields);
+
+    res.status(200).json({
+      message: "Hospital profile updated successfully and confirmed by MediConnect Admin.",
+    });
+  } catch (error) {
+    console.error("Error confirming update:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
+
+
+// Route to cancel update
+router.get("/cancelUpdate/:token", async (req, res) => {
+  const { token } = req.params;
+  const updateData = pendingUpdates[token];
+
+  if (!updateData) {
+    return res
+      .status(400)
+      .json({ message: "Invalid or expired cancellation token." });
+  }
+
+  await sendUpdateCancellationEmail(updateData); // Notify the hospital admin about the cancellation
+
+  delete pendingUpdates[token]; // Remove the pending update after cancellation
+
+  res.status(200).json({
+    message: "Hospital update request has been cancelled by MediConnect Admin.",
+  });
+});
+
+// Send update accepted email to hospital admin
+async function sendUpdateAcceptedEmail(adminEmail, updatedFields) {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.APP_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: adminEmail, // Hospital admin email
+    subject: "Hospital Profile Update Accepted",
+    html: `
+      <h2>Hospital Profile Update Accepted</h2>
+      <p>Your hospital profile update request has been approved and the following changes have been applied:</p>
+      <pre>${JSON.stringify(updatedFields, null, 2)}</pre>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+}
+
+// Send cancellation email function
+async function sendUpdateCancellationEmail(updateData) {
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.APP_PASS,
+    },
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: updateData.updatedFields.email, // Hospital admin email
+    subject: "Hospital Profile Update Request Cancelled",
+    html: `
+      <h2>Hospital Profile Update Request Cancelled</h2>
+      <p>Your update request has been cancelled by MediConnect Admin. No changes were made to your profile.</p>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+}
+
 
 module.exports = router;
