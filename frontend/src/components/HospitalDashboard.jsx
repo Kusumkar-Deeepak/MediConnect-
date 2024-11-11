@@ -100,7 +100,133 @@ const HospitalDashboard = () => {
     }
   };
 
-  const handleUpdateProfile = async () => {
+  const validateForm = () => {
+    const {
+      email,
+      phone,
+      address,
+      city,
+      state,
+      zipCode,
+      specDrName,
+      numberOfDoctors,
+      numberOfNurses,
+      aboutHospital,
+      website,
+      languagesSpoken,
+      insuranceAccepted,
+      emergencyContact,
+      degree,
+      experience,
+      openingHours,
+      closingHours,
+    } = formData;
+  
+    let errors = [];
+  
+    // Email validation (required and valid format)
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      toast.error("Please enter a valid email.");
+    }
+  
+    // Phone validation (required and valid format)
+    if (!phone || !/^\d{10}$/.test(phone)) {
+      toast.error("Please enter a valid 10-digit phone number.");
+    }
+  
+    // Address validation (required)
+    if (!address) {
+      toast.error("Address is required.");
+    }
+  
+    // City validation (required)
+    if (!city) {
+      toast.error("City is required.");
+    }
+  
+    // State validation (required)
+    if (!state) {
+      toast.error("State is required.");
+    }
+  
+    // Zip Code validation (required and valid format)
+    if (!zipCode || !/^\d{6}$/.test(zipCode)) {
+      toast.error("Please enter a valid 6-digit zip code.");
+    }
+  
+    // Specialty Doctor Name validation (required)
+    if (!specDrName) {
+      toast.error("Specialty Doctor Name is required.");
+    }
+  
+    // Number of Doctors validation (required and numeric)
+    if (!numberOfDoctors || isNaN(numberOfDoctors) || numberOfDoctors <= 0) {
+      toast.error("Please enter a valid number for the number of doctors.");
+    }
+  
+    // Number of Nurses validation (required and numeric)
+    if (!numberOfNurses || isNaN(numberOfNurses) || numberOfNurses <= 0) {
+      toast.error("Please enter a valid number for the number of nurses.");
+    }
+  
+    // About Hospital validation (required)
+    if (!aboutHospital) {
+      toast.error("About Hospital is required.");
+    }
+  
+    // Website validation (optional but valid URL format)
+    if (website && !/^https?:\/\/[^\s]+$/.test(website)) {
+      toast.error("Please enter a valid website URL.");
+    }
+  
+    // Languages Spoken validation (optional)
+    if (!languagesSpoken) {
+      toast.error("Languages Spoken is required.");
+    }
+  
+    // Insurance Accepted validation (optional)
+    if (!insuranceAccepted) {
+      toast.error("Insurance Accepted is required.");
+    }
+  
+    // Emergency Contact validation (required)
+    if (!emergencyContact) {
+      toast.error("Emergency Contact is required.");
+    }
+  
+    // Degree validation (optional)
+    if (!degree) {
+      toast.error("Degree is required.");
+    }
+  
+    // Experience validation (optional)
+    if (!experience) {
+      toast.error("Experience is required.");
+    }
+  
+    // Opening and Closing Hours validation (required)
+    if (!openingHours.start || !closingHours.end) {
+      toast.error("Opening and Closing Hours are required.");
+    }
+  
+    // If there are any errors, show them using toast
+    if (errors.length > 0) {
+      errors.forEach((error) => {
+        toast.error(error); // Display each error as a toast
+      });
+      return false;
+    }
+  
+    return true; // Form is valid if no errors
+  };
+
+  const handleUpdateProfile = async (e) => {
+
+    e.preventDefault();
+    if (!validateForm()) {
+      return;
+    }
+
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
@@ -190,6 +316,8 @@ const HospitalDashboard = () => {
     }
     return null;
   };
+
+
 
   return (
     <>

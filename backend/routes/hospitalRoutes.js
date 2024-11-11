@@ -757,5 +757,40 @@ router.post("/:id/review", async (req, res) => {
   }
 });
 
+// Get hospital ratings and reviews
+router.get("/:id/reviews", async (req, res) => {
+  try {
+    const hospitalId = req.params.id;
+
+    // Fetch the hospital from the database, including reviews
+    const hospital = await Hospital.findOne({ id: hospitalId }).select("reviews");
+
+    if (!hospital) {
+      return res.status(404).json({ message: "Hospital not found" });
+    }
+
+    // Calculate the average rating
+    const ratings = hospital.reviews.map(review => review.star);
+    const averageRating =
+      ratings.length > 0 ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length : 0;
+
+    // Get the latest 2-3 reviews
+    const latestReviews = hospital.reviews.slice(0, 3).map(review => ({
+      text: review.text,
+      star: review.star,
+      reviewerName: review.reviewerName,
+      createdAt: review.createdAt,
+    }));
+
+    res.status(200).json({
+      averageRating,
+      reviews: latestReviews,
+    });
+  } catch (error) {
+    console.error("Error fetching hospital reviews:", error);
+    res.status(500).json({ message: "Error fetching hospital reviews" });
+  }
+});
+
 
 module.exports = router;

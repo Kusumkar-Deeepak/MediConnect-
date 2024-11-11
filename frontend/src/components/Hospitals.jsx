@@ -36,7 +36,7 @@ const HospitalData = ({ hospital, isLoggedIn, clientInfo }) => {
       availableFeatures[Math.floor(Math.random() * availableFeatures.length)];
     return `The hospital offers ${randomFeature}.`;
   };
-  console.log('cleintInfo:', clientInfo)
+  console.log("cleintInfo:", clientInfo);
 
   // Toggle the review section
   const toggleReviewSection = () => {
@@ -45,11 +45,14 @@ const HospitalData = ({ hospital, isLoggedIn, clientInfo }) => {
 
   const submitReview = async () => {
     try {
-      const response = await axios.post(`http://localhost:3000/api/hospitals/${hospital.id}/review`, {
-        text: reviewText, // Changed to `text` as per server expectation
-        star: rating,     // Changed to `star` as per server expectation
-        reviewerName: clientInfo.name, // Replace with actual name if available
-      });
+      const response = await axios.post(
+        `http://localhost:3000/api/hospitals/${hospital.id}/review`,
+        {
+          text: reviewText, // Changed to `text` as per server expectation
+          star: rating, // Changed to `star` as per server expectation
+          reviewerName: clientInfo.name, // Replace with actual name if available
+        }
+      );
       if (response.status === 201) {
         toast.success("Review submitted successfully!");
         setReviewText("");
@@ -61,8 +64,6 @@ const HospitalData = ({ hospital, isLoggedIn, clientInfo }) => {
       toast.error("Failed to submit review. Please try again.");
     }
   };
-  
-
 
   return (
     <div className="flex flex-col lg:flex-row w-full max-w-full sm:max-w-4xl p-4 sm:px-12 lg:px-8 bg-white rounded-lg shadow-md border border-gray-200">
@@ -130,13 +131,14 @@ const HospitalData = ({ hospital, isLoggedIn, clientInfo }) => {
         )}
         <br />
 
-        {/* Add Review Button */}
-        <button
-          onClick={toggleReviewSection}
-          className="mt-4 text-sm text-blue-500 underline self-start"
-        >
-          {showReview ? "Close Review Section" : "Add a Review"}
-        </button>
+        {isLoggedIn ? (
+          <button
+            onClick={toggleReviewSection}
+            className="mt-4 text-sm text-blue-500 underline self-start"
+          >
+            {showReview ? "Close Review Section" : "Add a Review"}
+          </button>
+        ) : null}
 
         {/* Review Section */}
         {showReview && (
@@ -148,6 +150,8 @@ const HospitalData = ({ hospital, isLoggedIn, clientInfo }) => {
               placeholder="Write your review here..."
               className="w-full p-2 border rounded-md mb-4"
             />
+
+            {/* Rating Section */}
             <div className="flex flex-wrap items-center mb-4">
               <span className="mr-2 text-sm font-medium">Rating:</span>
               <div className="flex">
@@ -165,6 +169,7 @@ const HospitalData = ({ hospital, isLoggedIn, clientInfo }) => {
               </div>
             </div>
 
+            {/* Submit Review Button */}
             <button
               onClick={submitReview}
               className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200"

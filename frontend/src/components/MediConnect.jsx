@@ -92,7 +92,7 @@ export const MediConnect = () => {
                             <span className="font-semibold">Email:</span> deepak@example.com
                         </li>
                         <li className="mb-2">
-                            <span className="font-semibold">Phone:</span> +91 123 456 7890
+                            <span className="font-semibold">Phone:</span> +91 9370387851
                         </li>
                     </ul>
                 </section>

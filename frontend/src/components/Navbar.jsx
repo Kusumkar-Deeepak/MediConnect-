@@ -237,10 +237,10 @@ const Navbar = () => {
         <div className="hidden lg:flex items-center space-x-6">
           {isClientLoggedIn && (
             <a
-              href="/services"
+              href="/Medi-Info"
               className="px-4 py-2 border rounded-md hover:bg-gray-100"
             >
-              Ask The Doctor
+              🩺📚MediInfo
             </a>
           )}
 
@@ -368,7 +368,7 @@ const Navbar = () => {
           <div className="py-2 px-4">
             {isClientLoggedIn && (
               <a
-                href="/services"
+                href="/Medi-Info"
                 className="block px-4 py-2 border rounded-md hover:bg-gray-100"
               >
                 Ask The Doctor
@@ -437,12 +437,21 @@ const Navbar = () => {
                         </button>
                       </>
                     ) : (
+                      <>
+                      <Link
+                        to={`/client-appointments?email=${clientEmail}`} // Pass email as a query parameter
+                        className="block px-6 text-2 py-2 hover:bg-gray-100"
+                      >
+                        Client Appointments
+                      </Link>
+
                       <button
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                        className="block w-full text-center px-4 py-2 hover:bg-gray-100"
                         onClick={handleClientSignOut}
                       >
                         Sign Out
                       </button>
+                    </>
                     )}
                   </div>
                 )}

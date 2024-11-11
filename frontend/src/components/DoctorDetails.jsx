@@ -8,6 +8,8 @@ import "react-toastify/dist/ReactToastify.css";
 const DoctorDetails = () => {
   const location = useLocation();
   const { hospital, clientInfo } = location.state || {};
+  const [ratings, setRatings] = useState(0);
+  const [reviews, setReviews] = useState([]);
 
   console.log("Selected hospital:", hospital);
 
@@ -38,7 +40,7 @@ const DoctorDetails = () => {
   };
 
   const today = new Date();
-  const formattedToday = today.toISOString().split("T")[0];
+  // const formattedToday = today.toISOString().split("T")[0];
   const formatToday = formatDate(today);
 
   // Date 3 months from today
@@ -92,6 +94,26 @@ const DoctorDetails = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
+
+  // Fetch ratings and reviews for the hospital
+  useEffect(() => {
+    if (hospital?.id) {
+      const fetchRatingsAndReviews = async () => {
+        try {
+          const response = await axios.get(
+            `http://localhost:3000/api/hospitals/${hospital.id}/reviews`
+          );
+          setRatings(response.data.averageRating);
+          setReviews(response.data.reviews);
+        } catch (error) {
+          console.error("Error fetching ratings and reviews:", error);
+          toast.error("Failed to load ratings and reviews.");
+        }
+      };
+
+      fetchRatingsAndReviews();
+    }
+  }, [hospital?.id]);
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -186,15 +208,16 @@ const DoctorDetails = () => {
           {/* Hospital Info */}
           <div className="bg-white p-6 rounded-lg shadow-md mb-6">
             <h2 className="text-xl font-semibold mb-2">Hospital Information</h2>
-            <p>
+            <p className="text-sm sm:text-base md:text-lg">
               <strong>Website:</strong>{" "}
               <a
                 href={hospital.website || "#"}
-                className="text-blue-600 hover:underline"
+                className="text-blue-600 hover:underline break-words"
               >
                 {hospital.website || "No website available."}
               </a>
             </p>
+
             <p>
               <strong>Opening Hours:</strong>{" "}
               {hospital.openingHours
@@ -338,6 +361,156 @@ const DoctorDetails = () => {
               </button>
             </div>
           </form>
+        </div>
+      </div>
+      {/* Ratings and Reviews Section */}
+      <div className="bg-white p-6 rounded-lg shadow-md mb-6 space-y-6">
+        {/* Average Rating */}
+        <div className="flex items-center space-x-2 mb-6">
+          <strong className="text-lg text-gray-700">Average Rating:</strong>
+          <div className="flex items-center">
+            {/* Render stars based on average rating */}
+            {Array.from({ length: 5 }, (_, index) => (
+              <svg
+                key={index}
+                xmlns="http://www.w3.org/2000/svg"
+                fill={index < ratings ? "currentColor" : "none"}
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                className="w-5 h-5 text-yellow-500"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 17l-5 3 1-6-4-4 6-1 2-5 2 5 6 1-4 4 1 6-5-3z"
+                />
+              </svg>
+            ))}
+            <span className="text-2xl font-bold text-yellow-500 ml-2">
+              {ratings.toFixed(1)} / 5
+            </span>
+          </div>
+        </div>
+
+        <hr className="border-gray-300 mb-6" />
+
+        {/* Reviews Section */}
+        <div className="space-y-6">
+          <strong className="text-lg text-gray-700 mb-4 block">Reviews:</strong>
+
+          {/* Reviews Grid (2 reviews per row) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {reviews.length > 0 ? (
+              reviews.slice(0, 4).map((review, index) => (
+                <div
+                  key={index}
+                  className="bg-gray-50 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                >
+                  <div className="flex items-center space-x-4 mb-4">
+                    {/* Reviewer Image */}
+                    <img
+                      src={
+                        review.reviewerImage || "https://img.freepik.com/premium-vector/black-silhouette-default-profile-avatar_664995-354.jpg"
+                      }
+                      alt="Reviewer"
+                      className="w-12 h-12 rounded-full object-cover"
+                    />
+                    <div>
+                      <p className="font-semibold text-gray-800">
+                        {review.reviewerName}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {new Date(review.createdAt).toLocaleDateString()}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-gray-700">{review.text}</p>
+
+                  {/* Rating Stars */}
+                  <div className="flex items-center mt-2">
+                    {/* Render stars */}
+                    {Array.from({ length: 5 }, (_, index) => {
+                      if (review.star >= index + 1) {
+                        // Full star
+                        return (
+                          <svg
+                            key={index}
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            className="w-5 h-5 text-yellow-500"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M12 17l-5 3 1-6-4-4 6-1 2-5 2 5 6 1-4 4 1 6-5-3z"
+                            />
+                          </svg>
+                        );
+                      } else if (
+                        review.star > index &&
+                        review.star < index + 1
+                      ) {
+                        // Half star
+                        return (
+                          <svg
+                            key={index}
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="currentColor"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            className="w-5 h-5 text-yellow-500"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M12 17l-5 3 1-6-4-4 6-1 2-5 2 5 6 1-4 4 1 6-5-3z"
+                            />
+                            <path
+                              fill="none"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M12 17l-5 3 1-6-4-4 6-1 2-5 2 5 6 1-4 4 1 6-5-3z"
+                            />
+                          </svg>
+                        );
+                      } else {
+                        // Empty star
+                        return (
+                          <svg
+                            key={index}
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                            className="w-5 h-5 text-yellow-500"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M12 17l-5 3 1-6-4-4 6-1 2-5 2 5 6 1-4 4 1 6-5-3z"
+                            />
+                          </svg>
+                        );
+                      }
+                    })}
+                    {/* Display the number after the stars */}
+                    <span className="ml-2 text-gray-700 font-bold">
+                      {review.star}
+                    </span>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500">No reviews available.</p>
+            )}
+          </div>
         </div>
       </div>
     </div>
