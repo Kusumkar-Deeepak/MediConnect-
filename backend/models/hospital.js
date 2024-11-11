@@ -1,5 +1,28 @@
 const mongoose = require("mongoose");
 
+const reviewSchema = new mongoose.Schema({
+  text: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  star: {
+    type: Number,
+    required: true,
+    min: 1,
+    max: 5,
+  },
+  reviewerName: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+});
+
 const hospitalSchema = new mongoose.Schema(
   {
     name: {
@@ -22,7 +45,7 @@ const hospitalSchema = new mongoose.Schema(
     password: {
       type: String,
       required: true,
-      minlength: 6, // Minimum length of the password
+      minlength: 6,
     },
     phone: {
       type: String,
@@ -69,42 +92,42 @@ const hospitalSchema = new mongoose.Schema(
     },
     website: {
       type: String,
-      required: true, // Hospital website
+      required: true,
       trim: true,
       match: [/(http|https):\/\/.+/, "Please enter a valid URL"],
     },
     openingHours: {
-      start: { type: String, required: true }, // Opening hour
-      end: { type: String, required: true },   // Closing hour
+      start: { type: String, required: true },
+      end: { type: String, required: true },
     },
     experience: {
       type: String,
-      required: true, // Experience in years
+      required: true,
       trim: true,
     },
     specialist: {
       type: String,
-      required: true, // Specialist field
+      required: true,
       trim: true,
     },
     languagesSpoken: {
       type: String,
-      required: true, // Languages spoken
+      required: true,
       trim: true,
     },
     insuranceAccepted: {
       type: String,
-      required: true, // Insurance acceptedrrr4
+      required: true,
       trim: true,
     },
     degree: {
       type: String,
-      required: true, 
+      required: true,
       trim: true,
     },
     emergencyContact: {
       type: String,
-      required: true, // Emergency contact number
+      required: true,
       match: [/^\d{10}$/, "Please enter a valid 10-digit emergency contact number"],
     },
     facilities: {
@@ -116,13 +139,14 @@ const hospitalSchema = new mongoose.Schema(
       Surgery: { type: Boolean, default: false },
       Rehabilitation: { type: Boolean, default: false },
       Outpatient: { type: Boolean, default: false },
-      BloodBank: { type: Boolean, default: false }, // Added BloodBank
-      Maternity: { type: Boolean, default: false }, // Added Maternity services
-      Pediatrics: { type: Boolean, default: false }, // Added Pediatrics
-      Cardiology: { type: Boolean, default: false }, // Added Cardiology unit
+      BloodBank: { type: Boolean, default: false },
+      Maternity: { type: Boolean, default: false },
+      Pediatrics: { type: Boolean, default: false },
+      Cardiology: { type: Boolean, default: false },
     },
+    reviews: [reviewSchema],
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Hospital", hospitalSchema, 'hospitals');
+module.exports = mongoose.model("Hospital", hospitalSchema, "hospitals");

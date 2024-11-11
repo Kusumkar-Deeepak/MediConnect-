@@ -46,7 +46,8 @@ const Navbar = () => {
   const closeHospitalModal = () => setHospitalModalOpen(false);
   const closeClientModal = () => setClientModalOpen(false);
 
-  const { hospitalId, setHospitalInfo, setClientInfo } = useContext(UserContext);
+  const { hospitalId, clientEmail, setHospitalInfo, setClientInfo } =
+    useContext(UserContext);
   // const [hospitalId, setHospitalId] = useState("");
 
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -54,6 +55,7 @@ const Navbar = () => {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prevState) => !prevState);
   };
+
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -113,7 +115,10 @@ const Navbar = () => {
       }
     } catch (error) {
       toast.error("Hospital login failed - Invalid Credentials.");
-      console.error("Error during Hospital login:", error.response?.data || error.message);
+      console.error(
+        "Error during Hospital login:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -132,6 +137,7 @@ const Navbar = () => {
       if (response.status === 200 && response.data.token) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("clientName", response.data.client.name);
+        localStorage.setItem("clientEmail", response.data.client.email);
         setClientName(response.data.client.name);
         setClientInfo(response.data.client);
         setIsClientLoggedIn(true);
@@ -142,7 +148,10 @@ const Navbar = () => {
       }
     } catch (error) {
       toast.error("Error during client login");
-      console.error("Error during client login:", error.response?.data || error.message);
+      console.error(
+        "Error during client login:",
+        error.response?.data || error.message
+      );
     }
   };
 
@@ -170,6 +179,7 @@ const Navbar = () => {
       navigate("/");
     }, 2000);
   };
+
 
   return (
     <nav className="bg-white shadow-md">
@@ -298,12 +308,21 @@ const Navbar = () => {
                       </button>
                     </>
                   ) : (
-                    <button
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                      onClick={handleClientSignOut}
-                    >
-                      Sign Out
-                    </button>
+                    <>
+                      <Link
+                        to={`/client-appointments?email=${clientEmail}`} // Pass email as a query parameter
+                        className="block px-6 text-2 py-2 hover:bg-gray-100"
+                      >
+                        Client Appointments
+                      </Link>
+
+                      <button
+                        className="block w-full text-center px-4 py-2 hover:bg-gray-100"
+                        onClick={handleClientSignOut}
+                      >
+                        Sign Out
+                      </button>
+                    </>
                   )}
                 </div>
               )}

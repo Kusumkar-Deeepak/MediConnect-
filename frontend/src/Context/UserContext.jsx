@@ -18,6 +18,7 @@ export const UserProvider = ({ children }) => {
   });
 
   const [hospitalId, setHospitalId] = useState(localStorage.getItem("hospitalId") || "");
+  const [clientEmail, setClientEmail] = useState(localStorage.getItem("clientEmail") || "");
 
   
   // Function to save hospital and client info to localStorage
@@ -37,6 +38,10 @@ export const UserProvider = ({ children }) => {
     const storedHospitalId = localStorage.getItem("hospitalId");
     if (storedHospitalId) {
       setHospitalId(storedHospitalId);
+    }
+    const storedclientEmail = localStorage.getItem("clientEmail");
+    if (storedclientEmail) {
+      setClientEmail(storedclientEmail);
     }
 
   }, [hospitalInfo, clientInfo]);
@@ -62,7 +67,9 @@ export const UserProvider = ({ children }) => {
         clearHospitalInfo,
         clearClientInfo,
         hospitalId, 
-        setHospitalId
+        setHospitalId,
+        clientEmail,
+        setClientEmail
       }}
     >
       {children}

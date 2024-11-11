@@ -389,7 +389,7 @@ const HospitalSignup = () => {
                   onChange={handleChange}
                   type="number"
                   className="w-full px-3 py-2 border rounded-md mt-1"
-                  placeholder="EG. 10"
+                  placeholder="EG. 50"
                   required
                 />
               </label>

@@ -181,8 +181,9 @@ const HospitalDashboard = () => {
       return (
         <div className="pending-update-message">
           <p className="text-yellow-800 bg-yellow-200 border-l-4 border-yellow-500 p-2 mt-4">
-            Your update request is pending approval. When you got the mail from the MediConnect Then Please sign out and sign in
-            to view the changes once approved.
+            Your update request is pending approval. When you got the mail from
+            the MediConnect Then Please sign out and sign in to view the changes
+            once approved.
           </p>
         </div>
       );
@@ -444,8 +445,6 @@ const HospitalDashboard = () => {
 
             {currentStep === 1 && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                
-
                 {/* Email */}
                 <div className="flex flex-col mb-4">
                   <label className="mb-1 text-gray-700">Email</label>
@@ -568,16 +567,16 @@ const HospitalDashboard = () => {
                 </div>
                 {/* Specialist */}
                 <div className="flex flex-col mb-4">
-                    <label className="mb-1 text-gray-700">Specialist</label>
-                    <input
-                      type="text"
-                      name="specialist"
-                      placeholder="Specialist"
-                      value={formData.specialist}
-                      onChange={handleInputChange}
-                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
-                  </div>
+                  <label className="mb-1 text-gray-700">Specialist</label>
+                  <input
+                    type="text"
+                    name="specialist"
+                    placeholder="Specialist"
+                    value={formData.specialist}
+                    onChange={handleInputChange}
+                    className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
                 {/* Opening Hours */}
                 <div className="flex flex-col mb-4">
                   <label style={{ display: "flex", alignItems: "center" }}>
@@ -624,37 +623,39 @@ const HospitalDashboard = () => {
 
             {currentStep === 2 && (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
                   {/* About Hospital */}
-                  <div className="flex flex-col col-span-3 mb-4">
-                    <label className="mb-1 text-gray-700">About Hospital</label>
+                  <div className="col-span-1 md:col-span-2 lg:col-span-3">
+                    <label className="text-gray-800 font-semibold mb-1 block">
+                      About Hospital
+                    </label>
                     <textarea
                       name="aboutHospital"
                       placeholder="About Hospital"
                       value={formData.aboutHospital}
                       onChange={handleInputChange}
-                      className="border p-3 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 h-24"
+                      className="border border-gray-300 p-3 rounded-md w-full h-32 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
-                  
-
                   {/* Website */}
-                  <div className="flex flex-col mb-4">
-                    <label className="mb-1 text-gray-700">Website</label>
+                  <div className="col-span-1">
+                    <label className="text-gray-800 font-semibold mb-1 block">
+                      Website
+                    </label>
                     <input
                       type="text"
                       name="website"
                       placeholder="Website"
                       value={formData.website}
                       onChange={handleInputChange}
-                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
                   {/* Languages Spoken */}
-                  <div className="flex flex-col mb-4">
-                    <label className="mb-1 text-gray-700">
+                  <div className="col-span-1">
+                    <label className="text-gray-800 font-semibold mb-1 block">
                       Languages Spoken
                     </label>
                     <input
@@ -663,13 +664,13 @@ const HospitalDashboard = () => {
                       placeholder="Languages Spoken"
                       value={formData.languagesSpoken}
                       onChange={handleInputChange}
-                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
                   {/* Insurance Accepted */}
-                  <div className="flex flex-col mb-4">
-                    <label className="mb-1 text-gray-700">
+                  <div className="col-span-1">
+                    <label className="text-gray-800 font-semibold mb-1 block">
                       Insurance Accepted
                     </label>
                     <input
@@ -678,13 +679,13 @@ const HospitalDashboard = () => {
                       placeholder="Insurance Accepted"
                       value={formData.insuranceAccepted}
                       onChange={handleInputChange}
-                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
                   {/* Emergency Contact */}
-                  <div className="flex flex-col mb-4">
-                    <label className="mb-1 text-gray-700">
+                  <div className="col-span-1">
+                    <label className="text-gray-800 font-semibold mb-1 block">
                       Emergency Contact
                     </label>
                     <input
@@ -693,55 +694,70 @@ const HospitalDashboard = () => {
                       placeholder="Emergency Contact"
                       value={formData.emergencyContact}
                       onChange={handleInputChange}
-                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
                   {/* Degree */}
-                  <div className="flex flex-col mb-4">
-                    <label className="mb-1 text-gray-700">Degree</label>
+                  <div className="col-span-1">
+                    <label className="text-gray-800 font-semibold mb-1 block">
+                      Degree
+                    </label>
                     <input
                       type="text"
                       name="degree"
                       placeholder="Degree"
                       value={formData.degree}
                       onChange={handleInputChange}
-                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
                   {/* Experience */}
-                  <div className="flex flex-col mb-4">
-                    <label className="mb-1 text-gray-700">Experience</label>
+                  <div className="col-span-1">
+                    <label className="text-gray-800 font-semibold mb-1 block">
+                      Experience
+                    </label>
                     <input
                       type="text"
                       name="experience"
                       placeholder="Experience"
                       value={formData.experience}
                       onChange={handleInputChange}
-                      className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      className="border border-gray-300 p-3 rounded-md w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
-                  <div className="flex flex-wrap gap-6 p-4">
-  {Object.entries(formData.facilities).map(([facility, isAvailable]) => (
-    <div key={facility} className="flex items-center mb-3 w-auto">
-      <input
-        type="checkbox"
-        name={facility}
-        checked={isAvailable}
-        onChange={handleInputChange}
-        className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
-      />
-      <label
-        htmlFor={facility}
-        className="ml-2 text-gray-700 text-sm font-medium capitalize"
-      >
-        {facility}
-      </label>
-    </div>
-  ))}
-</div>
+                </div>
 
+                {/* Facilities Section */}
+                <div className="col-span-1 md:col-span-2 lg:col-span-3 mt-6">
+                  <label className="text-gray-800 font-semibold mb-1 block">
+                    Facilities Available
+                  </label>
+                  <div className="flex flex-wrap gap-4">
+                    {Object.entries(formData.facilities).map(
+                      ([facility, isAvailable]) => (
+                        <div
+                          key={facility}
+                          className="flex items-center space-x-2"
+                        >
+                          <input
+                            type="checkbox"
+                            name={facility}
+                            checked={isAvailable}
+                            onChange={handleInputChange}
+                            className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
+                          />
+                          <label
+                            htmlFor={facility}
+                            className="text-gray-700 text-sm font-medium capitalize"
+                          >
+                            {facility}
+                          </label>
+                        </div>
+                      )
+                    )}
+                  </div>
                 </div>
               </>
             )}

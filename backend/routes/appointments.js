@@ -13,7 +13,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // POST route to book appointments
-router.post('/appointments', async (req, res) => {
+router.post('/book-appointment', async (req, res) => {
   const { hospitalId, hospitalEmail, clientData } = req.body;
 
   if (!hospitalId || !clientData || !hospitalEmail) {
@@ -148,5 +148,57 @@ router.put('/update', async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
+
+
+// Route to fetch all appointments for a client using their email
+router.post('/client-appointments', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+    console.log("Request missing email query parameter.");
+    return res.status(400).json({ message: "Email is required" });
+  }
+
+  console.log(`Starting to fetch appointments for client with email: ${email}`);
+
+  try {
+    // Attempt to find the hospital document with an appointment matching the email
+    const hospital = await AppointmentHospital.findOne({
+      'appointments.email': email,
+    });
+
+    // Log whether a hospital document was found
+    if (!hospital) {
+      console.log(`No hospital found with any appointments for email: ${email}`);
+      return res.status(404).json({ message: "No appointments found for this email" });
+    }
+
+    console.log(`Hospital found: ${hospital.hospitalId} with appointments array length: ${hospital.appointments.length}`);
+
+    // Filter the appointments specific to the client email
+    const clientAppointments = hospital.appointments.filter(appointment => {
+      console.log(`Checking appointment with email: ${appointment.email}`);
+      return appointment.email === email;
+    });
+
+    // Log the number of appointments found
+    console.log(`Total appointments found for client email ${email}: ${clientAppointments.length}`);
+
+    // Return the filtered appointments for the client
+    if (clientAppointments.length > 0) {
+      return res.status(200).json(clientAppointments);
+    } else {
+      console.log(`No appointments found in hospital document for email: ${email}`);
+      return res.status(404).json({ message: "No appointments found for this email" });
+    }
+
+  } catch (error) {
+    console.error("Error fetching appointments:", error);
+    return res.status(500).json({ message: "Server error" });
+  }
+});
+
+
+
 
 module.exports = router;

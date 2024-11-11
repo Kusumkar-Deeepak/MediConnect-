@@ -414,7 +414,7 @@ router.get("/login", async (req, res) => {
 router.get("/find-hospital", async (req, res) => {
   try {
     const hospitals = await Hospital.find(); // Fetch all hospitals from the database
-    console.log(hospitals);
+    // console.log(hospitals);
     res.status(200).json(hospitals); // Send the hospitals as a response
   } catch (error) {
     console.error("Error fetching hospitals:", error);
@@ -725,6 +725,37 @@ async function sendUpdateCancellationEmail(updateData) {
 
   await transporter.sendMail(mailOptions);
 }
+
+// Route to add a review to a hospital
+router.post("/:id/review", async (req, res) => {
+  const hospitalId = req.params.id;  // This is the custom ID provided by the admin
+  const { text, star, reviewerName } = req.body;
+
+  // Validate inputs
+  if (!text || !star || !reviewerName) {
+    return res.status(400).json({ message: "Text, star, and reviewer name are required." });
+  }
+  if (star < 1 || star > 5) {
+    return res.status(400).json({ message: "Star rating must be between 1 and 5." });
+  }
+
+  try {
+    // Find the hospital by the custom 'id' field, not MongoDB's '_id'
+    const hospital = await Hospital.findOne({ id: hospitalId });
+    if (!hospital) {
+      return res.status(404).json({ message: "Hospital not found." });
+    }
+
+    // Add the new review to the hospital's reviews array
+    hospital.reviews.push({ text, star, reviewerName });
+    await hospital.save();
+
+    res.status(201).json({ message: "Review added successfully.", hospital });
+  } catch (error) {
+    console.error("Error while adding review:", error);
+    res.status(500).json({ message: "An error occurred while adding the review." });
+  }
+});
 
 
 module.exports = router;
