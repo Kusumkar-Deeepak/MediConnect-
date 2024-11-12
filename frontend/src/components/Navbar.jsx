@@ -371,7 +371,7 @@ const Navbar = () => {
                 href="/Medi-Info"
                 className="block px-4 py-2 border rounded-md hover:bg-gray-100"
               >
-                Ask The Doctor
+                🩺📚MediInfo
               </a>
             )}
             {isHospitalLoggedIn && (
