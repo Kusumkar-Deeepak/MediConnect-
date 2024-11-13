@@ -90,9 +90,6 @@ MediConnect is a platform designed to connect clients and healthcare providers i
    ```env
    JWT_SECRET=YOUR_JWT_SECRET
    ```
-   ```env
-   API_KEY = YOUR_GEMINI_API_KEY
-   ```
 
 4. Run the application:
    
@@ -110,7 +107,7 @@ MediConnect is a platform designed to connect clients and healthcare providers i
 - **Register a hospital:** Hospitals can request registration through the platform. The admin will receive a confirmation email with all details for verification.
 - **Book an appointment:** Clients can browse available hospitals and book appointments. Confirmation emails will be sent automatically.
 - **Access the admin dashboard:** Admins can view client appointments, edit hospital details, and manage settings from the dashboard.
-- **Ask the doctor:** Clients can ask up to 10 questions per day using the "Ask the Doctor" feature.
+- **Ask the doctor:** Clients can ask up the questions To the Doctor using the "Ask the Doctor" feature.
 
 
 
