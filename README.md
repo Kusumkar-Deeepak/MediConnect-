@@ -30,12 +30,20 @@ MediConnect is a platform designed to connect clients and healthcare providers i
 
 ## Features 🎯
 
+- **MediInfo Feature:** Provides users with comprehensive disease information, enabling more informed healthcare decisions.
 - **Hospital Search:** Real-time search for hospitals with location-based results.
-- **Appointment Booking:** Clients can book appointments with hospitals, with automatic email confirmations.
+- **Appointment Booking:** Clients can book appointments with hospitals up to 3 months in advance, with automatic email confirmations.
+- **Enhanced Appointment History:** Allows clients to view their past, present, and future appointments.
+- **Reviews Section:** Clients can share their experiences with hospitals, contributing to a feedback loop for service improvement.
+- **Display Hospital Reviews:** Users can view hospital reviews directly on the appointment booking page for better decision-making.
+- **Admin Guide:** A dedicated page assists admins in navigating MediConnect and utilizing its features effectively.
 - **Admin Dashboard:** Hospital admins can manage their profiles, edit settings, and track appointments.
-- **Ask the Doctor:** A feature allowing clients to ask healthcare professionals up to 10 questions per day.
+- **Hospital Profile Enhancements:** Updated "Edit Profile" section in the hospital dashboard with additional facilities for profile management.
+- **Ask the Doctor:** A feature allowing clients to consult healthcare professionals, with a daily question limit.
+- **MediConnect Info Page:** Dedicated page offering platform information and creator credits.
 - **Email Notifications:** Admins receive detailed emails for new hospital registrations with actionable links.
 - **Token System:** Ensures session persistence even after page refresh.
+
 
 ## Tech Stack 🛠️
 
