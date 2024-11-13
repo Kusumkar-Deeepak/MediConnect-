@@ -52,7 +52,6 @@ MediConnect is a platform designed to connect clients and healthcare providers i
 - **Database:** MongoDB (with Mongoose)
 - **Email Service:** Nodemailer for email notifications
 - **Authentication:** JWT-based token system for secure login
-- **APIs:** ChatGPT API integration (future enhancement)
 
 ## 🌟Installation
 
