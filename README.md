@@ -64,7 +64,7 @@ MediConnect is a platform designed to connect clients and healthcare providers i
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Kusumkar-DeeepakMediConnect-.git
+   git clone https://github.com/Kusumkar-Deeepak/MediConnect-.git
    cd MediConnect-
    ```
 2. Install dependencies:
