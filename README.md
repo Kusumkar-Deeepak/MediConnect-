@@ -28,7 +28,7 @@ MediConnect is a platform designed to connect clients and healthcare providers i
 - **"Ask the Doctor" Feature:** Integrated a feature where clients can consult doctors with a daily limit of questions.
 - **Admin Dashboard:** Created a hospital admin dashboard for managing hospital profile, appointments, and settings.
 
-## Features 🎯
+## Features 🎯🎯
 
 - **MediInfo Feature:** Provides users with comprehensive disease information, enabling more informed healthcare decisions.
 - **Hospital Search:** Real-time search for hospitals with location-based results.
