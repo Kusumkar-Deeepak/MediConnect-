@@ -47,7 +47,7 @@ MediConnect is a platform designed to connect clients and healthcare providers i
 
 ## Tech Stack 🛠️
 
-- **Frontend:** React.js, HTML, CSS, JavaScript
+- **Frontend:** React.js, Tailwind, JavaScript
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB (with Mongoose)
 - **Email Service:** Nodemailer for email notifications
