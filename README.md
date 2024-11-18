@@ -1,4 +1,4 @@
-# MediConnect- 🚀
+# MediConnect- 🚀🚀
 
 Welcome to **MediConnect** — an innovative platform designed to revolutionize the way we access healthcare services through technology. MediConnect aims to provide seamless, user-friendly solutions for hospitals and clients to enhance their healthcare experience.
 
@@ -28,23 +28,30 @@ MediConnect is a platform designed to connect clients and healthcare providers i
 - **"Ask the Doctor" Feature:** Integrated a feature where clients can consult doctors with a daily limit of questions.
 - **Admin Dashboard:** Created a hospital admin dashboard for managing hospital profile, appointments, and settings.
 
-## Features 🎯
+## Features 🎯🎯
 
+- **MediInfo Feature:** Provides users with comprehensive disease information, enabling more informed healthcare decisions.
 - **Hospital Search:** Real-time search for hospitals with location-based results.
-- **Appointment Booking:** Clients can book appointments with hospitals, with automatic email confirmations.
+- **Appointment Booking:** Clients can book appointments with hospitals up to 3 months in advance, with automatic email confirmations.
+- **Enhanced Appointment History:** Allows clients to view their past, present, and future appointments.
+- **Reviews Section:** Clients can share their experiences with hospitals, contributing to a feedback loop for service improvement.
+- **Display Hospital Reviews:** Users can view hospital reviews directly on the appointment booking page for better decision-making.
+- **Admin Guide:** A dedicated page assists admins in navigating MediConnect and utilizing its features effectively.
 - **Admin Dashboard:** Hospital admins can manage their profiles, edit settings, and track appointments.
-- **Ask the Doctor:** A feature allowing clients to ask healthcare professionals up to 10 questions per day.
+- **Hospital Profile Enhancements:** Updated "Edit Profile" section in the hospital dashboard with additional facilities for profile management.
+- **Ask the Doctor:** A feature allowing clients to consult healthcare professionals, with a daily question limit.
+- **MediConnect Info Page:** Dedicated page offering platform information and creator credits.
 - **Email Notifications:** Admins receive detailed emails for new hospital registrations with actionable links.
 - **Token System:** Ensures session persistence even after page refresh.
 
+
 ## Tech Stack 🛠️
 
-- **Frontend:** React.js, HTML, CSS, JavaScript
+- **Frontend:** React.js, Tailwind, JavaScript
 - **Backend:** Node.js, Express.js
 - **Database:** MongoDB (with Mongoose)
 - **Email Service:** Nodemailer for email notifications
 - **Authentication:** JWT-based token system for secure login
-- **APIs:** ChatGPT API integration (future enhancement)
 
 ## 🌟Installation
 
@@ -57,7 +64,7 @@ MediConnect is a platform designed to connect clients and healthcare providers i
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/Kusumkar-DeeepakMediConnect-.git
+   git clone https://github.com/Kusumkar-Deeepak/MediConnect-.git
    cd MediConnect-
    ```
 2. Install dependencies:
@@ -83,9 +90,6 @@ MediConnect is a platform designed to connect clients and healthcare providers i
    ```env
    JWT_SECRET=YOUR_JWT_SECRET
    ```
-   ```env
-   API_KEY = YOUR_GEMINI_API_KEY
-   ```
 
 4. Run the application:
    
@@ -103,7 +107,7 @@ MediConnect is a platform designed to connect clients and healthcare providers i
 - **Register a hospital:** Hospitals can request registration through the platform. The admin will receive a confirmation email with all details for verification.
 - **Book an appointment:** Clients can browse available hospitals and book appointments. Confirmation emails will be sent automatically.
 - **Access the admin dashboard:** Admins can view client appointments, edit hospital details, and manage settings from the dashboard.
-- **Ask the doctor:** Clients can ask up to 10 questions per day using the "Ask the Doctor" feature.
+- **Ask the doctor:** Clients can ask up the questions To the Doctor using the "Ask the Doctor" feature.
 
 
 
