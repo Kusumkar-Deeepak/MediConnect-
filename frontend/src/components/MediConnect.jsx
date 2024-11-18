@@ -89,7 +89,7 @@ export const MediConnect = () => {
                     </p>
                     <ul className="text-lg text-gray-700">
                         <li className="mb-2">
-                            <span className="font-semibold">Email:</span> deepak@example.com
+                            <span className="font-semibold">Email:</span> deeepak.kusumkar@gmail.com
                         </li>
                         <li className="mb-2">
                             <span className="font-semibold">Phone:</span> +91 9370387851
