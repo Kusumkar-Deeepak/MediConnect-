@@ -13,6 +13,7 @@ import Home from './pages/Home';
 import ClientAppointments from './components/ClientAppointments'; // Import ClientAppointments Component
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DiseaseInfo from './components/DiseaseInfo';
+import ResetPassword from './components/ResetPassword';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           
           {/* New route for Client Appointments */}
           <Route path="/client-appointments" element={<ClientAppointments />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
         </Routes>
       </Router>
     </UserProvider>

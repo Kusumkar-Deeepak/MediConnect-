@@ -8,6 +8,22 @@ import { UserContext } from "../Context/UserContext";
 import "font-awesome/css/font-awesome.min.css"; // Importing Font Awesome CSS
 
 const Navbar = () => {
+  const [email, setEmail] = useState("");
+  const [isEmailSent, setIsEmailSent] = useState(false);
+
+  const handleSendEmail = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/forgot-password",
+        { email }
+      );
+      setIsEmailSent(true);
+      toast.success(response.data.message || "Email sent successfully!");
+    } catch (error) {
+      toast.error(error.response?.data?.error || "Error sending reset email.");
+    }
+  };
+
   const navigate = useNavigate();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [askQuestionDropdownOpen, setAskQuestionDropdownOpen] = useState(false);
@@ -55,7 +71,6 @@ const Navbar = () => {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prevState) => !prevState);
   };
-
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -179,7 +194,6 @@ const Navbar = () => {
       navigate("/");
     }, 2000);
   };
-
 
   return (
     <nav className="bg-white shadow-md">
@@ -438,20 +452,20 @@ const Navbar = () => {
                       </>
                     ) : (
                       <>
-                      <Link
-                        to={`/client-appointments?email=${clientEmail}`} // Pass email as a query parameter
-                        className="block px-6 text-2 py-2 hover:bg-gray-100"
-                      >
-                        Client Appointments
-                      </Link>
+                        <Link
+                          to={`/client-appointments?email=${clientEmail}`} // Pass email as a query parameter
+                          className="block px-6 text-2 py-2 hover:bg-gray-100"
+                        >
+                          Client Appointments
+                        </Link>
 
-                      <button
-                        className="block w-full text-center px-4 py-2 hover:bg-gray-100"
-                        onClick={handleClientSignOut}
-                      >
-                        Sign Out
-                      </button>
-                    </>
+                        <button
+                          className="block w-full text-center px-4 py-2 hover:bg-gray-100"
+                          onClick={handleClientSignOut}
+                        >
+                          Sign Out
+                        </button>
+                      </>
                     )}
                   </div>
                 )}
@@ -555,6 +569,25 @@ const Navbar = () => {
                 </a>
               </p>
             </form>
+
+            <div>
+      <h2>Forgot Password</h2>
+      {!isEmailSent ? (
+        <div>
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <button onClick={handleSendEmail}>Send Reset Email</button>
+        </div>
+      ) : (
+        <p>Check your email for the reset password link!</p>
+      )}
+      <ToastContainer />
+    </div>
           </div>
         </div>
       )}
