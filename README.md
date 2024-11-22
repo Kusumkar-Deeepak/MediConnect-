@@ -1,5 +1,8 @@
 # MediConnect- 🚀🚀
 
+![Logo 1](Logo/LoGo_MediConnect.jpg)
+
+
 Welcome to **MediConnect** — an innovative platform designed to revolutionize the way we access healthcare services through technology. MediConnect aims to provide seamless, user-friendly solutions for hospitals and clients to enhance their healthcare experience.
 
 ## Table of Contents 📑
