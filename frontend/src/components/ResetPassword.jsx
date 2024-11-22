@@ -1,25 +1,24 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useSearchParams } from 'react-router-dom'; // To get the token from URL
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom"; // To get token from path
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const ResetPassword = () => {
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [token, setToken] = useState(null);
-  const [message, setMessage] = useState('');
-
-  const [searchParams] = useSearchParams();
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false); // State for password visibility
+  const { token: urlToken } = useParams(); // Use useParams to get the token from the URL path
 
   useEffect(() => {
-    const token = searchParams.get('token');
-    if (token) {
-      setToken(token);
+    if (urlToken) {
+      setToken(urlToken); // Set the token from the URL
+      console.log(urlToken);
     } else {
-      toast.error('No reset token found!');
+      toast.error("No reset token found!");
     }
-  }, [searchParams]);
+  }, [urlToken]);
 
   const handlePasswordReset = async () => {
     if (newPassword !== confirmPassword) {
@@ -32,29 +31,67 @@ const ResetPassword = () => {
         `http://localhost:3000/api/auth/reset-password/${token}`,
         { password: newPassword }
       );
-      toast.success(response.data.message || 'Password reset successfully!');
+      toast.success(response.data.message || "Password reset successfully!");
     } catch (error) {
-      toast.error(error.response?.data?.error || 'Error resetting password.');
+      toast.error(error.response?.data?.error || "Error resetting password.");
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible); // Toggle the password visibility state
+  };
+
   return (
-    <div>
-      <h2>Reset Password</h2>
-      <input
-        type="password"
-        placeholder="New Password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      />
-      <button onClick={handlePasswordReset}>Reset Password</button>
-      <ToastContainer />
+    <div className="min-h-screen flex justify-center items-center bg-gray-100">
+      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
+        <h2 className="text-2xl font-semibold text-center mb-6 text-gray-700">Reset Password</h2>
+
+        {/* New Password Input */}
+        <div className="relative mb-4">
+          <input
+            type={isPasswordVisible ? "text" : "password"} // Toggle input type based on visibility state
+            placeholder="New Password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {/* Show/Hide Password Icon */}
+          <i
+            className={`absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-xl ${
+              isPasswordVisible ? "fa fa-eye-slash" : "fa fa-eye"
+            }`}
+            onClick={togglePasswordVisibility}
+          ></i>
+        </div>
+
+        {/* Confirm Password Input */}
+        <div className="relative mb-6">
+          <input
+            type={isPasswordVisible ? "text" : "password"} // Same for confirm password input
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          <i
+            className={`absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-xl ${
+              isPasswordVisible ? "fa fa-eye-slash" : "fa fa-eye"
+            }`}
+            onClick={togglePasswordVisibility}
+          ></i>
+        </div>
+
+        <div className="text-center">
+          <button
+            onClick={handlePasswordReset}
+            className="w-full py-2 px-4 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Reset Password
+          </button>
+        </div>
+
+        <ToastContainer />
+      </div>
     </div>
   );
 };

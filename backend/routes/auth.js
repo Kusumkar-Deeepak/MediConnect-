@@ -18,7 +18,8 @@ router.post('/forgot-password', async (req, res) => {
         hospital.tokenExpiry = Date.now() + 3600000; // 1 hour
         await hospital.save();
 
-        const resetLink = `http://localhost:3000/reset-password?token=${token}`;
+        // Corrected link for the frontend (React app running on port 5173)
+        const resetLink = `http://localhost:5173/reset-password/${token}`;
         const transporter = nodemailer.createTransport({
             service: 'Gmail',
             auth: {

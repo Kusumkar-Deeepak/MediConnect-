@@ -24,6 +24,8 @@ const Navbar = () => {
     }
   };
 
+  const [forgotPasswordVisible, setForgotPasswordVisible] = useState(false);
+
   const navigate = useNavigate();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [askQuestionDropdownOpen, setAskQuestionDropdownOpen] = useState(false);
@@ -524,6 +526,7 @@ const Navbar = () => {
                   required
                 />
               </label>
+
               <div className="space-y-4">
                 <label className="block mb-4">
                   Password:
@@ -546,12 +549,14 @@ const Navbar = () => {
                   </div>
                 </label>
               </div>
+
               <button
                 type="submit"
-                className="w-full bg-blue-500 text-white px-4 py-2 rounded-md"
+                className="w-full bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
               >
                 Login
               </button>
+
               <button
                 type="button"
                 className="mt-2 w-full text-center text-red-600"
@@ -560,7 +565,7 @@ const Navbar = () => {
                 Cancel
               </button>
               <p className="mt-4 text-center text-sm">
-                Already have an account?{" "}
+                Dont have an account?{" "}
                 <a
                   href="/HospitalSignup"
                   className="text-blue-500 hover:underline"
@@ -570,24 +575,61 @@ const Navbar = () => {
               </p>
             </form>
 
-            <div>
-      <h2>Forgot Password</h2>
-      {!isEmailSent ? (
-        <div>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <button onClick={handleSendEmail}>Send Reset Email</button>
-        </div>
-      ) : (
-        <p>Check your email for the reset password link!</p>
-      )}
-      <ToastContainer />
-    </div>
+            {/* Forgot Password Section */}
+            <div className="mt-4">
+              <p className="text-center text-sm">
+                <button
+                  type="button"
+                  onClick={() =>
+                    setForgotPasswordVisible(!forgotPasswordVisible)
+                  }
+                  className="text-blue-500 hover:underline"
+                >
+                  Forgot Password?
+                </button>
+              </p>
+
+              {/* Forgot Password Form */}
+              {forgotPasswordVisible && (
+                <div className="mt-4">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
+                    Enter your email:
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    placeholder="Enter your email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    onClick={handleSendEmail}
+                    className="w-full bg-blue-500 text-white px-4 py-2 rounded-md"
+                  >
+                    Send Reset Email
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setForgotPasswordVisible(false)} // Close the form
+                    className="text-red-600 ml-4"
+                  >
+                    Close
+                  </button>
+                  {isEmailSent && (
+                    <p className="mt-2 text-center text-green-600">
+                      Check your email for the reset password link!
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            <ToastContainer />
           </div>
         </div>
       )}

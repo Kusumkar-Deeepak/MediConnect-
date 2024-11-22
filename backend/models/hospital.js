@@ -130,6 +130,14 @@ const hospitalSchema = new mongoose.Schema(
       required: true,
       match: [/^\d{10}$/, "Please enter a valid 10-digit emergency contact number"],
     },
+    resetToken: {
+      type: String,
+      default: null,
+    },
+    tokenExpiry: {
+      type: Date,
+      default: null,
+    },
     facilities: {
       Emergency: { type: Boolean, default: false },
       ICU: { type: Boolean, default: false },

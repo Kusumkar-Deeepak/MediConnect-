@@ -33,7 +33,7 @@ function App() {
           
           {/* New route for Client Appointments */}
           <Route path="/client-appointments" element={<ClientAppointments />} />
-          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/reset-password/:token" element={<ResetPassword />} />
         </Routes>
       </Router>
     </UserProvider>
