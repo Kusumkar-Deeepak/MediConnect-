@@ -10,7 +10,10 @@ import "font-awesome/css/font-awesome.min.css"; // Importing Font Awesome CSS
 const Navbar = () => {
   const [email, setEmail] = useState("");
   const [isEmailSent, setIsEmailSent] = useState(false);
+  const [clientForgotPasswordEmail, setClientForgotPasswordEmail] = useState("");  // New state for client email
+  const [isClientEmailSent, setIsClientEmailSent] = useState(false);  // For client email sent status
 
+  // Hospital password reset
   const handleSendEmail = async () => {
     try {
       const response = await axios.post(
@@ -24,7 +27,22 @@ const Navbar = () => {
     }
   };
 
+  // Client password reset
+  const handleClientSendEmail = async () => {
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/client-forgot-password",
+        { email: clientForgotPasswordEmail }  // Using the new state here
+      );
+      setIsClientEmailSent(true);
+      toast.success(response.data.message || "Email sent successfully!");
+    } catch (error) {
+      toast.error(error.response?.data?.error || "Error sending client reset email.");
+    }
+  };
+
   const [forgotPasswordVisible, setForgotPasswordVisible] = useState(false);
+  const [clientForgotPasswordVisible, setClientForgotPasswordVisible] = useState(false); // For Client Forgot Password Modal
 
   const navigate = useNavigate();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -532,14 +550,13 @@ const Navbar = () => {
                   Password:
                   <div className="relative">
                     <input
-                      type={isPasswordVisible ? "text" : "password"} // Toggle between text and password
+                      type={isPasswordVisible ? "text" : "password"}
                       name="hospitalPassword"
                       onChange={hospitalOnChange}
                       value={hospitalData.hospitalPassword}
                       className="w-full px-3 py-2 border rounded-md"
                       required
                     />
-                    {/* Font Awesome Icon for Show/Hide Password */}
                     <i
                       className={`absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-xl ${
                         isPasswordVisible ? "fa fa-eye-slash" : "fa fa-eye"
@@ -580,9 +597,7 @@ const Navbar = () => {
               <p className="text-center text-sm">
                 <button
                   type="button"
-                  onClick={() =>
-                    setForgotPasswordVisible(!forgotPasswordVisible)
-                  }
+                  onClick={() => setForgotPasswordVisible(!forgotPasswordVisible)}
                   className="text-blue-500 hover:underline"
                 >
                   Forgot Password?
@@ -615,7 +630,7 @@ const Navbar = () => {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setForgotPasswordVisible(false)} // Close the form
+                    onClick={() => setForgotPasswordVisible(false)}
                     className="text-red-600 ml-4"
                   >
                     Close
@@ -629,7 +644,7 @@ const Navbar = () => {
               )}
             </div>
 
-            <ToastContainer />
+            {/* <ToastContainer /> */}
           </div>
         </div>
       )}
@@ -658,14 +673,13 @@ const Navbar = () => {
                   Password:
                   <div className="relative">
                     <input
-                      type={isPasswordVisible ? "text" : "password"} // Toggle between text and password
+                      type={isPasswordVisible ? "text" : "password"}
                       name="clientPassword"
                       onChange={clientOnChange}
                       value={clientData.clientPassword}
                       className="w-full px-3 py-2 border rounded-md"
                       required
                     />
-                    {/* Font Awesome Icon for Show/Hide Password */}
                     <i
                       className={`absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-xl ${
                         isPasswordVisible ? "fa fa-eye-slash" : "fa fa-eye"
@@ -698,9 +712,64 @@ const Navbar = () => {
                 </a>
               </p>
             </form>
+
+            {/* Forgot Password Section for Client */}
+            <div className="mt-4">
+              <p className="text-center text-sm">
+                <button
+                  type="button"
+                  onClick={() => setClientForgotPasswordVisible(!clientForgotPasswordVisible)}
+                  className="text-blue-500 hover:underline"
+                >
+                  Forgot Password?
+                </button>
+              </p>
+
+              {/* Forgot Password Form for Client */}
+              {clientForgotPasswordVisible && (
+                <div className="mt-4">
+                  <label
+                    htmlFor="clientForgotPasswordEmail"
+                    className="block text-sm font-semibold text-gray-700 mb-2"
+                  >
+                    Enter your email:
+                  </label>
+                  <input
+                    type="email"
+                    id="clientForgotPasswordEmail"
+                    placeholder="Enter your email"
+                    value={clientForgotPasswordEmail} // Using the new state here
+                    onChange={(e) => setClientForgotPasswordEmail(e.target.value)}
+                    required
+                    className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                  <button
+                    onClick={handleClientSendEmail}
+                    className="w-full bg-blue-500 text-white px-4 py-2 rounded-md"
+                  >
+                    Send Reset Email
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setClientForgotPasswordVisible(false)}
+                    className="text-red-600 ml-4"
+                  >
+                    Close
+                  </button>
+                  {isClientEmailSent && (
+                    <p className="mt-2 text-center text-green-600">
+                      Check your email for the reset password link!
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* <ToastContainer /> */}
           </div>
         </div>
       )}
+
     </nav>
   );
 };

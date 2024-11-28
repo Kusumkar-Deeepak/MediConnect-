@@ -49,6 +49,17 @@ const clientSchema = new mongoose.Schema({
     trim: true,
     match: [/^\d{6}$/, "Please enter a valid 6-digit zip code"],
   },
+  
+  // Fields for reset password functionality
+  resetToken: {
+    type: String,
+    default: null,
+  },
+  tokenExpiry: {
+    type: Date,
+    default: null,
+  },
+  
 }, { timestamps: true }); // Adds createdAt and updatedAt fields
 
 module.exports = mongoose.model("Client", clientSchema, 'client');

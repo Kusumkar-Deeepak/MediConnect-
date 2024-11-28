@@ -14,6 +14,7 @@ import ClientAppointments from './components/ClientAppointments'; // Import Clie
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DiseaseInfo from './components/DiseaseInfo';
 import ResetPassword from './components/ResetPassword';
+import ClientResetPassword from './components/ClientResetPassword';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           {/* New route for Client Appointments */}
           <Route path="/client-appointments" element={<ClientAppointments />} />
           <Route path="/reset-password/:token" element={<ResetPassword />} />
+          <Route path="/client-reset-password/:token" element={<ClientResetPassword />} />
         </Routes>
       </Router>
     </UserProvider>
