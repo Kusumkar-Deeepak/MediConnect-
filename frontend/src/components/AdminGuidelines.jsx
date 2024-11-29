@@ -1,5 +1,5 @@
 // import React from 'react';
-
+import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 
 const AdminGuidelines = () => {
@@ -79,7 +79,12 @@ const AdminGuidelines = () => {
 
         <div className="text-center">
           <p className="text-lg text-gray-600">
-            We hope these guidelines help you get started with MediConnect. If you have any questions or need support, feel free to contact our support team. We are here to assist you!
+            We hope these guidelines help you get started with MediConnect. If you have any questions or need support, feel free to contact our support team. We are here to assist you! <Link
+          to="/main"
+          className="text-base text-blue-500 font-semibold hover:text-blue-700 transition duration-300"
+        >
+          Check MediConnect
+        </Link>
           </p>
         </div>
       </div>

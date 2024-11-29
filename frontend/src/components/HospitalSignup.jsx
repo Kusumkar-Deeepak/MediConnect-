@@ -5,6 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
 import 'font-awesome/css/font-awesome.min.css'; // Import Font Awesome CSS
+import Footer from "./Footer";
 
 const HospitalSignup = () => {
   const [formData, setFormData] = useState({
@@ -646,6 +647,7 @@ const HospitalSignup = () => {
           </li>
         </ul>
       </div>
+      <Footer />
     </>
   );
 };

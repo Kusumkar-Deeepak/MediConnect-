@@ -7,6 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "font-awesome/css/font-awesome.min.css"; // Import Font Awesome CSS
+import { Link } from "react-router-dom";
 
 const HospitalDashboard = () => {
   const { hospitalInfo, setHospitalInfo, clearHospitalInfo } =
@@ -121,94 +122,94 @@ const HospitalDashboard = () => {
       openingHours,
       closingHours,
     } = formData;
-  
+
     let errors = [];
-  
+
     // Email validation (required and valid format)
     if (!email || !/\S+@\S+\.\S+/.test(email)) {
       toast.error("Please enter a valid email.");
     }
-  
+
     // Phone validation (required and valid format)
     if (!phone || !/^\d{10}$/.test(phone)) {
       toast.error("Please enter a valid 10-digit phone number.");
     }
-  
+
     // Address validation (required)
     if (!address) {
       toast.error("Address is required.");
     }
-  
+
     // City validation (required)
     if (!city) {
       toast.error("City is required.");
     }
-  
+
     // State validation (required)
     if (!state) {
       toast.error("State is required.");
     }
-  
+
     // Zip Code validation (required and valid format)
     if (!zipCode || !/^\d{6}$/.test(zipCode)) {
       toast.error("Please enter a valid 6-digit zip code.");
     }
-  
+
     // Specialty Doctor Name validation (required)
     if (!specDrName) {
       toast.error("Specialty Doctor Name is required.");
     }
-  
+
     // Number of Doctors validation (required and numeric)
     if (!numberOfDoctors || isNaN(numberOfDoctors) || numberOfDoctors <= 0) {
       toast.error("Please enter a valid number for the number of doctors.");
     }
-  
+
     // Number of Nurses validation (required and numeric)
     if (!numberOfNurses || isNaN(numberOfNurses) || numberOfNurses <= 0) {
       toast.error("Please enter a valid number for the number of nurses.");
     }
-  
+
     // About Hospital validation (required)
     if (!aboutHospital) {
       toast.error("About Hospital is required.");
     }
-  
+
     // Website validation (optional but valid URL format)
     if (website && !/^https?:\/\/[^\s]+$/.test(website)) {
       toast.error("Please enter a valid website URL.");
     }
-  
+
     // Languages Spoken validation (optional)
     if (!languagesSpoken) {
       toast.error("Languages Spoken is required.");
     }
-  
+
     // Insurance Accepted validation (optional)
     if (!insuranceAccepted) {
       toast.error("Insurance Accepted is required.");
     }
-  
+
     // Emergency Contact validation (required)
     if (!emergencyContact) {
       toast.error("Emergency Contact is required.");
     }
-  
+
     // Degree validation (optional)
     if (!degree) {
       toast.error("Degree is required.");
     }
-  
+
     // Experience validation (optional)
     if (!experience) {
       toast.error("Experience is required.");
     }
-  
+
     // Opening and Closing Hours validation (required)
     if (!openingHours.start || !closingHours.end) {
       toast.error("Opening and Closing Hours are required.");
     }
-  
+
     // If there are any errors, show them using toast
     if (errors.length > 0) {
       errors.forEach((error) => {
@@ -216,12 +217,11 @@ const HospitalDashboard = () => {
       });
       return false;
     }
-  
+
     return true; // Form is valid if no errors
   };
 
   const handleUpdateProfile = async (e) => {
-
     e.preventDefault();
     if (!validateForm()) {
       return;
@@ -316,8 +316,6 @@ const HospitalDashboard = () => {
     }
     return null;
   };
-
-
 
   return (
     <>
@@ -455,6 +453,7 @@ const HospitalDashboard = () => {
 
         {/* Operational Hours and Experience Section */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Opening Hours Section */}
           <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-4 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
             <h3 className="text-lg font-semibold mb-2 text-blue-800">
               Opening Hours
@@ -463,11 +462,22 @@ const HospitalDashboard = () => {
             <p>End: {hospitalInfo?.openingHours?.end || "N/A"}</p>
           </div>
 
+          {/* Languages Spoken Section */}
           <div className="bg-gradient-to-r from-blue-100 to-blue-200 p-4 rounded-lg shadow hover:shadow-xl transition-shadow duration-300">
             <h3 className="text-lg font-semibold mb-2 text-blue-800">
               Languages Spoken
             </h3>
             <p>Languages Spoken: {hospitalInfo?.languagesSpoken || "N/A"}</p>
+          </div>
+
+          {/* Check MediConnect Link */}
+          <div className="col-span-1 md:col-span-2 flex justify-center">
+            <Link
+              to="/admin-details"
+              className="text-base text-blue-500 font-semibold hover:text-blue-700 transition duration-300"
+            >
+              Check MediConnect Admin Guidelines
+            </Link>
           </div>
         </div>
       </div>

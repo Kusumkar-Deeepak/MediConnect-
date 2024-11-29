@@ -703,7 +703,7 @@ const Navbar = () => {
                 Cancel
               </button>
               <p className="mt-4 text-center text-sm">
-                Already have an account?{" "}
+              Dont have an account?{" "}
                 <a
                   href="/ClientSignup"
                   className="text-blue-500 hover:underline"
