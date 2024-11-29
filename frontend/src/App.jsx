@@ -15,6 +15,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import DiseaseInfo from './components/DiseaseInfo';
 import ResetPassword from './components/ResetPassword';
 import ClientResetPassword from './components/ClientResetPassword';
+import NotFound from './components/NotFound';
 
 function App() {
   return (
@@ -42,6 +43,9 @@ function App() {
           {/* New route for Client Appointments */}
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/client-reset-password/:token" element={<ClientResetPassword />} />
+
+          {/* 404 Not Found Route */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </UserProvider>
