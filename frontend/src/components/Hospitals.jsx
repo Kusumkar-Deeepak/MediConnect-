@@ -46,7 +46,10 @@ const HospitalData = ({ hospital, isLoggedIn, clientInfo }) => {
   const submitReview = async () => {
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/hospitals/${hospital.id}/review`,
+        // `http://localhost:3000/api/hospitals/${hospital.id}/review`
+        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/${hospital.id}/review`
+
+        ,
         {
           text: reviewText, // Changed to `text` as per server expectation
           star: rating, // Changed to `star` as per server expectation

@@ -80,7 +80,10 @@ const ClientSignup = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/clients",
+        // "http://localhost:3000/api/clients"
+        `${import.meta.env.VITE_API_BASE_URL_CLIENT}`
+
+        ,
         formData
       );
       if (response.status === 200) {
@@ -88,7 +91,7 @@ const ClientSignup = () => {
 
         // Add a timeout before navigating to the home page
         setTimeout(() => {
-          navigate("/"); // Redirect to home page after 3 seconds
+          navigate("/main"); // Redirect to home page after 3 seconds
         }, 3000); // 3000 milliseconds = 3 seconds
       } else {
         toast.error(response.data.message); // Show error message

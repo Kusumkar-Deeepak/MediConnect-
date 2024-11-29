@@ -101,7 +101,9 @@ const DoctorDetails = () => {
       const fetchRatingsAndReviews = async () => {
         try {
           const response = await axios.get(
-            `http://localhost:3000/api/hospitals/${hospital.id}/reviews`
+            // `http://localhost:3000/api/hospitals/${hospital.id}/reviews`
+            `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/${hospital.id}/reviews`
+
           );
           setRatings(response.data.averageRating);
           setReviews(response.data.reviews);
@@ -120,7 +122,10 @@ const DoctorDetails = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/appointments/book-appointment",
+        // "http://localhost:3000/api/appointments/book-appointment"
+        `${import.meta.env.VITE_API_BASE_URL_APPOINTMENT}/book-appointment`
+
+        ,
         {
           hospitalId: hospital.id, // Replace with actual ID
           hospitalEmail: hospital.email,

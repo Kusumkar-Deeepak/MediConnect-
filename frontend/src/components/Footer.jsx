@@ -8,7 +8,7 @@ const Footer = () => {
         <p>Find the best doctors and book appointments with ease.</p>
         {/* Link to /main page */}
         <Link
-          to="/main"
+          to="/"
           className="text-base text-blue-500 font-semibold hover:text-blue-700 transition duration-300"
         >
           Check MediConnect

@@ -21,7 +21,10 @@ router.post("/forgot-password", async (req, res) => {
     await hospital.save();
 
     // Corrected link for the frontend (React app running on port 5173)
-    const resetLink = `http://localhost:5173/reset-password/${token}`;
+    const resetLink = 
+    //http://localhost:5173/reset-password/${token}
+     `${process.env.AUTH_HOSPITAL_API}/${token}`;
+
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {
@@ -87,7 +90,10 @@ router.post("/client-forgot-password", async (req, res) => {
     await client.save();
 
     // Link for the frontend (React app running on port 5173)
-    const resetLink = `http://localhost:5173/client-reset-password/${token}`;
+    const resetLink = 
+    // http://localhost:5173/client-reset-password/${token}
+    `${process.env.AUTH_CLIENT_API}/${token}`
+    ;
     const transporter = nodemailer.createTransport({
       service: "Gmail",
       auth: {

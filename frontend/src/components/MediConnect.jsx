@@ -23,21 +23,18 @@ export const MediConnect = () => {
             appointment, or seeking an online consultation, MediConnect is here
             to serve you.
           </p>
-
           {/* Horizontal line */}
           <hr className="my-6 border-t-2 border-gray-300 lg:border-green-500" />
-
           {/* Message for larger screens */}
           <p className="text-sm text-gray-500 text-center lg:text-lg font-medium mt-4">
             For the best experience, we recommend using MediConnect on larger
             screens, such as laptops or desktop PCs.
           </p>
-
           <Link
-            to="/"
+            to="/main"
             className="text-lg text-green-500 hover:text-pink-400 underline"
           >
-            Back to Main Page
+            Find Nearby Hospitals
           </Link>
         </section>
 
@@ -100,7 +97,6 @@ export const MediConnect = () => {
             </div>
           </div>
         </section>
-        
 
         <section
           id="routes-learning"
@@ -265,6 +261,46 @@ export const MediConnect = () => {
                 </li>
               </ul>
             </div>
+          </div>
+        </section>
+
+        <section className="flex flex-col lg:flex-row items-center justify-center gap-8 px-6 py-12">
+          {/* Hospital Signup Link */}
+          <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-8 w-full lg:w-1/2">
+            <h3 className="text-2xl font-semibold text-green-600 mb-4">
+              Hospital Signup
+            </h3>
+            <p className="text-lg text-gray-700 mb-6 text-center">
+              Sign up to list your hospital or clinic on MediConnect. Provide
+              essential details such as hospital name, location, services, and
+              contact information. Reach a wider audience and grow your patient
+              base with ease.
+            </p>
+            <Link
+              to="/HospitalSignup"
+              className="w-full py-3 mt-4 bg-green-600 text-white font-semibold rounded-lg text-center hover:bg-green-700 transition duration-200"
+            >
+              Go to Hospital Signup
+            </Link>
+          </div>
+
+          {/* Client Signup Link */}
+          <div className="flex flex-col items-center bg-white shadow-lg rounded-lg p-8 w-full lg:w-1/2">
+            <h3 className="text-2xl font-semibold text-green-600 mb-4">
+              Client Signup
+            </h3>
+            <p className="text-lg text-gray-700 mb-6 text-center">
+              Sign up to access healthcare services, book appointments with
+              doctors, and receive personalized health recommendations. Create a
+              profile to manage your health records and connect with healthcare
+              providers.
+            </p>
+            <Link
+              to="/ClientSignup"
+              className="w-full py-3 mt-4 bg-green-600 text-white font-semibold rounded-lg text-center hover:bg-green-700 transition duration-200"
+            >
+              Go to Client Signup
+            </Link>
           </div>
         </section>
 

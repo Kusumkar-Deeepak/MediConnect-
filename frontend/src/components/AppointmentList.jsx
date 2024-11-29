@@ -12,10 +12,18 @@ const AppointmentList = () => {
   const appointmentsPerPage = 10;
 
   useEffect(() => {
+
+    const type = localStorage.getItem("type");
+    if ( type==="client") {
+      console.log("Client logged in");
+      window.location.href = "/main";
+    }
     const fetchAppointments = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/appointments/${hospitalId}`
+          // `http://localhost:3000/api/appointments/${hospitalId}`
+          `${import.meta.env.VITE_API_BASE_URL_APPOINTMENT}/${hospitalId}`
+
         );
         
         // Filter and sort appointments
@@ -41,7 +49,11 @@ const AppointmentList = () => {
 
   const updateVisitStatus = async (appointmentId, status) => {
     try {
-      await axios.put(`http://localhost:3000/api/appointments/update`, {
+      await axios.put(
+        // `http://localhost:3000/api/appointments/update`
+        `${import.meta.env.VITE_API_BASE_URL_APPOINTMENT}/update`
+
+        , {
         hospitalId,
         appointmentId,
         visited: status,

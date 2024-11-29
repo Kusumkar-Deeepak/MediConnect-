@@ -21,19 +21,25 @@ function App() {
     <UserProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/main" element={<MediConnect />} />
+          <Route path="/" element={<MediConnect />} />
+          <Route path="/main" element={<Home />} />
           <Route path="/ClientSignup" element={<ClientSignup />} />
           <Route path="/HospitalSignup" element={<HospitalSignup />} />
           <Route path="/Medi-Info" element={<DiseaseInfo />} />
+
+          {/* New route for Contact Page for hosapitals */}
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/hospital/dashboard" element={<HospitalDashboard />} />
-          <Route path="/doctor-details" element={<DoctorDetails />} />
-          <Route path="/admin-details" element={<AdminGuidelines />} />
           <Route path="/check-clients/:hospitalId" element={<AppointmentList />} />
           
-          {/* New route for Client Appointments */}
+          {/* New route for Doctor Details only user */}
+          <Route path="/doctor-details" element={<DoctorDetails />} />
           <Route path="/client-appointments" element={<ClientAppointments />} />
+
+          {/* New route for Admin Guidelines */}
+          <Route path="/admin-details" element={<AdminGuidelines />} />
+          
+          {/* New route for Client Appointments */}
           <Route path="/reset-password/:token" element={<ResetPassword />} />
           <Route path="/client-reset-password/:token" element={<ClientResetPassword />} />
         </Routes>

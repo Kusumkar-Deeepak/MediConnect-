@@ -14,7 +14,12 @@ const ClientAppointments = () => {
 
     if (clientEmail) {
       axios
-        .post("http://localhost:3000/api/appointments/client-appointments", { email: clientEmail })
+        .post(
+          // "http://localhost:3000/api/appointments/client-appointments"
+          `${import.meta.env.VITE_API_BASE_URL_APPOINTMENT}/client-appointments`
+
+          
+          , { email: clientEmail })
         .then((response) => {
           const sortedAppointments = response.data.sort((a, b) => new Date(b.preferredDate) - new Date(a.preferredDate));
           setAppointments(sortedAppointments);

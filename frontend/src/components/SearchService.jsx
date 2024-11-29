@@ -301,7 +301,11 @@ const [searchTerm, setSearchTerm] = useState('');
 
       if (isLoggedIn) {
         try {
-          const response = await axios.get('http://localhost:3000/api/hospitals/find-hospital', {
+          const response = await axios.get(
+            // 'http://localhost:3000/api/hospitals/find-hospital'
+            `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/find-hospital`
+
+            , {
             headers: { Authorization: `Bearer ${token}` },
           });
 

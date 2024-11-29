@@ -17,7 +17,10 @@ const Navbar = () => {
   const handleSendEmail = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/forgot-password",
+        // "http://localhost:3000/api/auth/forgot-password"
+        `${import.meta.env.VITE_API_BASE_URL_AUTH}/forgot-password`
+
+        ,
         { email }
       );
       setIsEmailSent(true);
@@ -31,7 +34,10 @@ const Navbar = () => {
   const handleClientSendEmail = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/client-forgot-password",
+        // "http://localhost:3000/api/auth/client-forgot-password"
+        `${import.meta.env.VITE_API_BASE_URL_AUTH}/client-forgot-password`
+
+        ,
         { email: clientForgotPasswordEmail }  // Using the new state here
       );
       setIsClientEmailSent(true);
@@ -123,7 +129,9 @@ const Navbar = () => {
     e.preventDefault();
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/hospitals/login",
+        // "http://localhost:3000/api/hospitals/login"
+        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/login`
+        ,
         {
           params: {
             id: hospitalData.hospitalID,
@@ -133,6 +141,7 @@ const Navbar = () => {
       );
       if (response.status === 200 && response.data.token) {
         localStorage.setItem("token", response.data.token);
+        localStorage.setItem("type", response.data.type);
         localStorage.setItem("hospitalName", response.data.hospital.name);
         localStorage.setItem("hospitalId", response.data.hospital.id);
         setHospitalName(response.data.hospital.name);
@@ -161,7 +170,9 @@ const Navbar = () => {
     e.preventDefault();
     try {
       const response = await axios.get(
-        "http://localhost:3000/api/clients/login",
+        // "http://localhost:3000/api/clients/login"
+        `${import.meta.env.VITE_API_BASE_URL_CLIENT}/login`
+        ,
         {
           params: {
             email: clientData.clientEmail,
@@ -172,6 +183,7 @@ const Navbar = () => {
       if (response.status === 200 && response.data.token) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("clientName", response.data.client.name);
+        localStorage.setItem("type", response.data.type);
         localStorage.setItem("clientEmail", response.data.client.email);
         setClientName(response.data.client.name);
         setClientInfo(response.data.client);
@@ -182,7 +194,7 @@ const Navbar = () => {
         toast.error("Client login failed");
       }
     } catch (error) {
-      toast.error("Error during client login");
+      toast.error("Client login failed - Invalid Credentials.");
       console.error(
         "Error during client login:",
         error.response?.data || error.message
@@ -190,20 +202,24 @@ const Navbar = () => {
     }
   };
 
+  // console.log(`api is : ${import.meta.env.VITE_API_BASE_URL}/client/login`);
+
   const handleHospitalSignOut = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("type");
     localStorage.removeItem("hospitalName");
     setIsHospitalLoggedIn(false);
     setHospitalName("");
 
     toast.success("Hospital signed out successfully");
     setTimeout(() => {
-      navigate("/");
+      navigate("/main");
     }, 2000);
   };
 
   const handleClientSignOut = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("type");
     localStorage.removeItem("clientName");
     setIsClientLoggedIn(false);
     setClientInfo(null);
@@ -211,7 +227,7 @@ const Navbar = () => {
 
     toast.success("Client signed out successfully");
     setTimeout(() => {
-      navigate("/");
+      navigate("/main");
     }, 2000);
   };
 
@@ -222,7 +238,7 @@ const Navbar = () => {
         {/* Left: Logo */}
         <div className="flex items-center text-2xl font-bold">
           <Link
-            to={isHospitalLoggedIn ? "" : "/"}
+            to={isHospitalLoggedIn ? "" : "/main"}
             className="flex items-center"
           >
             <svg

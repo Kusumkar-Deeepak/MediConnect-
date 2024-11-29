@@ -16,6 +16,15 @@ const ContactPage = () => {
   });
 
   useEffect(() => {
+    const type = localStorage.getItem("type");
+if ( type==="client") {
+  console.log("Client logged in");
+  window.location.href = "/main";
+}
+
+// console.log("Client logged in");
+
+
     // Prefill name and email from hospitalInfo if available
     if (hospitalInfo) {
       setFormData((prevData) => ({
@@ -39,7 +48,12 @@ const ContactPage = () => {
 
     try {
       // Send the form data to the backend
-      const response = await axios.post("http://localhost:3000/api/hospitals/contact", formData);
+      const response = await axios.post(
+        // "http://localhost:3000/api/hospitals/contact"
+        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/contact`
+
+        
+        , formData);
 
       // Handle successful submission
       if (response.status === 200) {

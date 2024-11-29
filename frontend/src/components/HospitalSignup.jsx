@@ -201,7 +201,10 @@ const HospitalSignup = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/hospitals",
+        // "http://localhost:3000/api/hospitals"
+        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}`
+
+        ,
         requestBody
       );
 
@@ -209,7 +212,7 @@ const HospitalSignup = () => {
         toast.success(response.data.message);
 
         setTimeout(() => {
-          navigate("/");
+          navigate("/main");
         }, 3000);
       } else {
         toast.error(response.data.message);

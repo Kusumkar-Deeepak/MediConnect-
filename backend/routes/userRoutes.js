@@ -56,8 +56,9 @@ Router.get('/login', async (req, res) => {
     }
 
     const token = jwt.sign({ email: client.email, type: 'client' }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(200).json({ message: 'Login successful', token, client: {
+    res.status(200).json({ message: 'Login successful', token,  type: 'client', client: {
       // id: client.id,
+     
       name: client.name,
       email: client.email,
       phone: client.phone,

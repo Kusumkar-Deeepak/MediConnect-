@@ -29,6 +29,12 @@ const HospitalDashboard = () => {
   };
 
   useEffect(() => {
+const type = localStorage.getItem("type");
+if ( type==="client") {
+  console.log("Client logged in");
+  window.location.href = "/main";
+}
+
     if (hospitalInfo) {
       setFormData(hospitalInfo);
     }
@@ -79,7 +85,10 @@ const HospitalDashboard = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/hospitals/verify",
+        // "http://localhost:3000/api/hospitals/verify"
+        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/verify`
+
+        ,
         {
           id: hospitalInfo.id,
           password,
@@ -206,9 +215,9 @@ const HospitalDashboard = () => {
     }
 
     // Opening and Closing Hours validation (required)
-    if (!openingHours.start || !closingHours.end) {
-      toast.error("Opening and Closing Hours are required.");
-    }
+    // if (!openingHours || !closingHours.end) {
+    //   toast.error("Opening and Closing Hours are required.");
+    // }
 
     // If there are any errors, show them using toast
     if (errors.length > 0) {
@@ -230,7 +239,10 @@ const HospitalDashboard = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        "http://localhost:3000/api/hospitals/update",
+        "http://localhost:3000/api/hospitals/update"
+        // `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/update`
+
+        ,
         {
           ...formData,
           password,
@@ -265,7 +277,10 @@ const HospitalDashboard = () => {
   const handleDeleteProfile = async () => {
     try {
       const response = await axios.delete(
-        "http://localhost:3000/api/hospitals/delete",
+        // "http://localhost:3000/api/hospitals/delete"
+        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/delete`
+        
+        ,
         {
           data: {
             id: hospitalInfo.id,

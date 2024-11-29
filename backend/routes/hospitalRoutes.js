@@ -377,6 +377,7 @@ router.get("/login", async (req, res) => {
     );
     res.status(200).json({
       message: "Login successful",
+      type: "hospital",
       token,
       hospital: {
         id: hospital.id,
