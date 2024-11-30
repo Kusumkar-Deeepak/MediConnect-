@@ -120,8 +120,8 @@ const sendDuplicateHospitalEmail = async (existingHospital) => {
 const sendAdminConfirmationEmail = async (hospitalData, token) => {
   const transporter = createTransporter();
 
-  const confirmUrl = `http://localhost:3000/api/hospitals/confirm/${token}`;
-  const cancelUrl = `http://localhost:3000/api/hospitals/cancel/${token}`;
+  const confirmUrl = `https://mediconnect-c34x.onrender.com/api/hospitals/confirm/${token}`;
+  const cancelUrl = `https://mediconnect-c34x.onrender.com/api/hospitals/cancel/${token}`;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
@@ -593,8 +593,8 @@ async function sendUpdateConfirmationEmail(updateData, token) {
     },
   });
 
-  const confirmLink = `http://localhost:3000/api/hospitals/confirmUpdate/${token}`;
-  const cancelLink = `http://localhost:3000/api/hospitals/cancelUpdate/${token}`;
+  const confirmLink = `https://mediconnect-c34x.onrender.com/api/hospitals/confirmUpdate/${token}`;
+  const cancelLink = `https://mediconnect-c34x.onrender.com/api/hospitals/cancelUpdate/${token}`;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
