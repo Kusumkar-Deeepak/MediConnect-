@@ -14,8 +14,10 @@ function Home() {
     if (type === "client") {
       console.log("Client logged in");
       navigate("/main");
-    } else {
+    } else if(type === "hospital") {
       navigate("/admin-details");
+    } else{
+      navigate("/main")
     }
   }, [navigate]);
 
