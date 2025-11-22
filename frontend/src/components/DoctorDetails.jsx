@@ -142,28 +142,51 @@ const DoctorDetails = () => {
 
       // Show success toast
       toast.success(
-        "Appointment booked successfully! Please check your email."
+        "Appointment booked successfully! Please check your email.",
+        {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        }
       );
+
+      // Reset form after successful booking
+      setFormData({
+        name: clientInfo?.name || "",
+        email: clientInfo?.email || "",
+        phone: clientInfo?.phone || "",
+        preferredDate: "",
+        preferredTime: "",
+      });
     } catch (error) {
       console.error("Error booking appointment:", error);
 
       // Show error toast with the error message from the response
-      if (error.response && error.response.data) {
-        if (
-          error.response.data.message ===
-          "You already have an appointment booked for today with this email."
-        ) {
-          toast.error(
-            "You already have an appointment booked for today. Please choose another date."
-          );
-        } else {
-          toast.error(
-            error.response.data.message ||
-              "Error booking appointment. Please try again."
-          );
-        }
+      if (
+        error.response &&
+        error.response.data &&
+        error.response.data.message
+      ) {
+        toast.error(error.response.data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       } else {
-        toast.error("Error booking appointment. Please try again.");
+        toast.error("Error booking appointment. Please try again.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
       }
     }
   };
