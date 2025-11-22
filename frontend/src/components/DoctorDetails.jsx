@@ -2,11 +2,10 @@ import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import Navbar from "./Navbar";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const DoctorDetails = () => {
-
   const location = useLocation();
   const { hospital, clientInfo } = location.state || {};
   const [ratings, setRatings] = useState(0);
@@ -103,8 +102,9 @@ const DoctorDetails = () => {
         try {
           const response = await axios.get(
             // `http://localhost:3000/api/hospitals/${hospital.id}/reviews`
-            `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/${hospital.id}/reviews`
-
+            `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/${
+              hospital.id
+            }/reviews`
           );
           setRatings(response.data.averageRating);
           setReviews(response.data.reviews);
@@ -124,9 +124,8 @@ const DoctorDetails = () => {
     try {
       const response = await axios.post(
         // "http://localhost:3000/api/appointments/book-appointment"
-        `${import.meta.env.VITE_API_BASE_URL_APPOINTMENT}/book-appointment`
+        `${import.meta.env.VITE_API_BASE_URL_APPOINTMENT}/book-appointment`,
 
-        ,
         {
           hospitalId: hospital.id, // Replace with actual ID
           hospitalEmail: hospital.email,
@@ -171,7 +170,6 @@ const DoctorDetails = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen flex flex-col overflow-x-hidden">
-      <ToastContainer />
       <Navbar />
 
       <div className="flex flex-col lg:flex-row w-full mt-4 lg:mt-6 px-2 lg:px-0">
@@ -417,7 +415,8 @@ const DoctorDetails = () => {
                     {/* Reviewer Image */}
                     <img
                       src={
-                        review.reviewerImage || "https://img.freepik.com/premium-vector/black-silhouette-default-profile-avatar_664995-354.jpg"
+                        review.reviewerImage ||
+                        "https://img.freepik.com/premium-vector/black-silhouette-default-profile-avatar_664995-354.jpg"
                       }
                       alt="Reviewer"
                       className="w-12 h-12 rounded-full object-cover"

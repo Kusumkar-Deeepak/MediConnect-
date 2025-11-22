@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom"; // To get token from path
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const ResetPassword = () => {
@@ -29,9 +29,10 @@ const ResetPassword = () => {
     try {
       const response = await axios.post(
         // `http://localhost:3000/api/auth/client-reset-password/${token}`
-        `${import.meta.env.VITE_API_BASE_URL_AUTH}/client-reset-password/${token}`
+        `${
+          import.meta.env.VITE_API_BASE_URL_AUTH
+        }/client-reset-password/${token}`,
 
-        ,
         { password: newPassword }
       );
       toast.success(response.data.message || "Password reset successfully!");
@@ -47,7 +48,9 @@ const ResetPassword = () => {
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-2xl font-semibold text-center mb-6 text-gray-700">Reset Password</h2>
+        <h2 className="text-2xl font-semibold text-center mb-6 text-gray-700">
+          Reset Password
+        </h2>
 
         {/* New Password Input */}
         <div className="relative mb-4">
@@ -92,8 +95,6 @@ const ResetPassword = () => {
             Reset Password
           </button>
         </div>
-
-        <ToastContainer />
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../index.css";
-import 'font-awesome/css/font-awesome.min.css'; // Import Font Awesome CSS
+import "font-awesome/css/font-awesome.min.css"; // Import Font Awesome CSS
 import Footer from "./Footer";
 
 const HospitalSignup = () => {
@@ -202,9 +202,8 @@ const HospitalSignup = () => {
     try {
       const response = await axios.post(
         // "http://localhost:3000/api/hospitals"
-        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}`
+        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}`,
 
-        ,
         requestBody
       );
 
@@ -233,7 +232,6 @@ const HospitalSignup = () => {
       </div>
 
       <div className="flex items-center flex-row justify-center h-screen bg-gray-100">
-        <ToastContainer />
         <div
           className="bg-white p-4 rounded-lg shadow-lg max-w-5xl w-full"
           style={{ maxHeight: "70vh", overflowY: "auto" }}
@@ -280,27 +278,27 @@ const HospitalSignup = () => {
                 />
               </label>
               {/* Password Field with Show/Hide Feature */}
-        <label className="block">
-          Password:
-          <div className="relative">
-            <input
-              type={isPasswordVisible ? 'text' : 'password'}
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full px-3 py-2 border rounded-md mt-1"
-              autoComplete="current-password"
-              placeholder="EG. Example@123"
-              required
-            />
-            <i
-              className={`absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-xl ${
-                isPasswordVisible ? 'fa fa-eye-slash' : 'fa fa-eye'
-              }`}
-              onClick={togglePasswordVisibility}
-            ></i>
-          </div>
-        </label>
+              <label className="block">
+                Password:
+                <div className="relative">
+                  <input
+                    type={isPasswordVisible ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2 border rounded-md mt-1"
+                    autoComplete="current-password"
+                    placeholder="EG. Example@123"
+                    required
+                  />
+                  <i
+                    className={`absolute top-1/2 right-3 transform -translate-y-1/2 cursor-pointer text-xl ${
+                      isPasswordVisible ? "fa fa-eye-slash" : "fa fa-eye"
+                    }`}
+                    onClick={togglePasswordVisibility}
+                  ></i>
+                </div>
+              </label>
               <label>
                 Contact Number:
                 <input

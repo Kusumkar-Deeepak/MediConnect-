@@ -76,32 +76,74 @@ const sendDuplicateHospitalEmail = async (existingHospital) => {
           <li><strong>Name:</strong> ${existingHospital.name}</li>
           <li><strong>Email:</strong> ${existingHospital.email}</li>
           <li><strong>Phone:</strong> ${existingHospital.phone}</li>
-          <li><strong>Address:</strong> ${existingHospital.address}, ${existingHospital.city}, ${existingHospital.state}, ${existingHospital.zipCode}</li>
-          <li><strong>Specialist Doctor Name:</strong> ${existingHospital.specDrName}</li>
+          <li><strong>Address:</strong> ${existingHospital.address}, ${
+        existingHospital.city
+      }, ${existingHospital.state}, ${existingHospital.zipCode}</li>
+          <li><strong>Specialist Doctor Name:</strong> ${
+            existingHospital.specDrName
+          }</li>
           <li><strong>Website:</strong> ${existingHospital.website}</li>
-          <li><strong>Number of Doctors:</strong> ${existingHospital.numberOfDoctors}</li>
-          <li><strong>Number of Nurses:</strong> ${existingHospital.numberOfNurses}</li>
-          <li><strong>Opening Hours:</strong> ${existingHospital.openingHours.start} to ${existingHospital.openingHours.end}</li>
-          <li><strong>Experience:</strong> ${existingHospital.experience} years</li>
-          <li><strong>Specialist Field:</strong> ${existingHospital.specialist}</li>
-          <li><strong>Languages Spoken:</strong> ${existingHospital.languagesSpoken}</li>
-          <li><strong>Insurance Accepted:</strong> ${existingHospital.insuranceAccepted}</li>
+          <li><strong>Number of Doctors:</strong> ${
+            existingHospital.numberOfDoctors
+          }</li>
+          <li><strong>Number of Nurses:</strong> ${
+            existingHospital.numberOfNurses
+          }</li>
+          <li><strong>Opening Hours:</strong> ${
+            existingHospital.openingHours.start
+          } to ${existingHospital.openingHours.end}</li>
+          <li><strong>Experience:</strong> ${
+            existingHospital.experience
+          } years</li>
+          <li><strong>Specialist Field:</strong> ${
+            existingHospital.specialist
+          }</li>
+          <li><strong>Languages Spoken:</strong> ${
+            existingHospital.languagesSpoken
+          }</li>
+          <li><strong>Insurance Accepted:</strong> ${
+            existingHospital.insuranceAccepted
+          }</li>
           <li><strong>Degree:</strong> ${existingHospital.degree}</li>
-          <li><strong>Emergency Contact:</strong> ${existingHospital.emergencyContact}</li>
+          <li><strong>Emergency Contact:</strong> ${
+            existingHospital.emergencyContact
+          }</li>
           <li><strong>Facilities:</strong>
             <ul>
-              <li>Emergency: ${existingHospital.facilities.Emergency ? "Yes" : "No"}</li>
+              <li>Emergency: ${
+                existingHospital.facilities.Emergency ? "Yes" : "No"
+              }</li>
               <li>ICU: ${existingHospital.facilities.ICU ? "Yes" : "No"}</li>
-              <li>Pharmacy: ${existingHospital.facilities.Pharmacy ? "Yes" : "No"}</li>
-              <li>Laboratory: ${existingHospital.facilities.Laboratory ? "Yes" : "No"}</li>
-              <li>Radiology: ${existingHospital.facilities.Radiology ? "Yes" : "No"}</li>
-              <li>Surgery: ${existingHospital.facilities.Surgery ? "Yes" : "No"}</li>
-              <li>Rehabilitation: ${existingHospital.facilities.Rehabilitation ? "Yes" : "No"}</li>
-              <li>Outpatient: ${existingHospital.facilities.Outpatient ? "Yes" : "No"}</li>
-              <li>Blood Bank: ${existingHospital.facilities.BloodBank ? "Yes" : "No"}</li>
-              <li>Maternity: ${existingHospital.facilities.Maternity ? "Yes" : "No"}</li>
-              <li>Pediatrics: ${existingHospital.facilities.Pediatrics ? "Yes" : "No"}</li>
-              <li>Cardiology: ${existingHospital.facilities.Cardiology ? "Yes" : "No"}</li>
+              <li>Pharmacy: ${
+                existingHospital.facilities.Pharmacy ? "Yes" : "No"
+              }</li>
+              <li>Laboratory: ${
+                existingHospital.facilities.Laboratory ? "Yes" : "No"
+              }</li>
+              <li>Radiology: ${
+                existingHospital.facilities.Radiology ? "Yes" : "No"
+              }</li>
+              <li>Surgery: ${
+                existingHospital.facilities.Surgery ? "Yes" : "No"
+              }</li>
+              <li>Rehabilitation: ${
+                existingHospital.facilities.Rehabilitation ? "Yes" : "No"
+              }</li>
+              <li>Outpatient: ${
+                existingHospital.facilities.Outpatient ? "Yes" : "No"
+              }</li>
+              <li>Blood Bank: ${
+                existingHospital.facilities.BloodBank ? "Yes" : "No"
+              }</li>
+              <li>Maternity: ${
+                existingHospital.facilities.Maternity ? "Yes" : "No"
+              }</li>
+              <li>Pediatrics: ${
+                existingHospital.facilities.Pediatrics ? "Yes" : "No"
+              }</li>
+              <li>Cardiology: ${
+                existingHospital.facilities.Cardiology ? "Yes" : "No"
+              }</li>
             </ul>
           </li>
         </ul>
@@ -115,13 +157,12 @@ const sendDuplicateHospitalEmail = async (existingHospital) => {
   }
 };
 
-
 // Function to send confirmation email to admin
 const sendAdminConfirmationEmail = async (hospitalData, token) => {
   const transporter = createTransporter();
 
-  const confirmUrl = `https://mediconnect-c34x.onrender.com/api/hospitals/confirm/${token}`;
-  const cancelUrl = `https://mediconnect-c34x.onrender.com/api/hospitals/cancel/${token}`;
+  const confirmUrl = `${process.env.HOSPITAL_CONFIRM_URL}/${token}`;
+  const cancelUrl = `${process.env.HOSPITAL_CANCEL_URL}/${token}`;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
@@ -247,7 +288,12 @@ router.post("/", async (req, res) => {
     if (existingHospital) {
       // Send cancellation email if hospital already exists
       await sendDuplicateHospitalEmail(existingHospital);
-      return res.status(400).json({ "message": "Hospital with these details already exists. Please check your MAIL and try again." });
+      return res
+        .status(400)
+        .json({
+          message:
+            "Hospital with these details already exists. Please check your MAIL and try again.",
+        });
     }
 
     // Hash the password
@@ -581,11 +627,9 @@ router.put("/update", verifyToken, async (req, res) => {
   }
 });
 
-
-
 // Send update confirmation email function
 async function sendUpdateConfirmationEmail(updateData, token) {
-  const transporter = nodemailer.createTransport({
+  const transporter = nodemailer.createTransporter({
     service: "gmail",
     auth: {
       user: process.env.EMAIL_USER,
@@ -593,8 +637,8 @@ async function sendUpdateConfirmationEmail(updateData, token) {
     },
   });
 
-  const confirmLink = `https://mediconnect-c34x.onrender.com/api/hospitals/confirmUpdate/${token}`;
-  const cancelLink = `https://mediconnect-c34x.onrender.com/api/hospitals/cancelUpdate/${token}`;
+  const confirmLink = `${process.env.HOSPITAL_CONFIRM_UPDATE_URL}/${token}`;
+  const cancelLink = `${process.env.HOSPITAL_CANCEL_UPDATE_URL}/${token}`;
 
   const mailOptions = {
     from: process.env.EMAIL_USER,
@@ -621,7 +665,9 @@ router.get("/confirmUpdate/:token", async (req, res) => {
 
     if (!updateData) {
       console.log("Invalid or expired token");
-      return res.status(400).json({ message: "Invalid or expired confirmation token." });
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired confirmation token." });
     }
 
     const hospital = await Hospital.findOne({ id: updateData.id });
@@ -648,17 +694,14 @@ router.get("/confirmUpdate/:token", async (req, res) => {
     await sendUpdateAcceptedEmail(hospital.email, updateData.updatedFields);
 
     res.status(200).json({
-      message: "Hospital profile updated successfully and confirmed by MediConnect Admin.",
+      message:
+        "Hospital profile updated successfully and confirmed by MediConnect Admin.",
     });
   } catch (error) {
     console.error("Error confirming update:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
-
-
-
-
 
 // Route to cancel update
 router.get("/cancelUpdate/:token", async (req, res) => {
@@ -729,15 +772,19 @@ async function sendUpdateCancellationEmail(updateData) {
 
 // Route to add a review to a hospital
 router.post("/:id/review", async (req, res) => {
-  const hospitalId = req.params.id;  // This is the custom ID provided by the admin
+  const hospitalId = req.params.id; // This is the custom ID provided by the admin
   const { text, star, reviewerName } = req.body;
 
   // Validate inputs
   if (!text || !star || !reviewerName) {
-    return res.status(400).json({ message: "Text, star, and reviewer name are required." });
+    return res
+      .status(400)
+      .json({ message: "Text, star, and reviewer name are required." });
   }
   if (star < 1 || star > 5) {
-    return res.status(400).json({ message: "Star rating must be between 1 and 5." });
+    return res
+      .status(400)
+      .json({ message: "Star rating must be between 1 and 5." });
   }
 
   try {
@@ -754,7 +801,9 @@ router.post("/:id/review", async (req, res) => {
     res.status(201).json({ message: "Review added successfully.", hospital });
   } catch (error) {
     console.error("Error while adding review:", error);
-    res.status(500).json({ message: "An error occurred while adding the review." });
+    res
+      .status(500)
+      .json({ message: "An error occurred while adding the review." });
   }
 });
 
@@ -764,19 +813,23 @@ router.get("/:id/reviews", async (req, res) => {
     const hospitalId = req.params.id;
 
     // Fetch the hospital from the database, including reviews
-    const hospital = await Hospital.findOne({ id: hospitalId }).select("reviews");
+    const hospital = await Hospital.findOne({ id: hospitalId }).select(
+      "reviews"
+    );
 
     if (!hospital) {
       return res.status(404).json({ message: "Hospital not found" });
     }
 
     // Calculate the average rating
-    const ratings = hospital.reviews.map(review => review.star);
+    const ratings = hospital.reviews.map((review) => review.star);
     const averageRating =
-      ratings.length > 0 ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length : 0;
+      ratings.length > 0
+        ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length
+        : 0;
 
     // Get the latest 2-3 reviews
-    const latestReviews = hospital.reviews.slice(0, 3).map(review => ({
+    const latestReviews = hospital.reviews.slice(0, 3).map((review) => ({
       text: review.text,
       star: review.star,
       reviewerName: review.reviewerName,
@@ -792,6 +845,5 @@ router.get("/:id/reviews", async (req, res) => {
     res.status(500).json({ message: "Error fetching hospital reviews" });
   }
 });
-
 
 module.exports = router;

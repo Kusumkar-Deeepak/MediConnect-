@@ -1,7 +1,7 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 
@@ -47,9 +47,8 @@ const HospitalData = ({ hospital, isLoggedIn, clientInfo }) => {
     try {
       const response = await axios.post(
         // `http://localhost:3000/api/hospitals/${hospital.id}/review`
-        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/${hospital.id}/review`
+        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/${hospital.id}/review`,
 
-        ,
         {
           text: reviewText, // Changed to `text` as per server expectation
           star: rating, // Changed to `star` as per server expectation
@@ -70,7 +69,6 @@ const HospitalData = ({ hospital, isLoggedIn, clientInfo }) => {
 
   return (
     <div className="flex flex-col lg:flex-row w-full max-w-full sm:max-w-4xl p-4 sm:px-12 lg:px-8 bg-white rounded-lg shadow-md border border-gray-200">
-      <ToastContainer />
       <div className="w-full lg:w-1/4 flex flex-col items-center p-4 border-b lg:border-r lg:border-gray-300">
         <img
           src={

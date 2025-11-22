@@ -5,7 +5,7 @@ import Navbar from "./Navbar";
 import { ArrowRightIcon, ArrowLeftIcon } from "@heroicons/react/outline";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "font-awesome/css/font-awesome.min.css"; // Import Font Awesome CSS
 import { Link } from "react-router-dom";
 
@@ -29,11 +29,11 @@ const HospitalDashboard = () => {
   };
 
   useEffect(() => {
-const type = localStorage.getItem("type");
-if ( type==="client") {
-  console.log("Client logged in");
-  window.location.href = "/main";
-}
+    const type = localStorage.getItem("type");
+    if (type === "client") {
+      console.log("Client logged in");
+      window.location.href = "/main";
+    }
 
     if (hospitalInfo) {
       setFormData(hospitalInfo);
@@ -86,9 +86,8 @@ if ( type==="client") {
     try {
       const response = await axios.post(
         // "http://localhost:3000/api/hospitals/verify"
-        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/verify`
+        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/verify`,
 
-        ,
         {
           id: hospitalInfo.id,
           password,
@@ -239,10 +238,9 @@ if ( type==="client") {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.put(
-        "http://localhost:3000/api/hospitals/update"
+        "http://localhost:3000/api/hospitals/update",
         // `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/update`
 
-        ,
         {
           ...formData,
           password,
@@ -278,9 +276,8 @@ if ( type==="client") {
     try {
       const response = await axios.delete(
         // "http://localhost:3000/api/hospitals/delete"
-        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/delete`
-        
-        ,
+        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/delete`,
+
         {
           data: {
             id: hospitalInfo.id,
@@ -336,7 +333,6 @@ if ( type==="client") {
     <>
       <Navbar />
       <div className="max-w-8xl w-full mt-4 bg-white shadow-lg rounded-lg p-6 md:p-8">
-        <ToastContainer />
         {/* Profile Section */}
         <div className="flex flex-col md:flex-row items-start mb-6">
           <img

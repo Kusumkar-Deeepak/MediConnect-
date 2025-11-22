@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import profileImage from "../assets/images/profile_picture.webp";
 import { UserContext } from "../Context/UserContext";
@@ -10,17 +10,17 @@ import "font-awesome/css/font-awesome.min.css"; // Importing Font Awesome CSS
 const Navbar = () => {
   const [email, setEmail] = useState("");
   const [isEmailSent, setIsEmailSent] = useState(false);
-  const [clientForgotPasswordEmail, setClientForgotPasswordEmail] = useState("");  // New state for client email
-  const [isClientEmailSent, setIsClientEmailSent] = useState(false);  // For client email sent status
+  const [clientForgotPasswordEmail, setClientForgotPasswordEmail] =
+    useState(""); // New state for client email
+  const [isClientEmailSent, setIsClientEmailSent] = useState(false); // For client email sent status
 
   // Hospital password reset
   const handleSendEmail = async () => {
     try {
       const response = await axios.post(
         // "http://localhost:3000/api/auth/forgot-password"
-        `${import.meta.env.VITE_API_BASE_URL_AUTH}/forgot-password`
+        `${import.meta.env.VITE_API_BASE_URL_AUTH}/forgot-password`,
 
-        ,
         { email }
       );
       setIsEmailSent(true);
@@ -35,20 +35,22 @@ const Navbar = () => {
     try {
       const response = await axios.post(
         // "http://localhost:3000/api/auth/client-forgot-password"
-        `${import.meta.env.VITE_API_BASE_URL_AUTH}/client-forgot-password`
+        `${import.meta.env.VITE_API_BASE_URL_AUTH}/client-forgot-password`,
 
-        ,
-        { email: clientForgotPasswordEmail }  // Using the new state here
+        { email: clientForgotPasswordEmail } // Using the new state here
       );
       setIsClientEmailSent(true);
       toast.success(response.data.message || "Email sent successfully!");
     } catch (error) {
-      toast.error(error.response?.data?.error || "Error sending client reset email.");
+      toast.error(
+        error.response?.data?.error || "Error sending client reset email."
+      );
     }
   };
 
   const [forgotPasswordVisible, setForgotPasswordVisible] = useState(false);
-  const [clientForgotPasswordVisible, setClientForgotPasswordVisible] = useState(false); // For Client Forgot Password Modal
+  const [clientForgotPasswordVisible, setClientForgotPasswordVisible] =
+    useState(false); // For Client Forgot Password Modal
 
   const navigate = useNavigate();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -130,8 +132,7 @@ const Navbar = () => {
     try {
       const response = await axios.get(
         // "http://localhost:3000/api/hospitals/login"
-        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/login`
-        ,
+        `${import.meta.env.VITE_API_BASE_URL_HOSPITAL}/login`,
         {
           params: {
             id: hospitalData.hospitalID,
@@ -171,8 +172,7 @@ const Navbar = () => {
     try {
       const response = await axios.get(
         // "http://localhost:3000/api/clients/login"
-        `${import.meta.env.VITE_API_BASE_URL_CLIENT}/login`
-        ,
+        `${import.meta.env.VITE_API_BASE_URL_CLIENT}/login`,
         {
           params: {
             email: clientData.clientEmail,
@@ -233,7 +233,6 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white shadow-md">
-      <ToastContainer />
       <div className="container mx-auto flex justify-between items-center py-4 px-4">
         {/* Left: Logo */}
         <div className="flex items-center text-2xl font-bold">
@@ -613,7 +612,9 @@ const Navbar = () => {
               <p className="text-center text-sm">
                 <button
                   type="button"
-                  onClick={() => setForgotPasswordVisible(!forgotPasswordVisible)}
+                  onClick={() =>
+                    setForgotPasswordVisible(!forgotPasswordVisible)
+                  }
                   className="text-blue-500 hover:underline"
                 >
                   Forgot Password?
@@ -719,7 +720,7 @@ const Navbar = () => {
                 Cancel
               </button>
               <p className="mt-4 text-center text-sm">
-              Dont have an account?{" "}
+                Dont have an account?{" "}
                 <a
                   href="/ClientSignup"
                   className="text-blue-500 hover:underline"
@@ -734,7 +735,9 @@ const Navbar = () => {
               <p className="text-center text-sm">
                 <button
                   type="button"
-                  onClick={() => setClientForgotPasswordVisible(!clientForgotPasswordVisible)}
+                  onClick={() =>
+                    setClientForgotPasswordVisible(!clientForgotPasswordVisible)
+                  }
                   className="text-blue-500 hover:underline"
                 >
                   Forgot Password?
@@ -755,7 +758,9 @@ const Navbar = () => {
                     id="clientForgotPasswordEmail"
                     placeholder="Enter your email"
                     value={clientForgotPasswordEmail} // Using the new state here
-                    onChange={(e) => setClientForgotPasswordEmail(e.target.value)}
+                    onChange={(e) =>
+                      setClientForgotPasswordEmail(e.target.value)
+                    }
                     required
                     className="w-full px-4 py-2 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
@@ -785,7 +790,6 @@ const Navbar = () => {
           </div>
         </div>
       )}
-
     </nav>
   );
 };

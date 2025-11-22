@@ -1,10 +1,10 @@
 // import React from 'react';
 import { useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import 'font-awesome/css/font-awesome.min.css'; // Import Font Awesome CSS
+import "font-awesome/css/font-awesome.min.css"; // Import Font Awesome CSS
 
 const ClientSignup = () => {
   const [formData, setFormData] = useState({
@@ -81,9 +81,8 @@ const ClientSignup = () => {
     try {
       const response = await axios.post(
         // "http://localhost:3000/api/clients"
-        `${import.meta.env.VITE_API_BASE_URL_CLIENT}`
+        `${import.meta.env.VITE_API_BASE_URL_CLIENT}`,
 
-        ,
         formData
       );
       if (response.status === 200) {
@@ -106,7 +105,6 @@ const ClientSignup = () => {
 
   return (
     <div className="flex items-center justify-center h-screen bg-gray-100">
-      <ToastContainer />
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-4xl w-full overflow-y-auto">
         {/* Heading */}
         <h2 className="text-2xl font-bold mb-6 text-center">Client Signup</h2>
